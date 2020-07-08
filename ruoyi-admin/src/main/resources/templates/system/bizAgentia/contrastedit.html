@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" >
+<head>
+	<th:block th:include="include :: header('修改药剂')" />
+</head>
+<body class="white-bg">
+    <div class="wrapper wrapper-content animated fadeInRight ibox-content">
+        <form class="form-horizontal m" id="form-bizAgentia-edit" th:object="${bizAgentiaContrast}">
+            <input id="agentiaId" name="agentiaId" th:field="*{contrastId}"  type="hidden">
+			<div class="form-group">
+				<label class="col-sm-3 control-label">药剂对照名称：</label>
+				<div class="col-sm-6">
+					<input id="contrastName" name="contrastName" th:field="*{contrastName}" class="form-control required" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">所属设备：</label>
+				<div class="col-sm-6">
+					<select id="contrastDevice" name="contrastDevice" class="form-control required"  th:with="type=${@bizDevice.getBizDevice()}" th:field="*{contrastDevice}" disabled="disabled">
+						<option th:each="bizDevice : ${type}" th:text="${bizDevice.deviceName}" th:value="${bizDevice.deviceId}"></option>
+					</select>
+				</div>
+			</div>
+
+			<div class="form-group">
+				<label class="col-sm-3 control-label">所属药剂：</label>
+				<div class="col-sm-6" id="contrast">
+					<select id="contrastAgentia" name="contrastAgentia" class="form-control required"   th:with="type=${@bizAgentia.getBizAgentia()}" th:field="*{contrastAgentia}" disabled="disabled">
+						<option th:each="bizAgentia : ${type}" th:text="${bizAgentia.agentiaName}" th:value="${bizAgentia.agentiaId}"></option>
+					</select>
+				</div>
+			</div>
+
+		</form>
+    </div>
+    <div th:include="include::footer"></div>
+    <script type="text/javascript">
+		var prefix = ctx + "system/bizAgentia";
+		$("#form-bizAgentia-edit").validate({
+			rules:{
+				xxxx:{
+					required:true,
+				},
+			},
+			focusCleanup: true
+		});
+		
+		function submitHandler() {
+	        if ($.validate.form()) {
+	            $.operate.save(prefix + "/contrastedit", $('#form-bizAgentia-edit').serialize());
+	        }
+	    }
+//
+//        function chage_contrast() {
+//            var contrastDevice = $("#contrastDevice").val();
+//            var d = {};
+//            d.deviceId = contrastDevice;
+//
+//            $.ajax({
+//                url: prefix + "/getContrastBydevice",
+//                data: JSON.stringify(d),
+//                type: "POST",
+//                cache: false,
+//                contentType: "application/json;charset=utf-8",
+//                processData: false,
+////            dataType: 'json',
+//                success: function(result) {
+//                    var obj = eval('('+result.agentiaData+')');
+//                    var agentiaId =obj.agentiaId;
+//                    var agentiaName =obj.agentiaName;
+//                    if(agentiaId !=''&& agentiaId != null&& agentiaId !== 'undefined'){
+//
+//                        $("#contrastAgentia").empty();
+//                        $("#contrastAgentia").removeAttr("disabled");
+//                        $("#contrastAgentia").append("<option  value=\"\">请选择</option>");
+//                        for (var p in agentiaId) {
+//                            $("#contrastAgentia").append("<option  value=\""+agentiaId[p]+"\">"+agentiaName[p]+"</option>");
+//                        }
+//                    }else{
+//                        alert("当前设备,不存在需要对照的化验药剂");
+//                    }
+//                },
+//                error: function(error) {
+//                    alert("当前设备,不存在需要对照的化验药剂");
+//                }
+//            })
+//        }
+
+	</script>
+</body>
+</html>

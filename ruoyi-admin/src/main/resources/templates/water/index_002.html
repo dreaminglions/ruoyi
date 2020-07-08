@@ -1,0 +1,1602 @@
+﻿<!DOCTYPE html>
+<html  lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <link th:href="@{/water/view02/css/BigData.css}" rel="stylesheet" type="text/css" />
+    <link th:href="@{/water/view02/css/index.css}" rel="stylesheet" type="text/css" />
+    <link th:href="@{/water/view02/css/index02.css}" rel="stylesheet" type="text/css" />
+    <script th:src="@{/water/view02/js/jquery.js}"></script>
+    <link th:href="@{/water/view02/js/bstable/css/bootstrap.min.css}" rel="stylesheet" type="text/css" />
+    <link th:href="@{/water/view02/js/bstable/css/bootstrap-table.css}" rel="stylesheet" type="text/css" />
+    <link th:href="@{/water/view02/css/Security_operation.css}" rel="stylesheet" type="text/css" />
+    <link th:href="@{/water/view02/js/artDialog/skins/default.css}" rel="stylesheet" type="text/css"/>
+    <script th:src="@{/water/view02/js/laydate.js}"></script>
+    <script th:src="@{/water/view02/js/Home_page.js}"></script>
+    <!--<script th:src="@{/water/system/js/assayData_02.js}" ></script>-->
+
+    <script language="javascript" th:src="@{/water/view02/jqprint/jquery-1.4.4.min.js}"></script>
+    <script language="javascript" th:src="@{/water/view02/jqprint/jquery.jqprint-0.3.js}"></script>
+
+
+    <meta charset="UTF-8">
+    <title>化验单据信息</title>
+
+</head>
+<body >
+<div class="data_bodey">
+
+
+    <div class="index_top" style="margin: 0 auto;">
+        <a class="back-png" >
+            <!--<img id="weatherImg1" th:src="@{/water/view01/images/back.png}" alt="" height="40" width="40" onclick="click1()">-->
+            <img id="weatherImg2" th:src="@{/water/view01/images/Home.png}" alt="" height="40" width="40" onclick="click2()">
+            <!--<img id="weatherImg3" th:src="@{/water/view01/images/back2.png}" alt="" height="40" width="40" onclick="click3()">-->
+        </a>
+        <div style="height: 50%; margin-bottom: 0px;">
+            <div class="data_tit001">化验趋势分析</div>
+        </div>
+        <div style="height: 50%; margin-bottom: 0px;;margin-top:10px">
+            <span class="chose_tltle">请选择现场：</span>
+            <select id="waterValue"  class="water_chose"  th:with="type=${@bizWorks.getOnlyWorks()}" onchange="change_select()">
+                <option class="water_option" value="">请选择</option>
+                <option class="water_option" th:each="bizWorks : ${type}" th:text="${bizWorks.worksName}" th:value="${bizWorks.worksId}"></option>
+            </select>
+
+            <span class="chose_tltle">化验开始日期：</span>
+            <input class="time_chose" type="text"  id="startTime" >
+
+            <span class="chose_tltle">化验结束日期：</span>
+            <input class="time_chose" type="text"  id="endTime" >
+
+
+
+            <!--<span class="chose_tltle">请选择化验月份：</span>-->
+            <!--<select class="time_chose" id="timeValue" >-->
+                <!--&lt;!&ndash;                 <option class="water_option" value="1">2019-11</option>-->
+                                <!--<option class="water_option" value="2">2019-12</option> &ndash;&gt;-->
+                <!--&lt;!&ndash;<option class="water_option" value="6">2018-10</option>&ndash;&gt;-->
+                <!--&lt;!&ndash;<option class="water_option" value="7">2018-11</option>&ndash;&gt;-->
+                <!--&lt;!&ndash;<option class="water_option" value="8">2018-12</option>&ndash;&gt;-->
+                <!--&lt;!&ndash;<option class="water_option" value="9">2019-01</option>&ndash;&gt;-->
+                <!--&lt;!&ndash;<option class="water_option" value="10">2019-02</option>&ndash;&gt;-->
+                <!--<option class="water_option" value="11">2019-03</option>-->
+                <!--<option class="water_option" value="12">2019-04</option>-->
+                <!--<option class="water_option" value="13">2019-05</option>-->
+                <!--<option class="water_option" value="14">2019-06</option>-->
+                <!--<option class="water_option" value="15">2019-07</option>-->
+                <!--<option class="water_option" value="16">2019-08</option>-->
+                <!--<option class="water_option" value="17">2019-09</option>-->
+                <!--<option class="water_option" value="18">2019-10</option>-->
+                <!--<option class="water_option" value="19">2019-11</option>-->
+                <!--<option class="water_option" value="20">2019-12</option>-->
+
+                <!--<option class="water_option" value="3">2020-01</option>-->
+                <!--<option class="water_option" value="4">2020-02</option>-->
+                <!--<option class="water_option" value="5">2020-03</option>-->
+            <!--</select>-->
+
+            <button class="chose_enter" onclick="change_water()">确定</button>
+        </div>
+        <div class="clear"></div>
+    </div>
+
+    <div class="index_tabs" >
+        <div class="inner"  >
+
+
+            <div class="data_left01">
+                <div class="dataAll maginS">
+                    <div class="dataAllBorder01">
+                        <div class="dataAllBorder02">
+                            <div class="data_tit1">化验现场分析</div>
+                            <div id="four_linechart" style="width:100%;height:90%;"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="dataAll">
+                    <div class="dataAllBorder01">
+                        <div class="dataAllBorder02">
+                            <div class="data_tit1">风力影响</div>
+                            <!-- <p class="data_chart" id="Package01"></p> -->
+                            <div class="data_chart" id="buyTime"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="dataAll">
+                    <div class="dataAllBorder01">
+                        <div class="dataAllBorder02">
+                            <div class="data_tit1">气温影响</div>
+                            <!-- <p class="data_chart" id="bookAret"></p> -->
+                            <p class="data_chart" id="rodeAbook"></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="data_right01">
+                <div class="data_right">
+                    <div class="dataAllBorder01">
+                        <div class="dataAllBorder02">
+                            <div class="data_tit11">入水COD趋势</div>
+                            <div class="data_chart" id="in_cod_line"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="data_right">
+                    <div class="dataAllBorder01">
+                        <div class="dataAllBorder02">
+                            <div class="data_tit11">出水COD趋势</div>
+                            <!-- <p class="data_chart" id="Package01"></p> -->
+                            <div class="data_chart" id="out_cod_line" ></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="data_right01">
+                <div class="data_right">
+                    <div class="dataAllBorder01">
+                        <div class="dataAllBorder02">
+                            <div class="data_tit11">入水NH3趋势</div>
+                            <div class="data_chart" id="in_NH_line"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="data_right">
+                    <div class="dataAllBorder01">
+                        <div class="dataAllBorder02">
+                            <div class="data_tit11">出水NH3趋势</div>
+                            <!-- <p class="data_chart" id="Package01"></p> -->
+                            <div class="data_chart" id="out_NH_line" ></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="data_right01">
+                <div class="data_right">
+                    <div class="dataAllBorder01">
+                        <div class="dataAllBorder02">
+                            <div class="data_tit11">入水TP趋势</div>
+                            <div class="data_chart" id="in_TP_line" ></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="data_right">
+                    <div class="dataAllBorder01">
+                        <div class="dataAllBorder02">
+                            <div class="data_tit11">出水TP趋势</div>
+                            <!-- <p class="data_chart" id="Package01"></p> -->
+                            <div class="data_chart" id="out_TP_line" ></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="data_right01">
+                <div class="data_right">
+                    <div class="dataAllBorder01">
+                        <div class="dataAllBorder02">
+                            <div class="data_tit11">入水TN趋势</div>
+                            <div class="data_chart" id="in_TN_line" ></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="data_right">
+                    <div class="dataAllBorder01">
+                        <div class="dataAllBorder02">
+                            <div class="data_tit11">出水TN趋势</div>
+                            <!-- <p class="data_chart" id="Package01"></p> -->
+                            <div class="data_chart" id="out_TN_line" ></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+    <script th:src="@{/water/view02/js/echarts-all.js}"></script>
+    <!-- <script src="js/index.js"></script> -->
+    <script th:src="@{/water/view02/js/bstable/js/bootstrap.min.js}"></script>
+    <script th:src="@{/water/view02/js/bstable/js/bootstrap-table.js}"></script>
+    <script th:src="@{/water/view02/js/jquery.pagination.js}"></script>
+    <script th:src="@{/water/view02/js/bstable/js/bootstrap-table-zh-CN.min.js}"></script>
+    <script th:src="@{/water/view02/js/Home_page.js}"></script>
+    <script th:src="@{/water/view02/js/artDialog/artDialog.js}"></script>
+    <script th:src="@{/water/view02/js/artDialog/plugins/iframeTools.source.js}"></script>
+
+    <script th:inline="javascript">
+        var number;
+        $(function() {
+            if (window.screen.height <= 768) {
+                number = 4;
+            } else if (window.screen.height > 768 && window.screen.height <= 900) {
+                number = 6
+            } else if (window.screen.height > 1080) {
+                number = 8
+            }
+        });
+
+
+        //    翻页模块
+        $(".tcdPageCode").createPage({
+            pageCount:5,
+            current:1,
+            backFn:function(p){}
+        });
+        $(".chemistry_tcdPageCode").createPage({
+            pageCount:4,
+            current:1,
+            backFn:function(p){}
+        });
+        $(".enterprise_tcdPageCode").createPage({
+            pageCount:4,
+            current:1,
+            backFn:function(p){}
+        });
+        $(".car_tcdPageCode").createPage({
+            pageCount:4,
+            current:1,
+            backFn:function(p){}
+        });
+
+        $(function () {
+            $(".tit02Diva a").each(function (index) {
+                $(this).on("click",function () {
+                    $(".data_map").eq(index).fadeIn().siblings(".data_map").stop().hide();
+                    $(this).prev('i').removeClass('i_crlieAction');
+                    $(this).siblings('a').prev('i').addClass('i_crlieAction');
+
+                })
+            });
+            BootstrapTable();
+            // Echarts();
+            $("#fresh_tool").click(function(event){
+                event.stopPropagation();
+                cancel();
+            })
+
+        });
+        function EventClick(){
+            $(".check_increase").removeClass("check_increase_act");
+            $("#over_hide1").show().siblings().hide();
+            $(".check_decrease").show();
+            $("#cage_cl").hide();
+            $("#map_title_innerbox").hide();
+            $("#cage_cl1").show();
+//        $("#over_hide").show();
+            $("#map_title_innerbox1").show();
+            $(".addition_check_in").hide();
+            $("#car_check_in").hide();
+            BootstrapTable();
+        }
+        function cancel(e){
+            $(".check_increase").removeClass("check_increase_act");
+            $("#over_hide").show().siblings().hide();
+            $(".check_decrease").show();
+            $("#cage_cl").show();
+            $("#cage_cl1").hide();
+//        $("#cage_cl").show();
+//        $("#over_hide1").show();
+//        $("#map_title_innerbox").show();
+            BootstrapTable();
+        }
+
+        //    地址检索
+        $(".addition_check_btn").click(function () {
+            $(".check_increase").addClass("check_increase_act");
+            $(".check_decrease").hide()
+            $(".addition_check_in").show().siblings().hide()
+        });
+
+        //    危化品检索
+        function chemistryCheck() {
+            $(".check_increase").addClass("check_increase_act");
+            $(".check_decrease").hide()
+            $("#chemistry_check_in").show().siblings().hide()
+        }
+
+        //    企业检索
+        function enterpriseCheck() {
+            $(".check_increase").addClass("check_increase_act");
+            $(".check_decrease").hide()
+            $("#enterprise_check_in").show().siblings().hide()
+        }
+
+        //    车辆检索
+        function carCheck() {
+            $(".check_increase").addClass("check_increase_act");
+            $(".check_decrease").hide()
+            $("#car_check_in").show().siblings().hide()
+        }
+
+        function BootstrapTable() {
+            $('#table').bootstrapTable({
+                method: "get",
+                striped: true,
+                singleSelect: false,
+                url: "json/DGCar.json",
+                dataType: "json",
+                pagination: true, //分页
+                pageSize: number,
+                pageNumber: 1,
+                search: false, //显示搜索框
+                contentType: "application/x-www-form-urlencoded",
+                queryParams: null,
+                columns: [
+//                {
+//                    title: "车辆编号",
+//                    field: 'id',
+//                    width:80,
+//                    align: 'center',
+//                    valign: 'middle'
+//                },
+                    {
+                        title: '车牌号',
+                        field: 'carno',
+                        width:80,
+                        align: 'center',
+                        valign: 'middle'
+                    },
+                    {
+                        title: '所属企业',
+                        field: 'company',
+                        align: 'center',
+                        valign: 'middle'
+                    },
+
+                    {
+                        title: '运输内容',
+                        field: 'content',
+                        align: 'center'
+                    },
+
+                    {
+                        title: '行驶速度',
+                        field: 'speed',
+                        width:80,
+                        align: 'center'
+                    },
+                    {
+                        title: '车辆载重',
+                        field: 'load',
+                        width:80,
+                        align: 'center'
+                    },
+                    {
+                        title: '操作',
+                        field: 'load',
+                        align: 'center',
+                        formatter: function (value, row) {
+                            var e = '<a  href="javascript:void(0)" title="" onclick="showCarDetai()">查看详情</a> ';
+                            var d = '<a  href="javascript:void(0)" title="" onclick="analiysis(\'' + row.id + '\')">车辆定位</a> ';
+                            return e + d;
+                        }
+                    }
+
+                ]
+            });
+            $('#table1').bootstrapTable({
+                method: "get",
+                striped: true,
+                singleSelect: false,
+                url: "json/note1.json",
+                dataType: "json",
+                pagination: true, //分页
+                pageSize: number,
+                pageNumber: 1,
+                search: false, //显示搜索框
+                contentType: "application/x-www-form-urlencoded",
+                queryParams: null,
+                columns: [
+                    {
+                        title: "威胁源",
+                        field: 'id',
+                        align: 'center',
+                        valign: 'middle'
+                    },
+                    {
+                        title: '辐射距离',
+                        field: 'title',
+                        align: 'center',
+                        valign: 'middle'
+                    },
+                    {
+                        title: '威胁范围',
+                        field: 'type',
+                        align: 'center',
+                        valign: 'middle'
+                    },
+
+                    {
+                        title: '危害类型',
+                        field: 'person',
+                        align: 'center'
+                    }
+
+                ]
+            });
+            $('#table2').bootstrapTable({
+                method: "get",
+                striped: true,
+                singleSelect: false,
+                url: "json/note2.json",
+                dataType: "json",
+                pagination: true, //分页
+                pageSize: number,
+                pageNumber: 1,
+                search: false, //显示搜索框
+                contentType: "application/x-www-form-urlencoded",
+                queryParams: null,
+                columns: [
+                    {
+                        title: "威胁源",
+                        field: 'id',
+                        align: 'center',
+                        valign: 'middle'
+                    },
+                    {
+                        title: '辐射距离',
+                        field: 'title',
+                        align: 'center',
+                        valign: 'middle'
+                    },
+                    {
+                        title: '威胁范围',
+                        field: 'type',
+                        align: 'center',
+                        valign: 'middle'
+                    },
+
+                    {
+                        title: '危害类型',
+                        field: 'person',
+                        align: 'center'
+                    }
+
+                ]
+            });
+        }
+
+        function Echarts() {
+            var myChart = echarts.init($("#container_huan")[0]);
+            var option = {
+                tooltip: {
+                    trigger: 'item',
+                    formatter: "{a} <br/>{b}: {c} ({d}%)"
+                },
+                legend: {
+                    orient: 'vertical',
+                    x: 'left',
+                    data:['民用爆炸','射钉器材','危化品','寄递物流','旅店'],
+                    textStyle:{
+                        color:"#e9ebee"
+                    }
+                },
+                series: [
+                    {
+                        name:'行业数据',
+                        type:'pie',
+                        center:['80%','50%'],
+                        radius: ['50%', '80%'],
+                        avoidLabelOverlap: false,
+                        label: {
+                            normal: {
+                                show: false,
+                                position: 'center'
+                            },
+                            emphasis: {
+                                show: true,
+                                textStyle: {
+                                    fontSize: '30',
+                                    fontWeight: 'bold'
+                                }
+                            }
+                        },
+                        itemStyle: {
+                            normal: {
+                                label: {
+                                    show: false
+                                },
+                                labelLine: {
+                                    show: false
+                                }
+                            }
+                        },
+                        data:[
+                            {value:335, name:'民用爆炸'},
+                            {value:310, name:'射钉器材'},
+                            {value:234, name:'危化品'},
+                            {value:135, name:'寄递物流'},
+                            {value:1548, name:'旅店'}
+                        ]
+                    }
+                ]
+            };
+            myChart.setOption(option);
+        }
+
+
+        function TimeControl(){
+            $(".message_scroll_box").animate({marginTop:96},800,
+                function(){
+                    $(".message_scroll_box").css({marginTop:0});    //把顶部的边界清零
+                    $(".message_scroll_box .message_scroll:first").before($(".message_scroll_box .message_scroll:last"));    //在第一个新闻后面插入最后一个新闻
+
+                });
+        }
+        var T=setInterval(TimeControl,2300);    //开始定时
+        $(".message_scroll_box").mouseenter(function(){
+            clearInterval(T);    //停止定时
+        })
+            .mouseleave(function(){
+                T=setInterval(TimeControl,2500);    //再次定时
+            })
+
+    </script>
+
+    <!--轨迹回放时间日期选择-->
+    <script th:inline="javascript">
+        !function(){
+            laydate.skin('danlan');//切换皮肤，请查看skins下面皮肤库
+            laydate({elem: '#demo'});
+            laydate({elem: '#demo1'});//绑定元素
+        }();
+
+        //日期范围限制
+        var start = {
+            elem: '#startTime',
+            format: 'YYYY-MM-DD',
+            min: '2018-01-01', //设定最小日期为当前日期
+            max: '2099-06-16', //最大日期
+            istime: true,
+            istoday: false,
+            choose: function(datas){
+                end.min = datas; //开始日选好后，重置结束日的最小日期
+                end.start = datas //将结束日的初始值设定为开始日
+                change_select();
+            }
+        };
+
+        var end = {
+            elem: '#endTime',
+            format: 'YYYY-MM-DD',
+            min: '2018-01-01',
+            max: '2099-06-16',
+            istime: true,
+            istoday: false,
+            choose: function(datas){
+                start.max = datas; //结束日选好后，充值开始日的最大日期
+                change_select();
+            }
+        };
+        laydate(start);
+        laydate(end);
+
+
+    </script>
+
+    <script th:inline="javascript">
+
+        function initgongyi(weatherTime,daytemp,nighttemp){
+            var myChart = echarts.init($("#rodeAbook")[0]);
+            var option = {
+                tooltip: {   //提示框，鼠标悬浮交互时的信息提示
+                    show: true,
+                    trigger: 'axis'
+                },
+                grid: {
+                    x: 46,
+                    y:30,
+                    x2:30,
+                    y2:40,
+                    borderWidth: 0
+                },
+                legend: {
+                    data: ['白天温度','夜晚温度'],
+                    orient: 'vertical',
+                    textStyle: { fontWeight: 'bold', color: '#a4a7ab' }
+                },
+                calculable: false,
+                xAxis: [
+                    {
+                        type: 'category',
+                        data: weatherTime,
+                        splitLine: {
+                            show: false
+                        },
+                        axisLabel: {
+                            show: true,
+                            textStyle: {
+                                color: '#a4a7ab',
+                                align: 'center'
+                            }
+                        }
+                    }
+
+                ],
+                yAxis: [
+                    {
+                        type: 'value',
+                        splitLine: {
+                            show: false
+                        },
+                        axisLabel : {
+                            formatter: '{value} ',
+                            textStyle: {
+                                color: '#a4a7ab',
+                                align: 'right'
+                            }
+                        }
+                    }
+                ],
+                series: [
+                    {
+                        name: '白天温度',
+                        type: 'line',
+                        stack: '气温',
+                        data: daytemp,
+                        barWidth:6,
+                        itemStyle: {
+                            normal: {
+                                color: '#02bcbc'
+                            }
+                        }
+                    },
+                    {
+                        name: '夜晚温度',
+                        type: 'line',
+                        stack: '气温',
+                        data: nighttemp,
+                        barWidth:6,
+                        itemStyle: {
+                            normal: {
+                                color: '#8CAA7A'
+                            }
+                        }
+                    }
+                ]
+            };
+
+            myChart.setOption(option);
+        }
+
+        function initfengli(date,obj1,obj2){
+            var myChart = echarts.init($("#buyTime")[0]);
+            var option = {
+                tooltip: {   //提示框，鼠标悬浮交互时的信息提示
+                    show: true,
+                    trigger: 'axis'
+                },
+                grid: {
+                    x: 46,
+                    y:30,
+                    x2:30,
+                    y2:40,
+                    borderWidth: 0
+                },
+                legend: {
+                    data: ['白天风力','夜晚风力'],
+                    orient: 'vertical',
+                    textStyle: { fontWeight: 'bold', color: '#a4a7ab' }
+                },
+                calculable: false,
+                xAxis: [
+                    {
+                        type: 'category',
+                        data: date,
+                        splitLine: {
+                            show: false
+                        },
+                        axisLabel: {
+                            show: true,
+                            textStyle: {
+                                color: '#a4a7ab',
+                                align: 'center'
+                            }
+                        }
+                    }
+
+                ],
+                yAxis: [
+                    {
+                        type: 'value',
+                        splitLine: {
+                            show: false
+                        },
+                        axisLabel : {
+                            formatter: '{value} ',
+                            textStyle: {
+                                color: '#a4a7ab',
+                                align: 'right'
+                            }
+                        }
+                    }
+                ],
+                series: [
+                    {
+                        name: '白天风力',
+                        type: 'bar',
+                        stack: '白天风力',
+                        // data: obj_f,
+                        data: obj1,
+                        barWidth:6,
+                        itemStyle: {
+                            normal: {
+                                color: '#02bcbc'
+                            }
+                        }
+                    },
+                    {
+                        name: '夜晚风力',
+                        type: 'bar',
+                        stack: '夜晚风力',
+                        // data: obj_f,
+                        data: obj2,
+                        barWidth:6,
+                        itemStyle: {
+                            normal: {
+                                color: '#8CAA7A'
+                            }
+                        }
+                    }
+                ]
+            };
+
+            myChart.setOption(option);
+        }
+
+
+    </script>
+
+    <script>
+        //化验数据走势
+        function linechart(obj1,obj2) {
+            var linechart = echarts.init(document.getElementById('four_linechart'));
+            window.addEventListener('resize', function () {
+                linechart.resize();
+            });
+
+            //    设置背景阴影的参数，获取数据的最大值
+
+            var data = ['COD', 'NH3', 'TN', 'TP'];
+
+            option = {
+                tooltip : {
+                    trigger: 'axis'
+                },
+                grid: {
+                    x: 46,
+                    y:30,
+                    x2:30,
+                    y2:50,
+                    borderWidth: 0
+                },
+
+                calculable : false,
+                legend: {
+                    show:false,
+                    data:['正常','异常'],
+                    textStyle:{
+                        color:"#e9ebee"
+
+                    }
+                },
+                xAxis : [
+                    {
+                        type : 'category',
+                        data : ['COD','NH3','TN','TP'],
+                        splitLine: {
+                            show: false
+                        },
+                        axisLabel: {
+                            show: true,
+                            textStyle: {
+                                color: '#a4a7ab',
+                                align: 'center'
+                            }
+                        }
+
+                    }
+                ],
+                yAxis : {
+                    type: 'value',
+                    name : '(次)',
+                    axisLabel : {
+                        formatter: '{value} ',
+                        textStyle: {
+                            color: '#a4a7ab',
+                            align: 'right'
+                        }
+                    },
+                    splitLine: {
+                        show: false
+                    },
+                },
+                series : [
+
+                    {
+                        name:'正常',
+                        type:'bar',
+                        stack: '正常',
+                        data:obj1,
+                        itemStyle: {
+                            normal: {
+                                color:"#0FA2FF"
+                            }
+                        }
+                    },
+                    {
+                        name:'异常',
+                        type:'bar',
+                        stack: '异常',
+                        data:obj2,
+                        itemStyle: {
+                            normal: {
+                                color:"#D48265"
+                            }
+                        }
+                    },
+                ]
+            };
+            linechart.clear();
+            linechart.setOption(option);
+        }
+
+
+
+    </script>
+
+    <script th:inline="javascript">
+        //化验数据走势
+        function in_cod_linechart(data,obj) {
+            var linechart = echarts.init(document.getElementById('in_cod_line'));
+            window.addEventListener('resize', function () {
+                linechart.resize();
+            });
+
+            option = {
+                tooltip : {
+                    trigger: 'axis'
+                },
+                grid: {
+                    x: 46,
+                    y:30,
+                    x2:30,
+                    y2:80,
+                    borderWidth: 0
+                },
+
+                calculable : false,
+                xAxis : [
+                    {
+                        type : 'category',
+                        data : data,
+                        splitLine: {
+                            show: false
+                        },
+                        axisLabel: {
+                            show: true,
+                            textStyle: {
+                                color: '#a4a7ab',
+                                align: 'center'
+                            }
+                        }
+
+                    }
+                ],
+                yAxis : {
+                    type: 'value',
+                    name : '(值)',
+                    axisLabel : {
+                        formatter: '{value} ',
+                        textStyle: {
+                            color: '#a4a7ab',
+                            align: 'right'
+                        }
+                    },
+                    splitLine: {
+                        show: false
+                    },
+                },
+                series : [
+                    {
+                        name:'入水COD',
+                        type:'line',
+                        stack: '异常',
+                        data:obj,
+                        itemStyle: {
+                            normal: {
+                                color:"#F15D21"
+                            }
+                        }
+                    },
+                ]
+            };
+
+            linechart.clear();
+            linechart.setOption(option);
+        }
+
+        function out_cod_linechart(data,obj) {
+            var linechart = echarts.init(document.getElementById('out_cod_line'));
+            window.addEventListener('resize', function () {
+                linechart.resize();
+            });
+
+            option = {
+                tooltip : {
+                    trigger: 'axis'
+                },
+                grid: {
+                    x: 46,
+                    y:30,
+                    x2:30,
+                    y2:80,
+                    borderWidth: 0
+                },
+
+                calculable : false,
+                xAxis : [
+                    {
+                        type : 'category',
+                        data : data,
+                        splitLine: {
+                            show: false
+                        },
+                        axisLabel: {
+                            show: true,
+                            textStyle: {
+                                color: '#a4a7ab',
+                                align: 'center'
+                            }
+                        }
+
+                    }
+                ],
+                yAxis : {
+                    type: 'value',
+                    name : '(值)',
+                    axisLabel : {
+                        formatter: '{value} ',
+                        textStyle: {
+                            color: '#a4a7ab',
+                            align: 'right'
+                        }
+                    },
+                    splitLine: {
+                        show: false
+                    },
+                },
+                series : [
+                    {
+                        name:'出水COD',
+                        type:'line',
+                        stack: '异常',
+                        data:obj,
+                        itemStyle: {
+                            normal: {
+                                color:"#F65720"
+                            }
+                        }
+                    },
+                ]
+            };
+
+            linechart.clear();
+            linechart.setOption(option);
+        }
+
+        function in_NH_linechart(data,obj) {
+            var linechart = echarts.init(document.getElementById('in_NH_line'));
+            window.addEventListener('resize', function () {
+                linechart.resize();
+            });
+
+            option = {
+                tooltip : {
+                    trigger: 'axis'
+                },
+                grid: {
+                    x: 46,
+                    y:30,
+                    x2:30,
+                    y2:80,
+                    borderWidth: 0
+                },
+
+                calculable : false,
+                xAxis : [
+                    {
+                        type : 'category',
+                        data : data,
+                        splitLine: {
+                            show: false
+                        },
+                        axisLabel: {
+                            show: true,
+                            textStyle: {
+                                color: '#a4a7ab',
+                                align: 'center'
+                            }
+                        }
+
+                    }
+                ],
+                yAxis : {
+                    type: 'value',
+                    name : '(值)',
+                    axisLabel : {
+                        formatter: '{value} ',
+                        textStyle: {
+                            color: '#a4a7ab',
+                            align: 'right'
+                        }
+                    },
+                    splitLine: {
+                        show: false
+                    },
+                },
+                series : [
+                    {
+                        name:'入水NH3',
+                        type:'line',
+                        stack: '异常',
+                        data:obj,
+                        itemStyle: {
+                            normal: {
+                                color:"#286E9F"
+                            }
+                        }
+                    },
+                ]
+            };
+
+            linechart.clear();
+            linechart.setOption(option);
+        }
+
+        function out_NH_linechart(data,obj) {
+            var linechart = echarts.init(document.getElementById('out_NH_line'));
+            window.addEventListener('resize', function () {
+                linechart.resize();
+            });
+
+            option = {
+                tooltip : {
+                    trigger: 'axis'
+                },
+                grid: {
+                    x: 46,
+                    y:30,
+                    x2:30,
+                    y2:80,
+                    borderWidth: 0
+                },
+
+                calculable : false,
+                xAxis : [
+                    {
+                        type : 'category',
+                        data : data,
+                        splitLine: {
+                            show: false
+                        },
+                        axisLabel: {
+                            show: true,
+                            textStyle: {
+                                color: '#a4a7ab',
+                                align: 'center'
+                            }
+                        }
+
+                    }
+                ],
+                yAxis : {
+                    type: 'value',
+                    name : '(值)',
+                    axisLabel : {
+                        formatter: '{value} ',
+                        textStyle: {
+                            color: '#a4a7ab',
+                            align: 'right'
+                        }
+                    },
+                    splitLine: {
+                        show: false
+                    },
+                },
+                series : [
+                    {
+                        name:'出水NH3',
+                        type:'line',
+                        stack: '异常',
+                        data:obj,
+                        itemStyle: {
+                            normal: {
+                                color:"#33A3DB"
+                            }
+                        }
+                    },
+                ]
+            };
+
+            linechart.clear();
+            linechart.setOption(option);
+        }
+
+        function in_TP_linechart(data,obj) {
+            var linechart = echarts.init(document.getElementById('in_TP_line'));
+            window.addEventListener('resize', function () {
+                linechart.resize();
+            });
+
+            option = {
+                tooltip : {
+                    trigger: 'axis'
+                },
+                grid: {
+                    x: 46,
+                    y:30,
+                    x2:30,
+                    y2:80,
+                    borderWidth: 0
+                },
+
+                calculable : false,
+                xAxis : [
+                    {
+                        type : 'category',
+                        data : data,
+                        splitLine: {
+                            show: false
+                        },
+                        axisLabel: {
+                            show: true,
+                            textStyle: {
+                                color: '#a4a7ab',
+                                align: 'center'
+                            }
+                        }
+
+                    }
+                ],
+                yAxis : {
+                    type: 'value',
+                    name : '(值)',
+                    axisLabel : {
+                        formatter: '{value} ',
+                        textStyle: {
+                            color: '#a4a7ab',
+                            align: 'right'
+                        }
+                    },
+                    splitLine: {
+                        show: false
+                    },
+                },
+                series : [
+                    {
+                        name:'入水TP',
+                        type:'line',
+                        stack: '异常',
+                        data:obj,
+                        itemStyle: {
+                            normal: {
+                                color:"#037E6E"
+                            }
+                        }
+                    },
+                ]
+            };
+
+            linechart.clear();
+            linechart.setOption(option);
+        }
+
+        function out_TP_linechart(data,obj) {
+            var linechart = echarts.init(document.getElementById('out_TP_line'));
+            window.addEventListener('resize', function () {
+                linechart.resize();
+            });
+
+
+            option = {
+                tooltip : {
+                    trigger: 'axis'
+                },
+                grid: {
+                    x: 46,
+                    y:30,
+                    x2:30,
+                    y2:80,
+                    borderWidth: 0
+                },
+
+                calculable : false,
+                xAxis : [
+                    {
+                        type : 'category',
+                        data : data,
+                        splitLine: {
+                            show: false
+                        },
+                        axisLabel: {
+                            show: true,
+                            textStyle: {
+                                color: '#a4a7ab',
+                                align: 'center'
+                            }
+                        }
+
+                    }
+                ],
+                yAxis : {
+                    type: 'value',
+                    name : '(值)',
+                    axisLabel : {
+                        formatter: '{value} ',
+                        textStyle: {
+                            color: '#a4a7ab',
+                            align: 'right'
+                        }
+                    },
+                    splitLine: {
+                        show: false
+                    },
+                },
+                series : [
+                    {
+                        name:'出水TP',
+                        type:'line',
+                        stack: '异常',
+                        data:obj,
+                        itemStyle: {
+                            normal: {
+                                color:"#01AF9E"
+                            }
+                        }
+                    },
+                ]
+            };
+
+            linechart.clear();
+            linechart.setOption(option);
+        }
+
+        function in_TN_linechart(data,obj) {
+            var linechart = echarts.init(document.getElementById('in_TN_line'));
+            window.addEventListener('resize', function () {
+                linechart.resize();
+            });
+
+            option = {
+                tooltip : {
+                    trigger: 'axis'
+                },
+                grid: {
+                    x: 46,
+                    y:30,
+                    x2:30,
+                    y2:80,
+                    borderWidth: 0
+                },
+
+                calculable : false,
+                xAxis : [
+                    {
+                        type : 'category',
+                        data : data,
+                        splitLine: {
+                            show: false
+                        },
+                        axisLabel: {
+                            show: true,
+                            textStyle: {
+                                color: '#a4a7ab',
+                                align: 'center'
+                            }
+                        }
+
+                    }
+                ],
+                yAxis : {
+                    type: 'value',
+                    name : '(值)',
+                    axisLabel : {
+                        formatter: '{value} ',
+                        textStyle: {
+                            color: '#a4a7ab',
+                            align: 'right'
+                        }
+                    },
+                    splitLine: {
+                        show: false
+                    },
+                },
+                series : [
+                    {
+                        name:'入水TN',
+                        type:'line',
+                        stack: '异常',
+                        data:obj,
+                        itemStyle: {
+                            normal: {
+                                color:"#DF871A"
+                            }
+                        }
+                    },
+                ]
+            };
+
+            linechart.clear();
+            linechart.setOption(option);
+        }
+
+        function out_TN_linechart(data,obj) {
+            var linechart = echarts.init(document.getElementById('out_TN_line'));
+            window.addEventListener('resize', function () {
+                linechart.resize();
+            });
+
+            option = {
+                tooltip : {
+                    trigger: 'axis'
+                },
+                grid: {
+                    x: 46,
+                    y:30,
+                    x2:30,
+                    y2:80,
+                    borderWidth: 0
+                },
+
+                calculable : false,
+                xAxis : [
+                    {
+                        type : 'category',
+                        data : data,
+                        splitLine: {
+                            show: false
+                        },
+                        axisLabel: {
+                            show: true,
+                            textStyle: {
+                                color: '#a4a7ab',
+                                align: 'center'
+                            }
+                        }
+
+                    }
+                ],
+                yAxis : {
+                    type: 'value',
+                    name : '(值)',
+                    axisLabel : {
+                        formatter: '{value} ',
+                        textStyle: {
+                            color: '#a4a7ab',
+                            align: 'right'
+                        }
+                    },
+                    splitLine: {
+                        show: false
+                    },
+                },
+                series : [
+                    {
+                        name:'出水TN',
+                        type:'line',
+                        stack: '异常',
+                        data:obj,
+                        itemStyle: {
+                            normal: {
+                                color:"#FEE200"
+                            }
+                        }
+                    },
+                ]
+            };
+
+            linechart.clear();
+            linechart.setOption(option);
+        }
+
+    </script>
+
+
+    <script th:inline="javascript">
+
+        var ctx = [[@{/}]];
+
+        var assaydate=[];
+        var in_cod_data=[];
+        var out_cod_data=[];
+        var in_tp_data=[];
+        var out_tp_data=[];
+        var in_tn_data=[];
+        var out_tn_data=[];
+        var in_nh_data=[];
+        var out_nh_data=[];
+
+            var select_tip =0;
+
+        function change_water(){
+
+            var waterValue = $("#waterValue").val();
+            var startTime = $("#startTime").val();
+            var endTime = $("#endTime").val();
+
+            if(waterValue == ""){
+                alert("请选择化验现场");
+                return false;
+            }
+            if(startTime == ""){
+                alert("请选择化验开始日期");
+                return false;
+            }
+            if(endTime == ""){
+                alert("请选择化验结束日期");
+                return false;
+            }
+
+            var d = {};
+            d.waterValue = waterValue;
+            d.startTime = startTime;
+            d.endTime = endTime;
+
+
+            $.ajax({
+                url: ctx + "index/getAssayListByIDBE",
+                data: JSON.stringify(d),
+                type: "POST",
+                cache: false,
+                contentType: "application/json;charset=utf-8",
+                processData: false,
+//            dataType: 'json',
+                success: function(result) {
+
+                    select_tip = 1;
+
+                    var assayData = eval('('+result.assayData+')');
+
+                    if(assayData !=''&& assayData != null&& assayData !== 'undefined'){
+                        assaydate = assayData.assaydate;
+                        in_cod_data = assayData.in_cod_data;
+                        out_cod_data = assayData.out_cod_data;
+                        in_tp_data = assayData.in_tp_data;
+                        out_tp_data = assayData.out_tp_data;
+                        in_tn_data = assayData.in_tn_data;
+                        out_tn_data = assayData.out_tn_data;
+                        in_nh_data = assayData.in_nh_data;
+                        out_nh_data = assayData.out_nh_data;
+
+                        in_cod_linechart(assaydate,in_cod_data);
+                        in_TP_linechart(assaydate,in_tp_data);
+                        in_TN_linechart(assaydate,in_tn_data);
+                        in_NH_linechart(assaydate,in_nh_data);
+
+                        out_cod_linechart(assaydate,out_cod_data);
+                        out_TP_linechart(assaydate,out_tp_data);
+                        out_TN_linechart(assaydate,out_tn_data);
+                        out_NH_linechart(assaydate,out_nh_data);
+
+                    }else{
+                        alert("化验编号: "+NoValue+" 无化验数据");
+                    }
+
+
+                },
+                error: function(error) {
+                    alert("化验编号: "+NoValue+" 无化验数据");
+                }
+            })
+
+            getWeather(waterValue,startTime,endTime);
+            getOutline(waterValue,startTime,endTime);
+
+        }
+
+        function getWeather(waterValue,startTime,endTime){
+            var d = {};
+            d.waterValue = waterValue;
+            d.startTime = startTime;
+            d.endTime = endTime;
+
+            $.ajax({
+                url: ctx + "index/getWeather",
+                data: JSON.stringify(d),
+                type: "POST",
+                cache: false,
+                contentType: "application/json;charset=utf-8",
+                processData: false,
+//            dataType: 'json',
+                success: function(result) {
+                    var weatherData = eval('('+result.weatherData+')');
+
+                    if(weatherData !=''&& weatherData != null&& weatherData !== 'undefined'){
+                        var weatherTime = weatherData.weatherTime;
+                        var daytemp = weatherData.daytemp;
+                        var nighttemp = weatherData.nighttemp;
+                        var daypower = weatherData.daypower;
+                        var nigpower = weatherData.nigpower;
+
+                        initgongyi(weatherTime,daytemp,nighttemp);
+                        initfengli(weatherTime,daypower,nigpower)
+
+                    }else{
+                        alert("化验编号: "+NoValue+" 无化验数据");
+                    }
+
+
+                },
+                error: function(error) {
+                    alert("化验编号: "+NoValue+" 无化验数据");
+                }
+            })
+        }
+
+            function getOutline(waterValue,startTime,endTime){
+                var d = {};
+                d.waterValue = waterValue;
+                d.startTime = startTime;
+                d.endTime = endTime;
+
+                $.ajax({
+                    url: ctx + "index/getOutline",
+                    data: JSON.stringify(d),
+                    type: "POST",
+                    cache: false,
+                    contentType: "application/json;charset=utf-8",
+                    processData: false,
+//            dataType: 'json',
+                    success: function(result) {
+                        var outData = eval('('+result.outData+')');
+
+                        if(outData !=''&& outData != null&& outData !== 'undefined'){
+                            var out_r = outData.out_r;
+                            var out_w = outData.out_w;
+
+                            linechart(out_r,out_w);
+
+                        }else{
+                            alert("化验编号: "+NoValue+" 无化验数据");
+                        }
+
+
+                    },
+                    error: function(error) {
+                        alert("化验编号: "+NoValue+" 无化验数据");
+                    }
+                })
+            }
+
+
+            //    定时刷新首页项目列表 30s
+            setInterval(function(){
+                var waterValue = $("#waterValue").val();
+                var startTime = $("#startTime").val();
+                var endTime = $("#endTime").val();
+                if(waterValue != ""&&startTime != ""&&endTime != ""&&select_tip==1){
+                    change_water();
+                }
+            }, 30000);
+            
+            function change_select() {
+                select_tip=0;
+            }
+
+            function click2(){
+                history.back(-1);
+            }
+
+    </script>
+
+
+
+</body>
+</html>
+
+

@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" >
+<head>
+	<th:block th:include="include :: header('新增告警')" />
+</head>
+<body class="white-bg">
+    <div class="wrapper wrapper-content animated fadeInRight ibox-content">
+        <form class="form-horizontal m" id="form-bizAlert-add">
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">化验编号：</label>
+				<div class="col-sm-6">
+					<input id="reportId" name="reportId" class="form-control required" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">告警设备：</label>
+				<div class="col-sm-6">
+					<select id="alertDevice" name="alertDevice" class="form-control required"  th:with="type=${@bizDevice.getBizDevice()}" >
+						<option value="">请选择</option>
+						<option th:each="bizDevice : ${type}" th:text="${bizDevice.deviceName}" th:value="${bizDevice.deviceId}"></option>
+					</select>
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">告警水厂：</label>
+				<div class="col-sm-6">
+					<select id="alertWorks"  name="alertWorks" class="form-control required"  th:with="type=${@bizWorks.getBizWorks()}"  >
+						<option value="">请选择</option>
+						<option th:each="bizWorks : ${type}" th:text="${bizWorks.worksName}" th:value="${bizWorks.worksId}"></option>
+					</select>
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">告警内容：</label>
+				<div class="col-sm-6">
+					<input id="alertContent" name="alertContent" class="form-control required" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">告警类型：</label>
+				<div class="col-sm-6">
+					<input id="alertType" name="alertType" class="form-control required" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">告警日期：</label>
+				<div class="col-sm-6">
+					<input id="alertDate" name="alertDate" class="form-control required" type="text">
+				</div>
+			</div>
+		</form>
+	</div>
+    <div th:include="include::footer"></div>
+    <script type="text/javascript">
+		var prefix = ctx + "system/bizAlert"
+		$("#form-bizAlert-add").validate({
+			rules:{
+				xxxx:{
+					required:true,
+				},
+			},
+			focusCleanup: true
+		});
+		
+		function submitHandler() {
+	        if ($.validate.form()) {
+	            $.operate.save(prefix + "/add", $('#form-bizAlert-add').serialize());
+	        }
+	    }
+	</script>
+</body>
+</html>

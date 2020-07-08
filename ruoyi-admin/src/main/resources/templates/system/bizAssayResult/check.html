@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" >
+<head>
+	<th:block th:include="include :: header('修改化验结果')" />
+</head>
+<body class="white-bg">
+    <div class="wrapper wrapper-content animated fadeInRight ibox-content">
+        <form class="form-horizontal m" id="form-bizAssayResult-edit" th:object="${bizAssayResult}">
+            <input id="resultId" name="resultId" th:field="*{resultId}"  type="hidden">
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">化验编号：</label>
+				<div class="col-sm-6">
+					<label class="control-label">[[*{resultNo}]]</label>
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">化验设备：</label>
+				<div class="col-sm-6">
+					<label class="control-label">[[${bizAssayResult.device?.deviceName}]]</label>
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">化验水厂：</label>
+				<div class="col-sm-6">
+					<label class="control-label">[[${bizAssayResult.works?.worksName}]]</label>
+				</div>
+			</div>
+			<!--<div class="form-group">	-->
+				<!--<label class="col-sm-3 control-label">化验类型：</label>-->
+				<!--<div class="col-sm-6">-->
+					<!--<label class="control-label">[[*{resultType}]]</label>-->
+				<!--</div>-->
+			<!--</div>-->
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">送检日期：</label>
+				<div class="col-sm-6">
+					<label class="control-label">[[*{assayDate}]]</label>
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">化验开始时间：</label>
+				<div class="col-sm-6">
+					<label class="control-label">[[*{beginTime}]]</label>
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">化验结束时间：</label>
+				<div class="col-sm-6">
+					<label class="control-label">[[*{endTime}]]</label>
+				</div>
+			</div>
+			<!--<div class="form-group">	-->
+				<!--<label class="col-sm-3 control-label">化验方法id：</label>-->
+				<!--<div class="col-sm-6">-->
+					<!--<label class="control-label">[[*{resultMethod}]]</label>-->
+				<!--</div>-->
+			<!--</div>-->
+			<!--<div class="form-group">	-->
+				<!--<label class="col-sm-3 control-label">化验参数id：</label>-->
+				<!--<div class="col-sm-6">-->
+					<!--<label class="control-label">[[*{resultParameter}]]</label>-->
+				<!--</div>-->
+			<!--</div>-->
+			<!--<div class="form-group">	-->
+				<!--<label class="col-sm-3 control-label">化验曲线id：</label>-->
+				<!--<div class="col-sm-6">-->
+					<!--<label class="control-label">[[*{resultCurve}]]</label>-->
+				<!--</div>-->
+			<!--</div>-->
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">入水COD数值：</label>
+				<div class="col-sm-6">
+					<label class="control-label">[[*{inCod}]]</label>
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">入水总磷（TP）数值：</label>
+				<div class="col-sm-6">
+					<label class="control-label">[[*{inTp}]]</label>
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">入水总氮（TN）数值：</label>
+				<div class="col-sm-6">
+					<label class="control-label">[[*{inTn}]]</label>
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">入水氨氮（NH3）数值：</label>
+				<div class="col-sm-6">
+					<label class="control-label">[[*{inNh3}]]</label>
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">出水COD数值：</label>
+				<div class="col-sm-6">
+					<label class="control-label">[[*{outCod}]]</label>
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">出水总磷（TP）数值：</label>
+				<div class="col-sm-6">
+					<label class="control-label">[[*{outTp}]]</label>
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">出水总氮（TN）数值：</label>
+				<div class="col-sm-6">
+					<label class="control-label">[[*{outTn}]]</label>
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">出水氨氮（NH3）数值：</label>
+				<div class="col-sm-6">
+					<label class="control-label">[[*{outNh3}]]</label>
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">化验状态：</label>
+				<div class="col-sm-6">
+					<div class="form-control-static" th:class="${bizAssayResult.resultStatus == '0' ? 'label label-primary' : 'label label-danger'}" th:text="${bizAssayResult.resultStatus == '0' ? '正常' : '异常'}"></div>
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">故障状态：</label>
+				<div class="col-sm-6">
+					<div class="form-control-static" th:class="${bizAssayResult.resultFault == '0' ? 'label label-primary' : 'label label-danger'}" th:text="${bizAssayResult.resultFault == '0' ? '无故障' : '故障'}"></div>
+				</div>
+			</div>
+		</form>
+    </div>
+    <div th:include="include::footer"></div>
+    <script type="text/javascript">
+
+		function submitHandler() {
+            $.modal.close();
+	    }
+	</script>
+</body>
+</html>

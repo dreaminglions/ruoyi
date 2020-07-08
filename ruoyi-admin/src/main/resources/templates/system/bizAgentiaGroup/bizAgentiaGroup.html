@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<head>
+	<th:block th:include="include :: header('集团药剂列表')" />
+</head>
+<body class="gray-bg">
+    
+     <div class="container-div">
+		<div class="row">
+			<div class="col-sm-12 search-collapse">
+				<form id="formId">
+					<div class="select-list">
+						<ul>
+							<li>
+								药剂名称：<input type="text" name="agentiaName"/>
+							</li>
+
+							<li class="select-time">
+								<label>使用日期： </label>
+								<input type="text" class="time-input" id="useTime" placeholder="使用日期" name="useTime"/>
+							</li>
+							<li>
+								<a class="btn btn-primary btn-rounded btn-sm" onclick="$.table.search()"><i class="fa fa-search"></i>&nbsp;搜索</a>
+								<a class="btn btn-warning btn-rounded btn-sm" onclick="$.form.reset()"><i class="fa fa-refresh"></i>&nbsp;重置</a>
+							</li>
+						</ul>
+					</div>
+				</form>
+			</div>
+			
+	        <div class="btn-group-sm" id="toolbar" role="group">
+				<a class="btn btn-success" onclick="$.operate.add()" shiro:hasPermission="system:bizAgentiaGroup:add">
+					<i class="fa fa-plus"></i> 添加
+				</a>
+				<!--<a class="btn btn-primary btn-edit disabled" onclick="$.operate.edit()" shiro:hasPermission="system:bizAgentia:edit">-->
+					<!--<i class="fa fa-edit"></i> 修改-->
+				<!--</a>-->
+				<!--<a class="btn btn-danger btn-del btn-del disabled" onclick="$.operate.removeAll()" shiro:hasPermission="system:bizAgentia:remove">-->
+					<!--<i class="fa fa-remove"></i> 删除-->
+				<!--</a>-->
+				<!--<a class="btn btn-warning" onclick="$.table.exportExcel()" shiro:hasPermission="system:bizAgentiaGroup:export">-->
+						<!--<i class="fa fa-download"></i> 导出-->
+				 <!--</a>-->
+				<!--<a class="btn btn-info" onclick="$.table.importExcel()" shiro:hasPermission="system:bizAgentiaGroup:import">-->
+					<!--<i class="fa fa-upload"></i> 打印-->
+				<!--</a>-->
+			</div>
+			<div class="col-sm-12 select-table table-striped">
+				<table id="bootstrap-table" data-mobile-responsive="true"></table>
+			</div>
+		</div>
+	</div>
+    <div th:include="include :: footer"></div>
+    <script th:inline="javascript">
+        var editFlag = [[${@permission.hasPermi('system:bizAgentiaGroup:edit')}]];
+        var removeFlag = [[${@permission.hasPermi('system:bizAgentiaGroup:remove')}]];
+        var prefix = ctx + "system/bizAgentia";
+
+        $(function() {
+            var options = {
+                url: prefix + "/grouplist",
+                createUrl: prefix + "/groupadd",
+                updateUrl: prefix + "/groupedit/{id}",
+                removeUrl: prefix + "/groupremove",
+				exportUrl: prefix + "/groupexport",
+                modalName: "药剂",
+		        showExport: true,
+                columns: [{
+		            checkbox: true
+		        },
+				{
+					field : 'agentiaId', 
+					title : '药剂ID',
+					visible: false
+				},
+				{
+					field : 'agentiaNo', 
+					title : '药剂编号',
+					sortable: true
+				},
+				{
+					field : 'agentiaName', 
+					title : '药剂名称',
+					sortable: true
+				},
+				{
+					field : 'works.worksName',
+					title : '所属集团',
+					sortable: true,
+					formatter: function(value, item, index) {
+                        var worksname="";
+                        if(item.works!=null){
+                            worksname = item.works.worksName
+                        }
+                        return '<span class="label label-success">'+worksname+'</span>';
+					}
+				},
+				{
+					field : 'agentiaTotal', 
+					title : '药剂累计总量(g)',
+					sortable: true
+				},
+				{
+					field : 'agentiaRemain', 
+					title : '药剂剩余量(g)',
+					sortable: true
+				},
+				{
+					field : 'agentiaAlert', 
+					title : '药剂告警量(g)',
+                    sortable: true,
+                    formatter: function(value, item, index) {
+                        if(item.agentiaAlert>=item.agentiaRemain){
+                            return '<span class="label label-danger">'+item.agentiaAlert+'</span>';
+						}else{
+                            return '<span class="label label-success">'+item.agentiaAlert+'</span>';
+						}
+                    }
+				},
+//				{
+//					field : 'agentiaStatus',
+//					title : '药剂状态',
+//					sortable: true,
+//                    formatter: function (value, row, index) {
+//                        if (row.agentiaStatus == 0) {
+//                            return '<i class=\"btn btn-success btn-xs\" >正常</i> ';
+//                        } else {
+//                            return '<i class=\"btn btn-danger btn-xs\" >停用</i> ';
+//                        }
+//                    }
+//				},
+				{
+					field : 'useTime', 
+					title : '投入使用时间',
+					sortable: true
+				},
+				{
+					field : 'useDay',
+					title : '使用天数',
+					sortable: true,
+                    formatter: function(value, item, index) {
+                        return '<i >30</i> ';
+                    }
+				},
+				{
+					field : 'repairTime', 
+					title : '维护时间',
+					sortable: true
+				},
+		        {
+		            title: '操作',
+		            align: 'center',
+		            formatter: function(value, row, index) {
+		            	var actions = [];
+                        actions.push('<a class="btn btn-primary btn-xs ' + editFlag + '" href="#" onclick="changeAgentia(\'' + row.agentiaId + '\')"><i class="fa fa-edit"></i>药剂量变更</a> ');
+                        actions.push('<a class="btn btn-success btn-xs ' + editFlag + '" href="#" onclick="$.operate.edit(\'' + row.agentiaId + '\')"><i class="fa fa-edit"></i>编辑</a> ');
+                        actions.push('<a class="btn btn-danger btn-xs ' + removeFlag + '" href="#" onclick="$.operate.remove(\'' + row.agentiaId + '\')"><i class="fa fa-remove"></i>删除</a>');
+						return actions.join('');
+		            }
+		        }]
+            };
+            $.table.init(options);
+        });
+
+        /*  设备药剂管理-修改药剂量 */
+        function changeAgentia(agentiaId) {
+            var url = prefix + '/changeGroupAgentia/' + agentiaId;
+            $.modal.open("药剂记录", url);
+        }
+    </script>
+</body>
+</html>

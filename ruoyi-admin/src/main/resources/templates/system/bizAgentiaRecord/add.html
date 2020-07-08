@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" >
+<head>
+	<th:block th:include="include :: header('新增化验药剂记录')" />
+</head>
+<body class="white-bg">
+    <div class="wrapper wrapper-content animated fadeInRight ibox-content">
+        <form class="form-horizontal m" id="form-bizAgentiaRecord-add">
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">记录编号：</label>
+				<div class="col-sm-8">
+					<input id="recordNo" name="recordNo" class="form-control required" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">记录名称：</label>
+				<div class="col-sm-8">
+					<input id="recordName" name="recordName" class="form-control required" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">所属药剂：</label>
+				<div class="col-sm-8">
+					<input id="agentiaId" name="agentiaId" class="form-control required" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">记录类型：</label>
+				<div class="col-sm-8">
+					<input id="recordType" name="recordType" class="form-control required" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">记录状态：</label>
+				<div class="col-sm-8">
+					<div class="radio-box" th:each="dict : ${@dict.getType('sys_normal_disable')}">
+						<input type="radio" th:id="${dict.dictCode}" name="recordStatus" th:value="${dict.dictValue}" th:checked="${dict.isDefault == 'Y' ? true : false}">
+						<label th:for="${dict.dictCode}" th:text="${dict.dictLabel}"></label>
+					</div>
+					<!--<input id="recordStatus" name="recordStatus" class="form-control" type="text">-->
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">记录前药剂累计使用量：</label>
+				<div class="col-sm-8">
+					<input id="beforeTotal" name="beforeTotal" class="form-control required" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">记录前药剂剩余量：</label>
+				<div class="col-sm-8">
+					<input id="beforeRemain" name="beforeRemain" class="form-control required" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">记录后药剂累计使用量：</label>
+				<div class="col-sm-8">
+					<input id="afterTotal" name="afterTotal" class="form-control required" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">记录后药剂剩余量：</label>
+				<div class="col-sm-8">
+					<input id="afterRemain" name="afterRemain" class="form-control required" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">药剂变化量：</label>
+				<div class="col-sm-8">
+					<input id="agentiaChange" name="agentiaChange" class="form-control required" type="text">
+				</div>
+			</div>
+		</form>
+	</div>
+    <div th:include="include::footer"></div>
+    <script type="text/javascript">
+		var prefix = ctx + "system/bizAgentiaRecord"
+		$("#form-bizAgentiaRecord-add").validate({
+			rules:{
+				xxxx:{
+					required:true,
+				},
+			},
+			focusCleanup: true
+		});
+		
+		function submitHandler() {
+	        if ($.validate.form()) {
+	            $.operate.save(prefix + "/add", $('#form-bizAgentiaRecord-add').serialize());
+	        }
+	    }
+	</script>
+</body>
+</html>

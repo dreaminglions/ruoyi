@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" >
+<head>
+	<th:block th:include="include :: header('修改化验结果修改')" />
+</head>
+<body class="white-bg">
+    <div class="wrapper wrapper-content animated fadeInRight ibox-content">
+        <form class="form-horizontal m" id="form-bizResultAlter-edit" th:object="${bizResultAlter}">
+            <input id="alterId" name="alterId" th:field="*{alterId}"  type="hidden">
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">修改编号：</label>
+				<div class="col-sm-8">
+					<label class="control-label">[[*{alterNo}]]</label>
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">入水COD数值：</label>
+				<div class="col-sm-8">
+					<label class="control-label">[[*{inCod}]]</label>
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">入水总磷（TP）数值：</label>
+				<div class="col-sm-8">
+					<label class="control-label">[[*{inTp}]]</label>
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">入水总氮（TN）数值：</label>
+				<div class="col-sm-8">
+					<label class="control-label">[[*{inTn}]]</label>
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">入水氨氮（NH3）数值：</label>
+				<div class="col-sm-8">
+					<label class="control-label">[[*{inNh3}]]</label>
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">出水COD数值：</label>
+				<div class="col-sm-8">
+					<label class="control-label">[[*{outCod}]]</label>
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">出水总磷（TP）数值：</label>
+				<div class="col-sm-8">
+					<label class="control-label">[[*{outTp}]]</label>
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">出水总氮（TN）数值：</label>
+				<div class="col-sm-8">
+					<label class="control-label">[[*{outTn}]]</label>
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">出水氨氮（NH3）数值：</label>
+				<div class="col-sm-8">
+					<label class="control-label">[[*{outNh3}]]</label>
+				</div>
+			</div>
+
+		</form>
+    </div>
+    <div th:include="include::footer"></div>
+    <script type="text/javascript">
+
+        function submitHandler() {
+            $.modal.close();
+        }
+	</script>
+</body>
+</html>

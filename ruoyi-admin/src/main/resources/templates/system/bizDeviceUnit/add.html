@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" >
+<head>
+	<th:block th:include="include :: header('新增设备部件')" />
+</head>
+<body class="white-bg">
+    <div class="wrapper wrapper-content animated fadeInRight ibox-content">
+        <form class="form-horizontal m" id="form-bizDeviceUnit-add">
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">部件编号：</label>
+				<div class="col-sm-6">
+					<input id="unitNo" name="unitNo" class="form-control required" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">部件名称：</label>
+				<div class="col-sm-6">
+					<input id="unitName" name="unitName" class="form-control required" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">部件SN：</label>
+				<div class="col-sm-6">
+					<input id="unitSn" name="unitSn" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">部件型号：</label>
+				<div class="col-sm-6">
+					<input id="unitModel" name="unitModel" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">所属设备：</label>
+				<div class="col-sm-6">
+					<select id="unitDevice" name="unitDevice" class="form-control required"  th:with="type=${@bizDevice.getBizDevice()}" >
+						<option value="">请选择</option>
+						<option th:each="bizDevice : ${type}" th:text="${bizDevice.deviceName}" th:value="${bizDevice.deviceId}"></option>
+					</select>
+				</div>
+			</div>
+			<!--<div class="form-group">	-->
+				<!--<label class="col-sm-3 control-label">部件类型：</label>-->
+				<!--<div class="col-sm-6">-->
+					<!--<input id="unitType" name="unitType" class="form-control" type="text">-->
+				<!--</div>-->
+			<!--</div>-->
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">部件数量：</label>
+				<div class="col-sm-6">
+					<input id="unitCount" name="unitCount" class="form-control required" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">部件厂家：</label>
+				<div class="col-sm-6">
+					<input id="unitMaker" name="unitMaker" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">部件状态：</label>
+				<div class="col-sm-6">
+					<div class="onoffswitch">
+						<input type="checkbox" th:checked="true" class="onoffswitch-checkbox" id="unitStatus">
+						<label class="onoffswitch-label" for="unitStatus">
+							<span class="onoffswitch-inner"></span>
+							<span class="onoffswitch-switch"></span>
+						</label>
+					</div>
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">投入使用时间：</label>
+				<div class="col-sm-6">
+					<input type="text" class="time-input-all form-control required" id="useTime" placeholder="投入使用时间" name="useTime" />
+				</div>
+			</div>
+			<!--<div class="form-group">	-->
+				<!--<label class="col-sm-3 control-label">上次维护时间：</label>-->
+				<!--<div class="col-sm-6">-->
+					<!--<input type="text" class="time-input-all form-control" id="lastRepairTime" placeholder="上次维护时间" name="lastRepairTime" />-->
+				<!--</div>-->
+			<!--</div>-->
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">维护时间：</label>
+				<div class="col-sm-6">
+					<input type="text" class="time-input-all form-control" id="repairTime" placeholder="维护时间" name="repairTime"/>
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">维护人：</label>
+				<div class="col-sm-6">
+					<input id="repairBy" name="repairBy" class="form-control" type="text">
+				</div>
+			</div>
+
+		</form>
+	</div>
+    <div th:include="include::footer"></div>
+    <script type="text/javascript">
+		var prefix = ctx + "system/bizDeviceUnit"
+		$("#form-bizDeviceUnit-add").validate({
+			rules:{
+				xxxx:{
+					required:true,
+				},
+			},
+			focusCleanup: true
+		});
+		
+		function submitHandler() {
+	        if ($.validate.form()) {
+                var data = $('#form-bizDeviceUnit-add').serializeArray();
+                var status = $("input[id='unitStatus']").is(':checked') == true ? 0 : 1;
+                data.push({"name": "unitStatus", "value": status});
+	            $.operate.save(prefix + "/add", data);
+	        }
+	    }
+	</script>
+</body>
+</html>

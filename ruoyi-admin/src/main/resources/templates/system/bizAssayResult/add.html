@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" >
+<head>
+	<th:block th:include="include :: header('新增化验结果')" />
+</head>
+<body class="white-bg">
+    <div class="wrapper wrapper-content animated fadeInRight ibox-content">
+        <form class="form-horizontal m" id="form-bizAssayResult-add">
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">化验结果编号：</label>
+				<div class="col-sm-8">
+					<input id="resultNo" name="resultNo" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">化验结果唯一ID：</label>
+				<div class="col-sm-8">
+					<input id="reportId" name="reportId" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">化验设备：</label>
+				<div class="col-sm-8">
+					<input id="resultDevice" name="resultDevice" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">化验水厂：</label>
+				<div class="col-sm-8">
+					<input id="resultWorks" name="resultWorks" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">化验类型：</label>
+				<div class="col-sm-8">
+					<input id="resultType" name="resultType" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">送检日期：</label>
+				<div class="col-sm-8">
+					<input id="assayDate" name="assayDate" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">化验开始时间：</label>
+				<div class="col-sm-8">
+					<input id="beginTime" name="beginTime" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">化验结束时间：</label>
+				<div class="col-sm-8">
+					<input id="endTime" name="endTime" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">化验方法id：</label>
+				<div class="col-sm-8">
+					<input id="methodId" name="methodId" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">化验参数id：</label>
+				<div class="col-sm-8">
+					<input id="parameterId" name="parameterId" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">化验曲线id：</label>
+				<div class="col-sm-8">
+					<input id="curveId" name="curveId" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">入水COD数值：</label>
+				<div class="col-sm-8">
+					<input id="inCod" name="inCod" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">入水总磷（TP）数值：</label>
+				<div class="col-sm-8">
+					<input id="inTp" name="inTp" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">入水总氮（TN）数值：</label>
+				<div class="col-sm-8">
+					<input id="inTn" name="inTn" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">入水氨氮（NH3）COD数值：</label>
+				<div class="col-sm-8">
+					<input id="inNh3" name="inNh3" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">出水COD数值：</label>
+				<div class="col-sm-8">
+					<input id="outCod" name="outCod" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">出水总磷（TP）数值：</label>
+				<div class="col-sm-8">
+					<input id="outTp" name="outTp" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">出水总氮（TN）数值：</label>
+				<div class="col-sm-8">
+					<input id="outTn" name="outTn" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">出水氨氮（NH3）COD数值：</label>
+				<div class="col-sm-8">
+					<input id="outNh3" name="outNh3" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">化验状态（0：有效；1：无效）：</label>
+				<div class="col-sm-8">
+					<input id="resultStatus" name="resultStatus" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">告警状态（0：无告警；1：有告警）：</label>
+				<div class="col-sm-8">
+					<input id="resultAlert" name="resultAlert" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">创建时间：</label>
+				<div class="col-sm-8">
+					<input id="createTime" name="createTime" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">创建人：</label>
+				<div class="col-sm-8">
+					<input id="createBy" name="createBy" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">更新时间：</label>
+				<div class="col-sm-8">
+					<input id="updateTime" name="updateTime" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">更新人：</label>
+				<div class="col-sm-8">
+					<input id="updateBy" name="updateBy" class="form-control" type="text">
+				</div>
+			</div>
+		</form>
+	</div>
+    <div th:include="include::footer"></div>
+    <script type="text/javascript">
+		var prefix = ctx + "system/bizAssayResult"
+		$("#form-bizAssayResult-add").validate({
+			rules:{
+				xxxx:{
+					required:true,
+				},
+			},
+			focusCleanup: true
+		});
+		
+		function submitHandler() {
+	        if ($.validate.form()) {
+	            $.operate.save(prefix + "/add", $('#form-bizAssayResult-add').serialize());
+	        }
+	    }
+	</script>
+</body>
+</html>

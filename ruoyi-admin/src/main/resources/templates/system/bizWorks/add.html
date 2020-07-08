@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" >
+<head>
+	<th:block th:include="include :: header('新增水厂')" />
+</head>
+<body class="white-bg">
+    <div class="wrapper wrapper-content animated fadeInRight ibox-content">
+        <form class="form-horizontal m" id="form-bizWorks-add">
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">水厂编号：</label>
+				<div class="col-sm-6">
+					<input id="worksNo" name="worksNo" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">水厂名称：</label>
+				<div class="col-sm-6">
+					<input id="worksName" name="worksName" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">省：</label>
+				<div class="col-sm-6">
+					<input id="worksProvince" name="worksProvince" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">市：</label>
+				<div class="col-sm-6">
+					<input id="worksCity" name="worksCity" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">区：</label>
+				<div class="col-sm-6">
+					<input id="worksArea" name="worksArea" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">详细地址：</label>
+				<div class="col-sm-6">
+					<input id="worksAddress" name="worksAddress" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">设备数量：</label>
+				<div class="col-sm-6">
+					<input id="worksCount" name="worksCount" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">水厂类型：</label>
+				<div class="col-sm-6">
+					<select name="worksType" class="form-control m-b" th:with="type=${@dict.getType('works_type')}">
+						<option th:each="dict : ${type}" th:text="${dict.dictLabel}" th:value="${dict.dictValue}"></option>
+					</select>
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">水厂所属集团：</label>
+				<div class="col-sm-6">
+					<input id="worksBelong" name="worksBelong" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">水厂状态：</label>
+				<div class="col-sm-6">
+					<div class="onoffswitch">
+						<input type="checkbox" th:checked="true" class="onoffswitch-checkbox" id="worksStatus">
+						<label class="onoffswitch-label" for="worksStatus">
+							<span class="onoffswitch-inner"></span>
+							<span class="onoffswitch-switch"></span>
+						</label>
+					</div>
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">水厂联系人：</label>
+				<div class="col-sm-6">
+					<input id="worksMaintainer" name="worksMaintainer" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">联系电话：</label>
+				<div class="col-sm-6">
+					<input id="worksTel" name="worksTel" class="form-control" type="text">
+				</div>
+			</div>
+
+		</form>
+	</div>
+    <div th:include="include::footer"></div>
+    <script type="text/javascript">
+		var prefix = ctx + "system/bizWorks"
+		$("#form-bizWorks-add").validate({
+			rules:{
+				xxxx:{
+					required:true,
+				},
+			},
+			focusCleanup: true
+		});
+		
+		function submitHandler() {
+	        if ($.validate.form()) {
+                var data = $("#form-bizWorks-add").serializeArray();
+                var status = $("input[id='worksStatus']").is(':checked') == true ? 0 : 1;
+                data.push({"name": "worksStatus", "value": status});
+	            $.operate.save(prefix + "/add", data);
+	        }
+	    }
+	</script>
+</body>
+</html>

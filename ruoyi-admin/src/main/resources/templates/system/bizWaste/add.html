@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" >
+<head>
+	<th:block th:include="include :: header('新增废液')" />
+</head>
+<body class="white-bg">
+    <div class="wrapper wrapper-content animated fadeInRight ibox-content">
+        <form class="form-horizontal m" id="form-bizWaste-add">
+			<input name="wasteWorks" type="hidden" id="treeId"/>
+			<div class="form-group">
+				<label class="col-sm-3 control-label">废液编号：</label>
+				<div class="col-sm-8">
+					<input id="wasteNo" name="wasteNo" class="form-control required" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">废液名称：</label>
+				<div class="col-sm-8">
+					<input id="wasteName" name="wasteName" class="form-control required" type="text">
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label">废液类型：</label>
+				<div class="col-sm-8">
+					<input id="wasteType" name="wasteType" class="form-control required" type="text">
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label">产生设备：</label>
+				<div class="col-sm-6">
+					<select id="wasteDevice" name="wasteDevice" class="form-control required"  th:with="type=${@bizDevice.getBizDevice()}" >
+						<option value="">请选择</option>
+						<option th:each="bizDevice : ${type}" th:text="${bizDevice.deviceName}" th:value="${bizDevice.deviceId}"></option>
+					</select>
+				</div>
+			</div>
+
+
+			<div class="form-group">
+				<label class="col-sm-3 control-label"><span style="color: red; ">*</span>所属水厂：</label>
+				<div class="col-sm-6">
+					<div class="input-group">
+						<input name="worksName" onclick="selectWorkTree()" id="treeName" type="text" placeholder="请选择所属水厂" class="form-control " >
+						<span class="input-group-addon"><i class="fa fa-search"></i></span>
+					</div>
+				</div>
+			</div>
+
+			<div class="form-group">
+				<label class="col-sm-3 control-label">废液状态：</label>
+				<div class="col-sm-8">
+					<div class="onoffswitch">
+						<input type="checkbox" th:checked="true" class="onoffswitch-checkbox" id="wasteStatus">
+						<label class="onoffswitch-label" for="wasteStatus">
+							<span class="onoffswitch-inner"></span>
+							<span class="onoffswitch-switch"></span>
+						</label>
+					</div>
+				</div>
+			</div>
+
+			<div class="form-group">
+				<label class="col-sm-3 control-label">废液总量：</label>
+				<div class="col-sm-8">
+					<input id="wasteTotal" name="wasteTotal" class="form-control required" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">处理时间：</label>
+				<div class="col-sm-8">
+					<input type="text" class="time-input-all form-control" id="repairTime" placeholder="处理时间" name="repairTime" />
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label">维护人：</label>
+				<div class="col-sm-8">
+					<input id="repairBy" name="repairBy" class="form-control" type="text">
+				</div>
+			</div>
+
+		</form>
+	</div>
+    <div th:include="include::footer"></div>
+    <script type="text/javascript">
+		var prefix = ctx + "system/bizWaste"
+		$("#form-bizWaste-add").validate({
+			rules:{
+				xxxx:{
+					required:true,
+				},
+			},
+			focusCleanup: true
+		});
+
+        /*水厂药剂管理-新增-选择水厂树*/
+        function selectWorkTree() {
+            var treeId = $("#treeId").val();
+            var worksId = $.common.isEmpty(treeId) ? "100" : $("#treeId").val();
+            var url = ctx + "system/bizWaterWork/selectWorksTree/" + worksId;
+            var options = {
+                title: '选择水厂',
+                width: "380",
+                url: ctx + "system/bizWaterWork/selectWorksTree/" + worksId,
+                callBack: doSubmit
+            };
+            $.modal.openOptions(options);
+        }
+
+        function doSubmit(index, layero){
+            var tree = layero.find("iframe")[0].contentWindow.$._tree;
+            if ($.tree.notAllowParents(tree)) {
+                var body = layer.getChildFrame('body', index);
+                $("#treeId").val(body.find('#treeId').val());
+                $("#treeName").val(body.find('#treeName').val());
+                layer.close(index);
+            }
+        }
+		
+		function submitHandler() {
+	        if ($.validate.form()) {
+                var data = $("#form-bizWaste-add").serializeArray();
+                var wasteStatus = $("input[id='wasteStatus']").is(':checked') == true ? 0 : 1;
+                data.push({"name": "wasteStatus", "value": wasteStatus});
+	            $.operate.save(prefix + "/add", data);
+	        }
+	    }
+	</script>
+</body>
+</html>

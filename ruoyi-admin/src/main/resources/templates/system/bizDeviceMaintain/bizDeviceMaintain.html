@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<head>
+	<th:block th:include="include :: header('设备维护列表')" />
+</head>
+<body class="gray-bg">
+    
+     <div class="container-div">
+		<div class="row">
+			<div class="col-sm-12 search-collapse">
+				<form id="formId">
+					<div class="select-list">
+						<ul>
+							<li>
+								维护设备：<select name="maintainDevice" th:with="type=${@bizDevice.selectOnlydeviceList()}">
+									<option value="">所有</option>
+									<option th:each="bizDevice : ${type}" th:text="${bizDevice.deviceName}" th:value="${bizDevice.deviceId}"></option>
+								</select>
+							</li>
+
+							<li>
+								所在水厂：<select name="maintainWorks" th:with="type=${@bizWorks.getOnlyWorks()}">
+									<option value="">所有</option>
+									<option th:each="bizWorks : ${type}" th:text="${bizWorks.worksName}" th:value="${bizWorks.worksId}"></option>
+								</select>
+							</li>
+
+							<li class="select-time">
+								<label>维护日期： </label>
+								<input type="text" class="time-input" id="maintainDate" placeholder="维护日期" name="maintainDate"/>
+							</li>
+
+							<li>
+								<a class="btn btn-primary btn-rounded btn-sm" onclick="$.table.search()"><i class="fa fa-search"></i>&nbsp;搜索</a>
+								<a class="btn btn-warning btn-rounded btn-sm" onclick="$.form.reset()"><i class="fa fa-refresh"></i>&nbsp;重置</a>
+							</li>
+						</ul>
+					</div>
+				</form>
+			</div>
+			
+	        <div class="btn-group-sm" id="toolbar" role="group">
+				<a class="btn btn-success" onclick="$.operate.add()" shiro:hasPermission="system:bizDeviceMaintain:add">
+					<i class="fa fa-plus"></i> 添加
+				</a>
+				<!--<a class="btn btn-primary btn-edit disabled" onclick="$.operate.edit()" shiro:hasPermission="system:bizDeviceMaintain:edit">-->
+					<!--<i class="fa fa-edit"></i> 修改-->
+				<!--</a>-->
+				<!--<a class="btn btn-danger btn-del btn-del disabled" onclick="$.operate.removeAll()" shiro:hasPermission="system:bizDeviceMaintain:remove">-->
+					<!--<i class="fa fa-remove"></i> 删除-->
+				<!--</a>-->
+				<!--<a class="btn btn-warning" onclick="$.table.exportExcel()" shiro:hasPermission="system:bizDeviceMaintain:export">-->
+						<!--<i class="fa fa-download"></i> 导出-->
+				 <!--</a>-->
+			</div>
+			<div class="col-sm-12 select-table table-striped">
+				<table id="bootstrap-table" data-mobile-responsive="true"></table>
+			</div>
+		</div>
+	</div>
+    <div th:include="include :: footer"></div>
+    <script th:inline="javascript">
+        var editFlag = [[${@permission.hasPermi('system:bizDeviceMaintain:edit')}]];
+        var removeFlag = [[${@permission.hasPermi('system:bizDeviceMaintain:remove')}]];
+        var prefix = ctx + "system/bizDeviceMaintain";
+
+        $(function() {
+            var options = {
+                url: prefix + "/list",
+                createUrl: prefix + "/add",
+                updateUrl: prefix + "/edit/{id}",
+                removeUrl: prefix + "/remove",
+				exportUrl: prefix + "/export",
+                modalName: "设备维护",
+		        showExport: true,
+                columns: [{
+		            checkbox: true
+		        },
+				{
+					field : 'maintainId', 
+					title : '设备维护id',
+					visible: false
+				},
+				{
+					field : 'device.deviceName',
+					title : '维护设备',
+					sortable: true,
+                    formatter: function(value, item, index) {
+                        var devicename="";
+                        if(item.device!=null){
+                            devicename = item.device.deviceName
+                        }
+                        return '<span class="label label-success">'+devicename+'</span>';
+                    }
+				},
+				{
+					field : 'works.worksName',
+					title : '所属水厂',
+					sortable: true,
+                    formatter: function(value, item, index) {
+                        var worksname="";
+                        if(item.works!=null){
+                            worksname = item.works.worksName
+                        }
+                        return '<span class="label label-success">'+worksname+'</span>';
+                    }
+				},
+				{
+					field : 'maintainCity', 
+					title : '所在城市',
+					sortable: true
+				},
+				{
+					field : 'maintainType',
+					title : '维护类型',
+					sortable: true
+				},
+				{
+					field : 'maintainReason',
+					title : '维护原因',
+					sortable: true
+				},
+//				{
+//					field : 'maintainCount',
+//					title : '维护数量',
+//					sortable: true,
+//                    formatter: function(value, item, index) {
+//                        return '<span >1</span>';
+//                    }
+//				},
+				{
+					field : 'maintainResult', 
+					title : '维护结果',
+					sortable: true,
+                    formatter: function(value, row, index) {
+                        var maintainResult="";
+                        if (row.maintainResult == 0) {
+                            return '<span class="label label-success">维护成功</span>';
+                        } else if (row.maintainResult == 1){
+                            return '<span class="label label-warning">维护中</span>';
+                        }
+                    }
+				},
+				{
+					field : 'maintainUser',
+					title : '维护人',
+					sortable: true
+				},
+				{
+					field : 'maintainTel',
+					title : '联系方式',
+					sortable: true
+				},
+				{
+					field : 'maintainDate', 
+					title : '维护日期',
+					sortable: true
+				},
+		        {
+		            title: '操作',
+		            align: 'center',
+		            formatter: function(value, row, index) {
+		            	var actions = [];
+		            	if(row.maintainResult == 1){
+                            actions.push('<a class="btn btn-primary btn-xs ' + editFlag + '" href="#" onclick="endmaintain(\'' + row.maintainId + '\')"><i class="fa fa-edit"></i>维护完成</a> ');
+						}
+		            	actions.push('<a class="btn btn-success btn-xs ' + editFlag + '" href="#" onclick="$.operate.edit(\'' + row.maintainId + '\')"><i class="fa fa-edit"></i>编辑</a> ');
+                        actions.push('<a class="btn btn-danger btn-xs ' + removeFlag + '" href="#" onclick="$.operate.remove(\'' + row.maintainId + '\')"><i class="fa fa-remove"></i>删除</a>');
+						return actions.join('');
+		            }
+		        }]
+            };
+            $.table.init(options);
+        });
+
+        function endmaintain(maintainId){
+            var d = {};
+            d.maintainId = maintainId;
+            $.ajax({
+                url: prefix + "/endmaintain",
+                data: JSON.stringify(d),
+                type: "POST",
+                cache: false,
+                contentType: "application/json;charset=utf-8",
+                processData: false,
+//            dataType: 'json',
+                success: function(result) {
+                    $.table.search()
+                },
+                error: function(error) {
+                    alert("设备维护完成失败");
+                }
+            })
+		}
+    </script>
+</body>
+</html>

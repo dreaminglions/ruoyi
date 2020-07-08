@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<head>
+	<th:block th:include="include :: header('化验结果列表')" />
+</head>
+<body class="gray-bg">
+
+<div class="wrapper wrapper-content animated fadeInRight ibox-content">
+	<form class="form-horizontal m" id="form-assayCurve-edit" >
+		<div class="form-group">
+			<label class="col-sm-3 control-label">高COD波长1：</label>
+			<div class="col-sm-3">
+				<label class="control-label" id="in_cod_wave1"></label>
+			</div>
+			<label class="col-sm-3 control-label">高COD波长2：</label>
+			<div class="col-sm-3">
+				<label class="control-label" id="in_cod_wave2"></label>
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="col-sm-3 control-label">高COD曲线K：</label>
+			<div class="col-sm-3">
+				<label class="control-label" id="in_cod_k"></label>
+			</div>
+			<label class="col-sm-3 control-label">高COD曲线B：</label>
+			<div class="col-sm-3">
+				<label class="control-label" id="in_cod_b"></label>
+			</div>
+		</div>
+
+		<div class="form-group">
+			<label class="col-sm-3 control-label">低COD波长1：</label>
+			<div class="col-sm-3">
+				<label class="control-label" id="out_cod_wave1"></label>
+			</div>
+			<label class="col-sm-3 control-label">低COD波长2：</label>
+			<div class="col-sm-3">
+				<label class="control-label" id="out_cod_wave2"></label>
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="col-sm-3 control-label">低COD曲线K：</label>
+			<div class="col-sm-3">
+				<label class="control-label" id="out_cod_k"></label>
+			</div>
+			<label class="col-sm-3 control-label">低COD曲线B：</label>
+			<div class="col-sm-3">
+				<label class="control-label" id="out_cod_b"></label>
+			</div>
+		</div>
+
+		<div class="form-group">
+			<label class="col-sm-3 control-label">总磷波长1：</label>
+			<div class="col-sm-3">
+				<label class="control-label" id="tp_wave1"></label>
+			</div>
+			<label class="col-sm-3 control-label">总磷波长2：</label>
+			<div class="col-sm-3">
+				<label class="control-label" id="tp_wave2"></label>
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="col-sm-3 control-label">总磷曲线K：</label>
+			<div class="col-sm-3">
+				<label class="control-label" id="tp_k"></label>
+			</div>
+			<label class="col-sm-3 control-label">总磷曲线B：</label>
+			<div class="col-sm-3">
+				<label class="control-label" id="tp_b"></label>
+			</div>
+		</div>
+
+		<div class="form-group">
+			<label class="col-sm-3 control-label">总氮波长1：</label>
+			<div class="col-sm-3">
+				<label class="control-label" id="tn_wave1"></label>
+			</div>
+			<label class="col-sm-3 control-label">总氮波长2：</label>
+			<div class="col-sm-3">
+				<label class="control-label" id="tn_wave2"></label>
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="col-sm-3 control-label">总氮曲线K：</label>
+			<div class="col-sm-3">
+				<label class="control-label" id="tn_k"></label>
+			</div>
+			<label class="col-sm-3 control-label">总氮曲线B：</label>
+			<div class="col-sm-3">
+				<label class="control-label" id="tn_b"></label>
+			</div>
+		</div>
+
+		<div class="form-group">
+			<label class="col-sm-3 control-label">氨氮波长1：</label>
+			<div class="col-sm-3">
+				<label class="control-label" id="nh_wave1"></label>
+			</div>
+			<label class="col-sm-3 control-label">氨氮波长2：</label>
+			<div class="col-sm-3">
+				<label class="control-label" id="nh_wave2"></label>
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="col-sm-3 control-label">氨氮曲线K：</label>
+			<div class="col-sm-3">
+				<label class="control-label" id="nh_k"></label>
+			</div>
+			<label class="col-sm-3 control-label">氨氮曲线B：</label>
+			<div class="col-sm-3">
+				<label class="control-label" id="nh_b"></label>
+			</div>
+		</div>
+
+	</form>
+</div>
+
+    <div th:include="include :: footer"></div>
+
+	 <script th:src="@{/water/view02/js/echarts-all.js}"></script>
+
+    <script th:inline="javascript">
+        var editFlag = [[${@permission.hasPermi('system:bizAssayResult:edit')}]];
+        var removeFlag = [[${@permission.hasPermi('system:bizAssayResult:remove')}]];
+        var prefix = ctx + "system/bizAssayResult";
+
+        $(document).ready(function(){
+            var reportId = [[${reportId}]];
+            var formdata = {};
+            formdata.reportId = reportId;
+            $.ajax({
+                url: prefix + "/getAssayCurve",
+                data: JSON.stringify(formdata),
+                type: "POST",
+                cache: false,
+                contentType: "application/json;charset=utf-8",
+                processData: false,
+                success: function(result) {
+                    var obj = eval('('+result.resultdata+')');
+                    initLine(obj);
+                },
+                error: function(error) {
+                }
+            });
+		});
+
+
+		function initLine(obj){
+            var resultdate =obj.resultdate;
+            $("#in_cod_wave1").html(obj.in_cod_wave1);
+            $("#in_cod_wave2").html(obj.in_cod_wave2);
+            $("#in_cod_k").html(obj.in_cod_k);
+            $("#in_cod_b").html(obj.in_cod_b);
+
+            $("#out_cod_wave1").html(obj.out_cod_wave1);
+            $("#out_cod_wave2").html(obj.out_cod_wave2);
+            $("#out_cod_k").html(obj.out_cod_k);
+            $("#out_cod_b").html(obj.out_cod_b);
+
+            $("#tp_wave1").html(obj.tp_wave1);
+            $("#tp_wave2").html(obj.tp_wave2);
+            $("#tp_k").html(obj.tp_k);
+            $("#tp_b").html(obj.tp_b);
+
+            $("#tn_wave1").html(obj.tn_wave1);
+            $("#tn_wave2").html(obj.tn_wave2);
+            $("#tn_k").html(obj.tn_k);
+            $("#tn_b").html(obj.tn_b);
+
+            $("#nh_wave1").html(obj.nh_wave1);
+            $("#nh_wave2").html(obj.nh_wave2);
+            $("#nh_k").html(obj.nh_k);
+            $("#nh_b").html(obj.nh_b);
+
+		}
+
+
+
+    </script>
+</body>
+</html>

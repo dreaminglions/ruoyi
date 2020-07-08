@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" >
+<head>
+	<th:block th:include="include :: header('新增设备维护')" />
+</head>
+<body class="white-bg">
+    <div class="wrapper wrapper-content animated fadeInRight ibox-content">
+        <form class="form-horizontal m" id="form-bizDeviceMaintain-add">
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">维护设备：</label>
+				<div class="col-sm-6">
+					<select id="maintainDevice" name="maintainDevice" class="form-control required"  th:with="type=${@bizDevice.getBizDeviceMaintain()}" >
+						<option value="">请选择</option>
+						<option th:each="bizDevice : ${type}" th:text="${bizDevice.deviceName}" th:value="${bizDevice.deviceId}"></option>
+					</select>
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">所在水厂：</label>
+				<div class="col-sm-6">
+					<select id="maintainWorks"  name="maintainWorks" class="form-control required"  th:with="type=${@bizWorks.getOnlyWorks()}"  >
+						<option value="">请选择</option>
+						<option th:each="bizWorks : ${type}" th:text="${bizWorks.worksName}" th:value="${bizWorks.worksId}"></option>
+					</select>
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">所在城市：</label>
+				<div class="col-sm-6">
+					<input id="maintainCity" name="maintainCity" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label">维护类型：</label>
+				<div class="col-sm-8">
+					<label class="radio-box"> <input type="radio" name="maintainType" value="0" checked/> 设备维护 </label>
+					<label class="radio-box"> <input type="radio" name="maintainType" value="1" /> 药液维护 </label>
+					<label class="radio-box"> <input type="radio" name="maintainType" value="2" /> 试管维护 </label>
+					<label class="radio-box"> <input type="radio" name="maintainType" value="3" /> 部件维护 </label>
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">维护原因：</label>
+				<div class="col-sm-6">
+					<input id="maintainReason" name="maintainReason" class="form-control required" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">维护结果：</label>
+				<div class="col-sm-8">
+					<label class="radio-box"> <input type="radio" name="maintainResult" value="1" checked/> 维护中 </label>
+					<label class="radio-box"> <input type="radio" name="maintainResult" value="0" /> 维护成功 </label>
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">维护日期：</label>
+				<div class="col-sm-6">
+					<input id="maintainDate" name="maintainDate" class="form-control required" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">负责人：</label>
+				<div class="col-sm-6">
+					<input id="maintainUser" name="maintainUser" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">联系电话：</label>
+				<div class="col-sm-6">
+					<input id="maintainTel" name="maintainTel" class="form-control" type="text">
+				</div>
+			</div>
+
+		</form>
+	</div>
+    <div th:include="include::footer"></div>
+    <script type="text/javascript">
+		var prefix = ctx + "system/bizDeviceMaintain"
+		$("#form-bizDeviceMaintain-add").validate({
+			rules:{
+				xxxx:{
+					required:true,
+				},
+			},
+			focusCleanup: true
+		});
+		
+		function submitHandler() {
+	        if ($.validate.form()) {
+	            $.operate.save(prefix + "/add", $('#form-bizDeviceMaintain-add').serialize());
+	        }
+	    }
+	</script>
+</body>
+</html>

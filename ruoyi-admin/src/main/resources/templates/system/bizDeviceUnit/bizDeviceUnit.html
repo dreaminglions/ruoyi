@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<head>
+	<th:block th:include="include :: header('设备部件列表')" />
+</head>
+<body class="gray-bg">
+    
+     <div class="container-div">
+		<div class="row">
+			<div class="col-sm-12 search-collapse">
+				<form id="formId">
+					<div class="select-list">
+						<ul>
+
+							<li>
+								部件编号：<input type="text" name="unitNo"/>
+							</li>
+
+							<li>
+								部件名称：<input type="text" name="unitName"/>
+							</li>
+
+							<li>
+								所属设备：<select name="unitDevice" th:with="type=${@bizDevice.getBizDevice()}">
+								<option value="">所有</option>
+								<option th:each="bizDevice : ${type}" th:text="${bizDevice.deviceName}" th:value="${bizDevice.deviceId}"></option>
+							</select>
+							</li>
+
+							<li>
+								<a class="btn btn-primary btn-rounded btn-sm" onclick="$.table.search()"><i class="fa fa-search"></i>&nbsp;搜索</a>
+								<a class="btn btn-warning btn-rounded btn-sm" onclick="$.form.reset()"><i class="fa fa-refresh"></i>&nbsp;重置</a>
+							</li>
+						</ul>
+					</div>
+				</form>
+			</div>
+			
+	        <div class="btn-group-sm" id="toolbar" role="group">
+				<a class="btn btn-success" onclick="$.operate.add()" shiro:hasPermission="system:bizDeviceUnit:add">
+					<i class="fa fa-plus"></i> 添加
+				</a>
+				<!--<a class="btn btn-primary btn-edit disabled" onclick="$.operate.edit()" shiro:hasPermission="system:bizDeviceUnit:edit">-->
+					<!--<i class="fa fa-edit"></i> 修改-->
+				<!--</a>-->
+				<!--<a class="btn btn-danger btn-del btn-del disabled" onclick="$.operate.removeAll()" shiro:hasPermission="system:bizDeviceUnit:remove">-->
+					<!--<i class="fa fa-remove"></i> 删除-->
+				<!--</a>-->
+				<a class="btn btn-warning" onclick="$.table.exportExcel()" shiro:hasPermission="system:bizDeviceUnit:export">
+						<i class="fa fa-download"></i> 导出
+				 </a>
+				<!--<a class="btn btn-info" onclick="$.table.importExcel()" shiro:hasPermission="system:user:import">-->
+					<!--<i class="fa fa-upload"></i> 打印-->
+				<!--</a>-->
+			</div>
+			<div class="col-sm-12 select-table table-striped">
+				<table id="bootstrap-table" data-mobile-responsive="true"></table>
+			</div>
+		</div>
+	</div>
+    <div th:include="include :: footer"></div>
+    <script th:inline="javascript">
+        var editFlag = [[${@permission.hasPermi('system:bizDeviceUnit:edit')}]];
+        var removeFlag = [[${@permission.hasPermi('system:bizDeviceUnit:remove')}]];
+        var prefix = ctx + "system/bizDeviceUnit";
+
+        $(function() {
+            var options = {
+                url: prefix + "/list",
+                createUrl: prefix + "/add",
+                updateUrl: prefix + "/edit/{id}",
+                removeUrl: prefix + "/remove",
+				exportUrl: prefix + "/export",
+                modalName: "设备部件",
+		        showExport: true,
+                columns: [{
+		            checkbox: true
+		        },
+				{
+					field : 'unitId', 
+					title : '部件ID',
+					visible: false
+				},
+				{
+					field : 'unitNo', 
+					title : '部件编号',
+					sortable: true
+				},
+				{
+					field : 'unitName', 
+					title : '部件名称',
+					sortable: true
+				},
+				{
+					field : 'unitModel', 
+					title : '部件型号',
+					sortable: true
+				},
+				{
+					field : 'device.deviceName',
+					title : '所属设备',
+					sortable: true,
+                    formatter: function(value, item, index) {
+                        var devicename="";
+                        if(item.device!=null){
+                            devicename = item.device.deviceName
+                        }
+                        return '<span class="label label-success">'+devicename+'</span>';
+                    }
+				},
+				{
+					field : 'works.worksName',
+					title : '所属水厂',
+					sortable: true,
+					formatter: function(value, item, index) {
+                        var worksname="";
+                        if(item.works!=null){
+                            worksname = item.works.worksName
+                        }
+                        return '<span class="label label-success">'+worksname+'</span>';
+					}
+				},
+				{
+					field : 'unitCount', 
+					title : '部件数量',
+					sortable: true
+				},
+				{
+					field : 'unitNum',
+					title : '部件使用次数',
+					sortable: true,
+                    formatter: function (value, row, index) {
+                        return '<i class=\"btn btn-success btn-xs\" >'+row.unitNum +'</i> ';
+                    }
+				},
+				{
+					field : 'unitStatus', 
+					title : '部件状态',
+					sortable: true,
+                    formatter: function (value, row, index) {
+                        if (row.unitStatus == 0) {
+                            return '<i class=\"btn btn-success btn-xs\" >正常</i> ';
+                        } else {
+                            return '<i class=\"btn btn-danger btn-xs\" >停用</i> ';
+                        }
+                    }
+				},
+				{
+					field : 'useTime', 
+					title : '投入使用时间',
+					sortable: true
+				},
+//				{
+//					field : 'lastRepairTime',
+//					title : '上次维护时间',
+//					sortable: true
+//				},
+		        {
+		            title: '操作',
+		            align: 'center',
+		            formatter: function(value, row, index) {
+		            	var actions = [];
+		            	actions.push('<a class="btn btn-success btn-xs ' + editFlag + '" href="#" onclick="$.operate.edit(\'' + row.unitId + '\')"><i class="fa fa-edit"></i>编辑</a> ');
+                        actions.push('<a class="btn btn-danger btn-xs ' + removeFlag + '" href="#" onclick="$.operate.remove(\'' + row.unitId + '\')"><i class="fa fa-remove"></i>删除</a>');
+						return actions.join('');
+		            }
+		        }]
+            };
+            $.table.init(options);
+        });
+    </script>
+</body>
+</html>

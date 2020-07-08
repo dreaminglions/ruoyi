@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" >
+<head>
+	<th:block th:include="include :: header('新增药剂')" />
+</head>
+<body class="white-bg">
+    <div class="wrapper wrapper-content animated fadeInRight ibox-content">
+        <form class="form-horizontal m" id="form-bizAgentia-add">
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">药剂编号：</label>
+				<div class="col-sm-6">
+					<input id="agentiaNo" name="agentiaNo" class="form-control required" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">药剂名称：</label>
+				<div class="col-sm-6">
+					<input id="agentiaName" name="agentiaName" class="form-control required" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">所属设备：</label>
+				<div class="col-sm-6">
+					<select id="agentiaDevice" name="agentiaDevice" class="form-control required"  th:with="type=${@bizDevice.getBizDevice()}" >
+						<option value="">请选择</option>
+						<option th:each="bizDevice : ${type}" th:text="${bizDevice.deviceName}" th:value="${bizDevice.deviceId}"></option>
+					</select>
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">药剂总量：</label>
+				<div class="col-sm-6">
+					<input id="agentiaTotal" name="agentiaTotal" class="form-control required" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">药剂剩余量：</label>
+				<div class="col-sm-6">
+					<input id="agentiaRemain" name="agentiaRemain" class="form-control required" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">药剂告警量：</label>
+				<div class="col-sm-6">
+					<input id="agentiaAlert" name="agentiaAlert" class="form-control required" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">药剂类型：</label>
+				<div class="col-sm-6">
+					<input id="agentiaType" name="agentiaType" class="form-control required" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">药剂厂家：</label>
+				<div class="col-sm-6">
+					<input id="agentiaMaker" name="agentiaMaker" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">药剂状态：</label>
+				<div class="col-sm-6">
+					<div class="radio-box" th:each="dict : ${@dict.getType('sys_normal_disable')}">
+						<input type="radio" th:id="${dict.dictCode}" name="agentiaStatus" th:value="${dict.dictValue}" th:checked="${dict.isDefault == 'Y' ? true : false}">
+						<label th:for="${dict.dictCode}" th:text="${dict.dictLabel}"></label>
+					</div>
+					<!--<input id="agentiaStatus" name="agentiaStatus" class="form-control required" type="text">-->
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">投入使用时间：</label>
+				<div class="col-sm-6">
+					<input id="useTime" name="useTime" class="form-control required" type="text">
+				</div>
+			</div>
+			<!--<div class="form-group">	-->
+				<!--<label class="col-sm-3 control-label">上次维护时间：</label>-->
+				<!--<div class="col-sm-6">-->
+					<!--<input id="lastRepairTime" name="lastRepairTime" class="form-control" type="text">-->
+				<!--</div>-->
+			<!--</div>-->
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">维护时间：</label>
+				<div class="col-sm-6">
+					<input id="repairTime" name="repairTime" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">维护人：</label>
+				<div class="col-sm-6">
+					<input id="repairBy" name="repairBy" class="form-control" type="text">
+				</div>
+			</div>
+
+		</form>
+	</div>
+    <div th:include="include::footer"></div>
+    <script type="text/javascript">
+		var prefix = ctx + "system/bizAgentia"
+		$("#form-bizAgentia-add").validate({
+			rules:{
+				xxxx:{
+					required:true,
+				},
+			},
+			focusCleanup: true
+		});
+		
+		function submitHandler() {
+	        if ($.validate.form()) {
+	            $.operate.save(prefix + "/add", $('#form-bizAgentia-add').serialize());
+	        }
+	    }
+	</script>
+</body>
+</html>

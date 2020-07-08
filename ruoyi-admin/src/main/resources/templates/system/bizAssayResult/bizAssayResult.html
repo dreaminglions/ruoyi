@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<head>
+	<th:block th:include="include :: header('化验结果列表')" />
+</head>
+<body class="gray-bg" id="aaa">
+    
+     <div class="container-div">
+		<div class="row">
+			<div class="col-sm-12 search-collapse">
+				<form id="formId">
+					<div class="select-list">
+						<ul>
+							<li>
+								化验编号：<input type="text" name="resultNo"/>
+							</li>
+
+							<li>
+								化验设备：<select name="resultDevice" th:with="type=${@bizDevice.selectOnlydeviceList()}">
+									<option value="">所有</option>
+									<option th:each="bizDevice : ${type}" th:text="${bizDevice.deviceName}" th:value="${bizDevice.deviceId}"></option>
+								</select>
+							</li>
+
+							<li>
+								化验水厂：<select name="resultWorks" th:with="type=${@bizWorks.getOnlyWorks()}">
+								<option value="">所有</option>
+								<option th:each="bizWorks : ${type}" th:text="${bizWorks.worksName}" th:value="${bizWorks.worksId}"></option>
+							</select>
+							</li>
+
+							<li class="select-time">
+								<label>化验日期： </label>
+								<input type="text" class="time-input" id="resultDate" placeholder="化验日期" name="resultDate"/>
+							</li>
+
+							<li>
+								<a class="btn btn-primary btn-rounded btn-sm" onclick="$.table.search()"><i class="fa fa-search"></i>&nbsp;搜索</a>
+								<a class="btn btn-warning btn-rounded btn-sm" onclick="$.form.reset()"><i class="fa fa-refresh"></i>&nbsp;重置</a>
+							</li>
+						</ul>
+					</div>
+				</form>
+			</div>
+			
+	        <div class="btn-group-sm" id="toolbar" role="group">
+				<!--<a class="btn btn-success" onclick="AssayReport()" shiro:hasPermission="system:bizAssayResult:list">-->
+					<!--<i class="fa fa-search"></i> 化验报表-->
+				<!--</a>-->
+				<!--<a class="btn btn-warning" onclick="$.table.exportExcel()" shiro:hasPermission="system:bizAssayResult:export">-->
+						<!--<i class="fa fa-download"></i> 导出-->
+				 <!--</a>-->
+
+				<!--<a class="btn btn-primary" onclick="Print()" shiro:hasPermission="system:bizAssayResult:export">-->
+					<!--<i class="fa fa-download"></i> 打印-->
+				<!--</a>-->
+
+				<!--<a class="btn btn-primary" onclick="Docx()" shiro:hasPermission="system:bizAssayResult:export">-->
+					<!--<i class="fa fa-download"></i> 文件-->
+				<!--</a>-->
+
+			</div>
+			<div class="col-sm-12 select-table table-striped">
+				<table id="bootstrap-table" data-mobile-responsive="true"></table>
+			</div>
+		</div>
+	</div>
+    <div th:include="include :: footer"></div>
+
+	 <!--<script language="javascript" th:src="@{/water/view02/jqprint/jquery-1.4.4.min.js}"></script>-->
+	 <script language="javascript" th:src="@{/water/view02/jqprint/jquery.jqprint-0.3.js}"></script>
+	 <script src="http://www.jq22.com/jquery/jquery-migrate-1.2.1.min.js";></script>
+
+    <script th:inline="javascript">
+
+        var editFlag = [[${@permission.hasPermi('system:bizAssayResult:edit')}]];
+        var removeFlag = [[${@permission.hasPermi('system:bizAssayResult:remove')}]];
+        var prefix = ctx + "system/bizAssayResult";
+
+        $(function() {
+            var options = {
+                url: prefix + "/list",
+                createUrl: prefix + "/add",
+                detailUrl: prefix + "/check/{id}",
+                updateUrl: prefix + "/edit/{id}",
+                removeUrl: prefix + "/remove",
+				exportUrl: prefix + "/export",
+                modalName: "化验结果",
+		        showExport: true,
+                columns: [{
+		            checkbox: true
+		        },
+				{
+					field : 'resultId', 
+					title : '化验结果ID',
+					visible: false
+				},
+				{
+					field : 'resultNo', 
+					title : '化验编号',
+					sortable: true
+				},
+				{
+					field : 'device.deviceName',
+					title : '化验设备',
+					sortable: true,
+                    formatter: function(value, item, index) {
+                        var devicename="";
+                        if(item.device!=null){
+                            devicename = item.device.deviceName
+                        }
+                        return '<span class="label label-success">'+devicename+'</span>';
+                    }
+				},
+				{
+					field : 'works.worksName',
+					title : '化验水厂',
+					sortable: true,
+                    formatter: function(value, item, index) {
+                        var worksname="";
+                        if(item.works!=null){
+                            worksname = item.works.worksName
+                        }
+                        return '<span class="label label-success">'+worksname+'</span>';
+                    }
+				},
+				{
+					field : 'outCod',
+					title : '出水COD',
+					sortable: true
+				},
+				{
+					field : 'outTp',
+					title : '出水TP',
+					sortable: true
+				},
+				{
+					field : 'outTn',
+					title : '出水TN',
+					sortable: true
+				},
+				{
+					field : 'outNh3',
+					title : '出水NH3',
+					sortable: true
+				},
+				{
+					field : 'resultDate',
+					title : '化验日期',
+					sortable: true
+				},
+//				{
+//					field : 'beginTime',
+//					title : '化验开始时间',
+//					sortable: true
+//				},
+//				{
+//					field : 'endTime',
+//					title : '化验结束时间',
+//					sortable: true
+//				},
+				{
+					field : 'resultStatus', 
+					title : '化验结果',
+					sortable: false,
+                    formatter: function (value, row, index) {
+						return resultStatus(row);
+					}
+				},
+				{
+					field : 'resultFault',
+					title : '故障状态',
+					sortable: false,
+                    formatter: function (value, row, index) {
+                        return resultFault(row);
+                    }
+				},
+		        {
+		            title: '操作',
+		            align: 'center',
+		            formatter: function(value, row, index) {
+		            	var actions = [];
+                        actions.push('<a class="btn btn-primary btn-xs ' + editFlag + '" href="#" onclick="$.operate.detail(\'' + row.resultId + '\')"><i class="fa fa-search"></i>查看</a> ');
+//                        actions.push('<a class="btn btn-warning btn-xs ' + editFlag + '" href="#" onclick="assayCurve(\'' + row.reportId + '\')"><i class="fa fa-search"></i>化验曲线</a> ');
+//                        actions.push('<a class="btn btn-success btn-xs ' + editFlag + '" href="#" onclick="$.operate.edit(\'' + row.resultId + '\')"><i class="fa fa-edit"></i>数值修改</a> ');
+//                        actions.push('<a class="btn btn-danger btn-xs ' + removeFlag + '" href="#" onclick="$.operate.remove(\'' + row.resultId + '\')"><i class="fa fa-remove"></i>删除</a>');
+                        actions.push('<a class="btn btn-warning btn-xs ' + editFlag + '" href="#" onclick="assayDetails(\'' + row.reportId + '\')"><i class="fa fa-search"></i>化验报告</a> ');
+						return actions.join('');
+		            }
+		        }]
+            };
+            $.table.init(options);
+        });
+
+
+        /* 化验状态显示 */
+        function resultStatus(row) {
+            if (row.resultStatus == 0) {
+                return '<i class=\"btn btn-success btn-xs\" >正常</i> ';
+            } else {
+                return '<i class=\"btn btn-danger btn-xs\" >异常</i> ';
+            }
+        }
+        /* 告警状态显示 */
+        function resultFault(row) {
+            if (row.resultFault == 0) {
+                return '<i class=\"btn btn-success btn-xs\" >无故障</i> ';
+            } else {
+                return '<i class=\"btn btn-danger btn-xs\" >故障</i> ';
+            }
+        }
+
+        /*  化验报表折线图 */
+        function AssayReport(){
+            var url = prefix + '/assayReport' ;
+            $.modal.openTab("化验报表", url);
+		}
+
+        /*  化验曲线查询 */
+        function assayCurve(reportId) {
+            var url = prefix + '/assayCurve/' + reportId;
+            $.modal.openTab("化验曲线", url);
+        }
+
+
+        /*  化验详情参数查询 */
+        function assayDetails(reportId) {
+            var url = prefix + '/assayDetails/' + reportId;
+            $.modal.openTab("化验报告", url);
+        }
+
+    </script>
+
+	 <script th:inline="javascript">
+
+         function Print(){
+//              setTimeout(function() {
+//                  var myChart1 = echarts.init(document.getElementById('allAly03'));
+//                  myChart1.setOption(option);
+//                  var img1 = document.getElementById('printImg1');
+//                  img1.src = myChart1.getDataURL({
+//                      pixelRatio: 2,
+//                      backgroundColor: '#fff'
+//                  });
+//                  document.getElementById('allAly03').style.display = "hidden";
+//                  document.getElementById('printImg1').style.display = "block";
+//
+//              }, 0)
+
+              setTimeout(function() {
+                  jQuery("#aaa").jqprint();
+                  //关闭打印按钮后，再点击打印，否则第二次打印无图表
+//                  document.getElementById('allAly03').style.display = "block";
+//                  document.getElementById('printImg1').style.display = "none";
+              }, 50)
+         }
+
+         function Docx(){
+
+//             var url = prefix + '/getDoc' ;
+//             $.modal.open("下载文件", url);
+             window.location.href = prefix + "/getDoc";
+
+		 }
+
+	 </script>
+</body>
+</html>

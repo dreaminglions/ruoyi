@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" >
+<head>
+	<th:block th:include="include :: header('修改化验单据')" />
+</head>
+<body class="white-bg">
+    <div class="wrapper wrapper-content animated fadeInRight ibox-content">
+        <form class="form-horizontal m" id="form-bizOrder-edit" th:object="${bizOrder}">
+            <input id="orderId" name="orderId" th:field="*{orderId}"  type="hidden">
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">化验单据编号：</label>
+				<div class="col-sm-6">
+					<input id="orderNo" name="orderNo" th:field="*{orderNo}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label">化验结果唯一ID（用于修改溯源）：</label>
+				<div class="col-sm-6">
+					<input id="reportId" name="reportId" th:field="*{reportId}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">化验设备：</label>
+				<div class="col-sm-6">
+					<select id="orderDevice" name="orderDevice" class="form-control"  th:with="type=${@bizDevice.getBizDevice()}" th:field="*{orderDevice}">
+						<option th:each="bizDevice : ${type}" th:text="${bizDevice.deviceName}" th:value="${bizDevice.deviceId}"></option>
+					</select>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label">化验水厂：</label>
+				<div class="col-sm-6">
+					<select id="orderWorks"  name="orderWorks" class="form-control"  th:with="type=${@bizWorks.getBizWorks()}" th:field="*{orderWorks}" >
+						<option th:each="bizWorks : ${type}" th:text="${bizWorks.worksName}" th:value="${bizWorks.worksId}"></option>
+					</select>
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">化验开始时间：</label>
+				<div class="col-sm-6">
+					<input type="text" class="time-input-all form-control" id="beginTime" placeholder="化验开始时间" name="beginTime" th:field="*{beginTime}"/>
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">化验结束时间：</label>
+				<div class="col-sm-6">
+					<input type="text" class="time-input-all form-control" id="endTime" placeholder="化验开始时间" name="endTime" th:field="*{endTime}"/>
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">化验日期：</label>
+				<div class="col-sm-6">
+					<input id="orderDate" name="orderDate" th:field="*{orderDate}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">负责人：</label>
+				<div class="col-sm-6">
+					<input id="orderMaintainer" name="orderMaintainer" th:field="*{orderMaintainer}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">联系方式：</label>
+				<div class="col-sm-6">
+					<input id="orderTel" name="orderTel" th:field="*{orderTel}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">化验结果：</label>
+				<div class="col-sm-6">
+					<input id="orderResult" name="orderResult" th:field="*{orderResult}" class="form-control" type="text">
+				</div>
+			</div>
+
+		</form>
+    </div>
+    <div th:include="include::footer"></div>
+    <script type="text/javascript">
+		var prefix = ctx + "system/bizOrder";
+		$("#form-bizOrder-edit").validate({
+			rules:{
+				xxxx:{
+					required:true,
+				},
+			},
+			focusCleanup: true
+		});
+		
+		function submitHandler() {
+	        if ($.validate.form()) {
+	            $.operate.save(prefix + "/edit", $('#form-bizOrder-edit').serialize());
+	        }
+	    }
+	</script>
+</body>
+</html>

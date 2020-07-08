@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" >
+<head>
+	<th:block th:include="include :: header('新增化验结果修改')" />
+</head>
+<body class="white-bg">
+    <div class="wrapper wrapper-content animated fadeInRight ibox-content">
+        <form class="form-horizontal m" id="form-bizResultAlter-add">
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">修改编号：</label>
+				<div class="col-sm-8">
+					<input id="alterNo" name="alterNo" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">化验结果唯一ID（用于修改溯源）：</label>
+				<div class="col-sm-8">
+					<input id="reportId" name="reportId" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">入水COD数值：</label>
+				<div class="col-sm-8">
+					<input id="inCod" name="inCod" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">入水总磷（TP）数值：</label>
+				<div class="col-sm-8">
+					<input id="inTp" name="inTp" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">入水总氮（TN）数值：</label>
+				<div class="col-sm-8">
+					<input id="inTn" name="inTn" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">入水氨氮（NH3）COD数值：</label>
+				<div class="col-sm-8">
+					<input id="inNh3" name="inNh3" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">出水COD数值：</label>
+				<div class="col-sm-8">
+					<input id="outCod" name="outCod" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">出水总磷（TP）数值：</label>
+				<div class="col-sm-8">
+					<input id="outTp" name="outTp" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">出水总氮（TN）数值：</label>
+				<div class="col-sm-8">
+					<input id="outTn" name="outTn" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">出水氨氮（NH3）COD数值：</label>
+				<div class="col-sm-8">
+					<input id="outNh3" name="outNh3" class="form-control" type="text">
+				</div>
+			</div>
+
+		</form>
+	</div>
+    <div th:include="include::footer"></div>
+    <script type="text/javascript">
+		var prefix = ctx + "system/bizResultAlter"
+		$("#form-bizResultAlter-add").validate({
+			rules:{
+				xxxx:{
+					required:true,
+				},
+			},
+			focusCleanup: true
+		});
+		
+		function submitHandler() {
+	        if ($.validate.form()) {
+	            $.operate.save(prefix + "/add", $('#form-bizResultAlter-add').serialize());
+	        }
+	    }
+	</script>
+</body>
+</html>

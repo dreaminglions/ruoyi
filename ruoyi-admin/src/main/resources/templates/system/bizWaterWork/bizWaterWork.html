@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<head>
+	<th:block th:include="include :: header('水厂列表')" />
+</head>
+<body class="gray-bg">
+    
+     <div class="container-div">
+		<div class="row">
+			<div class="col-sm-12 search-collapse">
+				<form id="formId">
+					<div class="select-list">
+						<ul>
+							<li>
+								水厂名称：<input type="text" name="worksName"/>
+							</li>
+
+
+							<li>
+								水厂类型：<select name="worksType" id="worksType">
+									<option value="">所有</option>
+								<option value="0">管理上级</option>
+								<option value="1">普通水厂</option>
+								<option value="2">临时水厂</option>
+								</select>
+							</li>
+
+							<li>
+								<a class="btn btn-primary btn-rounded btn-sm" onclick="$.treeTable.search()"><i class="fa fa-search"></i>&nbsp;搜索</a>
+								<a class="btn btn-warning btn-rounded btn-sm" onclick="$.form.reset()"><i class="fa fa-refresh"></i>&nbsp;重置</a>
+							</li>
+						</ul>
+					</div>
+				</form>
+			</div>
+			
+	        <div class="btn-group-sm" id="toolbar" role="group">
+				<a class="btn btn-success" onclick="$.operate.add(100)" shiro:hasPermission="system:bizWaterWork:add">
+					<i class="fa fa-plus"></i> 添加
+				</a>
+				<!--<a class="btn btn-primary btn-edit " onclick="$.operate.edit()" shiro:hasPermission="system:bizWaterWork:edit">-->
+					<!--<i class="fa fa-edit"></i> 修改-->
+				<!--</a>-->
+				<!--<a class="btn btn-danger btn-del btn-del " onclick="$.operate.removeAll()" shiro:hasPermission="system:bizWaterWork:remove">-->
+					<!--<i class="fa fa-remove"></i> 删除-->
+				<!--</a>-->
+				<a class="btn btn-warning" onclick="$.table.exportExcel()" shiro:hasPermission="system:bizWaterWork:export">
+						<i class="fa fa-download"></i> 导出
+				 </a>
+			</div>
+			<div class="col-sm-12 select-table table-striped">
+				<table id="bootstrap-tree-table" data-mobile-responsive="true"></table>
+			</div>
+		</div>
+	</div>
+    <div th:include="include :: footer"></div>
+    <script th:inline="javascript">
+        var addFlag = [[${@permission.hasPermi('system:bizWaterWork:add')}]];
+        var editFlag = [[${@permission.hasPermi('system:bizWaterWork:edit')}]];
+        var removeFlag = [[${@permission.hasPermi('system:bizWaterWork:remove')}]];
+        var prefix = ctx + "system/bizWaterWork";
+
+        $(function() {
+            var options = {
+                code: "worksId",
+                parentCode: "parentId",
+                uniqueId: "worksId",
+                url: prefix + "/list",
+                createUrl: prefix + "/add/{id}",
+                updateUrl: prefix + "/edit/{id}",
+                removeUrl: prefix + "/remove",
+				exportUrl: prefix + "/export",
+                modalName: "水厂",
+		        showExport: true,
+                columns: [{
+                    field: 'selectItem',
+                    radio: true
+                },
+				{
+					field : 'worksName', 
+					title : '水厂名称',
+					sortable: true
+				},
+				{
+					field : 'worksNo',
+					title : '水厂编号',
+					sortable: true
+				},
+//				{
+//					field : 'worksProvince',
+//					title : '省',
+//					sortable: true
+//				},
+//				{
+//					field : 'worksCity',
+//					title : '市',
+//					sortable: true
+//				},
+//				{
+//					field : 'worksArea',
+//					title : '区',
+//					sortable: true
+//				},
+				{
+					field : 'worksAddress', 
+					title : '详细地址',
+					sortable: true
+				},
+				{
+					field : 'worksType', 
+					title : '水厂类型',
+					sortable: true,
+                    formatter: function(value, item, index) {
+                        if (item.worksType == '0') {
+                            return '<span class="label label-primary">管理上级</span>';
+                        }
+                        else if (item.worksType == '1') {
+                            return '<span class="label label-success">普通水厂</span>';
+                        }
+                        else if (item.worksType == '2') {
+                            return '<span class="label label-warning">临时水厂</span>';
+                        }
+                    }
+				},
+				{
+					field : 'worksStatus', 
+					title : '水厂状态',
+					sortable: true,
+                    formatter: function (value, row, index) {
+                        if (row.worksStatus == 0) {
+                            return '<i class=\"btn btn-success btn-xs\" >正常</i> ';
+                        } else {
+                            return '<i class=\"btn btn-danger btn-xs\" >停用</i> ';
+                        }
+                    }
+				},
+                    {
+                        field : 'worksCenter',
+                        title : '区域类型',
+                        sortable: true,
+                        formatter: function (value, row, index) {
+                            if (row.worksType == '0') {
+                                return '';
+                            }else{
+                                if (row.worksCenter == 0) {
+                                    return '<span class="label label-success">区域中心</span>'
+                                } else {
+                                    return '<span class="label label-danger">一般水厂</span>'
+                                }
+							}
+                        }
+                    },
+				{
+					field : 'worksMaintainer', 
+					title : '水厂联系人',
+					sortable: true
+				},
+				{
+					field : 'worksTel', 
+					title : '联系电话',
+					sortable: true
+				},
+				{
+					field : 'worksScope',
+					title : '化验范围',
+                    formatter: function(value, row, index) {
+                        if (row.parentId != 0) {
+                            var actions = [];
+							actions.push('<a class="btn btn-warning btn-xs ' + editFlag + '" href="#" onclick="addScope(\'' + row.worksId + '\')"><i class="fa fa-edit"></i>设置化验范围</a> ');
+                            return actions.join('');
+						}
+					}
+				},
+		        {
+		            title: '操作',
+		            align: 'center',
+		            formatter: function(value, row, index) {
+                        var actions = [];
+                        if (row.parentId != 0) {
+
+
+                            var actions = [];
+//                            actions.push('<a class="' + editFlag + '" href="#" onclick="$.operate.edit(\'' + row.worksId + '\')"><i class="fa fa-edit"></i>编辑</a>');
+//                            actions.push('<a class="' + removeFlag + '" href="#" onclick="$.operate.remove(\'' + row.worksId + '\')"><i class="fa fa-trash"></i>删除</a>');
+//                            return $.table.dropdownToggle(actions.join(''));
+
+                            actions.push('<a class="btn btn-primary btn-xs ' + editFlag + '" href="#" onclick="$.operate.edit(\'' + row.worksId + '\')"><i class="fa fa-edit"></i>编辑</a> ');
+                            actions.push('<a class="btn btn-danger btn-xs ' + removeFlag + '" href="#" onclick="$.operate.remove(\'' + row.worksId + '\')"><i class="fa fa-trash"></i>删除</a> ');
+                            return actions.join('');
+                        } else {
+
+                            actions.push('<a class="btn btn-success btn-xs ' + addFlag + '" href="#" onclick="$.operate.add(\'' + row.worksId + '\')"><i class="fa fa-plus"></i>添加下级</a> ');
+                            return actions.join('');
+                        }
+		            }
+		        }]
+            };
+            $.treeTable.init(options);
+        });
+
+		function addScope(worksId){
+            var url = prefix + '/addScope/' + worksId;
+            $.modal.open("设置化验范围", url);
+		}
+    </script>
+</body>
+</html>

@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<head>
+	<th:block th:include="include :: header('化验药剂记录列表')" />
+</head>
+<body class="gray-bg">
+    
+     <div class="container-div">
+		<div class="row">
+			<div class="col-sm-12 search-collapse">
+				<form id="formId">
+					<div class="select-list">
+						<ul>
+
+							<li>
+								所属药剂：<input type="text" name="agentiaId"/>
+							</li>
+
+							<li>
+								<a class="btn btn-primary btn-rounded btn-sm" onclick="$.table.search()"><i class="fa fa-search"></i>&nbsp;搜索</a>
+								<a class="btn btn-warning btn-rounded btn-sm" onclick="$.form.reset()"><i class="fa fa-refresh"></i>&nbsp;重置</a>
+							</li>
+						</ul>
+					</div>
+				</form>
+			</div>
+			
+	        <div class="btn-group-sm" id="toolbar" role="group">
+				<a class="btn btn-success" onclick="$.operate.add()" shiro:hasPermission="system:bizAgentiaRecord:add">
+					<i class="fa fa-plus"></i> 添加
+				</a>
+				<a class="btn btn-primary btn-edit disabled" onclick="$.operate.edit()" shiro:hasPermission="system:bizAgentiaRecord:edit">
+					<i class="fa fa-edit"></i> 修改
+				</a>
+				<a class="btn btn-danger btn-del btn-del disabled" onclick="$.operate.removeAll()" shiro:hasPermission="system:bizAgentiaRecord:remove">
+					<i class="fa fa-remove"></i> 删除
+				</a>
+				<a class="btn btn-warning" onclick="$.table.exportExcel()" shiro:hasPermission="system:bizAgentiaRecord:export">
+						<i class="fa fa-download"></i> 导出
+				 </a>
+			</div>
+			<div class="col-sm-12 select-table table-striped">
+				<table id="bootstrap-table" data-mobile-responsive="true"></table>
+			</div>
+		</div>
+	</div>
+    <div th:include="include :: footer"></div>
+    <script th:inline="javascript">
+        var editFlag = [[${@permission.hasPermi('system:bizAgentiaRecord:edit')}]];
+        var removeFlag = [[${@permission.hasPermi('system:bizAgentiaRecord:remove')}]];
+        var prefix = ctx + "system/bizAgentiaRecord";
+
+        $(function() {
+            var options = {
+                url: prefix + "/list",
+                createUrl: prefix + "/add",
+                updateUrl: prefix + "/edit/{id}",
+                removeUrl: prefix + "/remove",
+				exportUrl: prefix + "/export",
+                modalName: "化验药剂记录",
+		        showExport: true,
+                columns: [{
+		            checkbox: true
+		        },
+				{
+					field : 'recordId', 
+					title : '记录ID',
+					visible: false
+				},
+				{
+					field : 'recordNo', 
+					title : '记录编号',
+					sortable: true
+				},
+				{
+					field : 'recordName', 
+					title : '记录名称',
+					sortable: true
+				},
+				{
+					field : 'agentiaId', 
+					title : '所属药剂',
+					sortable: true
+				},
+				{
+					field : 'recordType', 
+					title : '记录类型',
+					sortable: true
+				},
+				{
+					field : 'recordStatus', 
+					title : '记录状态（0：正常；1：无效）',
+					sortable: true
+				},
+				{
+					field : 'beforeTotal', 
+					title : '记录前药剂累计使用量',
+					sortable: true
+				},
+				{
+					field : 'beforeRemain', 
+					title : '记录前药剂剩余量',
+					sortable: true
+				},
+				{
+					field : 'afterTotal', 
+					title : '记录后药剂累计使用量',
+					sortable: true
+				},
+				{
+					field : 'afterRemain', 
+					title : '记录后药剂剩余量',
+					sortable: true
+				},
+				{
+					field : 'agentiaChange', 
+					title : '药剂变化量',
+					sortable: true
+				},
+		        {
+		            title: '操作',
+		            align: 'center',
+		            formatter: function(value, row, index) {
+		            	var actions = [];
+		            	actions.push('<a class="btn btn-success btn-xs ' + editFlag + '" href="#" onclick="$.operate.edit(\'' + row.recordId + '\')"><i class="fa fa-edit"></i>编辑</a> ');
+                        actions.push('<a class="btn btn-danger btn-xs ' + removeFlag + '" href="#" onclick="$.operate.remove(\'' + row.recordId + '\')"><i class="fa fa-remove"></i>删除</a>');
+						return actions.join('');
+		            }
+		        }]
+            };
+            $.table.init(options);
+        });
+    </script>
+</body>
+</html>

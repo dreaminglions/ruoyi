@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<head>
+	<th:block th:include="include :: header('废液列表')" />
+</head>
+<body class="gray-bg">
+    
+     <div class="container-div">
+		<div class="row">
+			<div class="col-sm-12 search-collapse">
+				<form id="formId">
+					<div class="select-list">
+						<ul>
+
+							<li>
+								废液名称：<input type="text" name="wasteName"/>
+							</li>
+
+							<li>
+								产生设备：<select name="wasteDevice" th:with="type=${@bizDevice.selectOnlydeviceList()}">
+								<option value="">所有</option>
+								<option th:each="bizDevice : ${type}" th:text="${bizDevice.deviceName}" th:value="${bizDevice.deviceId}"></option>
+							</select>
+							</li>
+
+
+							<li>
+								所属水厂：<select name="wasteWorks" th:with="type=${@bizWorks.getOnlyWorks()}">
+								<option value="">所有</option>
+								<option th:each="bizWorks : ${type}" th:text="${bizWorks.worksName}" th:value="${bizWorks.worksId}"></option>
+							</select>
+							</li>
+
+							<li class="select-time">
+								<label>处理日期： </label>
+								<input type="text" class="time-input" id="repairTime" placeholder="使用日期" name="repairTime"/>
+							</li>
+
+							<li>
+								<a class="btn btn-primary btn-rounded btn-sm" onclick="$.table.search()"><i class="fa fa-search"></i>&nbsp;搜索</a>
+								<a class="btn btn-warning btn-rounded btn-sm" onclick="$.form.reset()"><i class="fa fa-refresh"></i>&nbsp;重置</a>
+							</li>
+						</ul>
+					</div>
+				</form>
+			</div>
+			
+	        <div class="btn-group-sm" id="toolbar" role="group">
+				<!--<a class="btn btn-success" onclick="wasteReport()" shiro:hasPermission="system:bizAssayResult:list">-->
+					<!--<i class="fa fa-search"></i> 化验报表-->
+				<!--</a>-->
+
+				<a class="btn btn-success" onclick="$.operate.add()" shiro:hasPermission="system:bizWaste:add">
+					<i class="fa fa-plus"></i> 添加
+				</a>
+				<!--<a class="btn btn-primary btn-edit disabled" onclick="$.operate.edit()" shiro:hasPermission="system:bizWaste:edit">-->
+					<!--<i class="fa fa-edit"></i> 修改-->
+				<!--</a>-->
+				<!--<a class="btn btn-danger btn-del btn-del disabled" onclick="$.operate.removeAll()" shiro:hasPermission="system:bizWaste:remove">-->
+					<!--<i class="fa fa-remove"></i> 删除-->
+				<!--</a>-->
+				<!--<a class="btn btn-warning" onclick="$.table.exportExcel()" shiro:hasPermission="system:bizWaste:export">-->
+						<!--<i class="fa fa-download"></i> 导出-->
+				 <!--</a>-->
+			</div>
+			<div class="col-sm-12 select-table table-striped">
+				<table id="bootstrap-table" data-mobile-responsive="true"></table>
+			</div>
+		</div>
+	</div>
+    <div th:include="include :: footer"></div>
+    <script th:inline="javascript">
+        var editFlag = [[${@permission.hasPermi('system:bizWaste:edit')}]];
+        var removeFlag = [[${@permission.hasPermi('system:bizWaste:remove')}]];
+        var prefix = ctx + "system/bizWaste";
+
+        $(function() {
+            var options = {
+                url: prefix + "/list",
+                createUrl: prefix + "/add",
+                updateUrl: prefix + "/edit/{id}",
+                removeUrl: prefix + "/remove",
+				exportUrl: prefix + "/export",
+                modalName: "废液",
+		        showExport: true,
+                columns: [{
+		            checkbox: true
+		        },
+				{
+					field : 'wasteId', 
+					title : '废液ID',
+					visible: false
+				},
+				{
+					field : 'wasteNo', 
+					title : '废液编号',
+					sortable: true
+				},
+				{
+					field : 'wasteName', 
+					title : '废液名称',
+					sortable: true
+				},
+//				{
+//					field : 'wasteType',
+//					title : '废液类型',
+//					sortable: true
+//				},
+				{
+					field : 'device.deviceName',
+					title : '产生设备',
+					sortable: true,
+					formatter: function(value, item, index) {
+						var devicename="";
+						if(item.device!=null){
+							devicename = item.device.deviceName
+						}
+						return '<span class="label label-success">'+devicename+'</span>';
+					}
+				},
+				{
+					field : 'works.worksName',
+					title : '所属水厂',
+					sortable: true,
+					formatter: function(value, item, index) {
+						var worksname="";
+						if(item.works!=null){
+							worksname = item.works.worksName
+						}
+						return '<span class="label label-success">'+worksname+'</span>';
+					}
+				},
+//				{
+//					field : 'wasteStatus',
+//					title : '废液状态',
+//					sortable: true
+//				},
+				{
+					field : 'wasteTotal', 
+					title : '废液总量',
+					sortable: true
+				},
+				{
+					field : 'repairTime', 
+					title : '处理时间',
+					sortable: true
+				},
+				{
+					field : 'repairBy', 
+					title : '维护人',
+					sortable: true
+				},
+		        {
+		            title: '操作',
+		            align: 'center',
+		            formatter: function(value, row, index) {
+		            	var actions = [];
+		            	actions.push('<a class="btn btn-success btn-xs ' + editFlag + '" href="#" onclick="$.operate.edit(\'' + row.wasteId + '\')"><i class="fa fa-edit"></i>编辑</a> ');
+                        actions.push('<a class="btn btn-danger btn-xs ' + removeFlag + '" href="#" onclick="$.operate.remove(\'' + row.wasteId + '\')"><i class="fa fa-remove"></i>删除</a>');
+						return actions.join('');
+		            }
+		        }]
+            };
+            $.table.init(options);
+        });
+
+
+        function wasteReport(){
+            var url = prefix + '/wasteReport' ;
+            $.modal.openTab("废液报表", url);
+        }
+    </script>
+</body>
+</html>

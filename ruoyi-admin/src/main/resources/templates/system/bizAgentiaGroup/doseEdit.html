@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" >
+<head>
+	<th:block th:include="include :: header('修改药剂')" />
+</head>
+<body class="white-bg">
+    <div class="wrapper wrapper-content animated fadeInRight ibox-content">
+        <form class="form-horizontal m" id="form-bizAgentia-edit" th:object="${bizAgentia}">
+            <input id="agentiaId" name="agentiaId" th:field="*{agentiaId}"  type="hidden">
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">药剂名称：</label>
+				<div class="col-sm-6">
+					<input  th:field="*{agentiaName}" class="form-control required" type="text" readonly="readonly">
+				</div>
+			</div>
+			<!--<div class="form-group">	-->
+				<!--<label class="col-sm-3 control-label">药剂累计总量：</label>-->
+				<!--<div class="col-sm-6">-->
+					<!--<input id="agentiaTotal" name="agentiaTotal" th:field="*{agentiaTotal}" class="form-control" type="text">-->
+				<!--</div>-->
+			<!--</div>-->
+			<div class="form-group">
+				<label class="col-sm-3 control-label">药剂剩余量：</label>
+				<div class="col-sm-6">
+					<input th:field="*{agentiaRemain}" class="form-control required" type="text" readonly="readonly">
+				</div>
+			</div>
+
+
+			<div class="form-group">
+				<label class="col-sm-3 control-label">药剂变化类型：</label>
+				<div class="col-sm-8">
+					<label class="radio-box"> <input type="radio" name="recordType"  value="0" checked/> 添加药剂 </label>
+					<label class="radio-box"> <input type="radio" name="recordType"  value="1" /> 药剂消耗 </label>
+				</div>
+			</div>
+
+			<div class="form-group">
+				<label class="col-sm-3 control-label">药剂变化量（g）：</label>
+				<div class="col-sm-6">
+					<input id="agentiaChange" name="agentiaChange"  class="form-control required" type="text" >
+				</div>
+			</div>
+
+
+			<div class="form-group">
+				<label class="col-sm-3 control-label">药剂变更名称：</label>
+				<div class="col-sm-8">
+					<input id="recordName" name="recordName" class="form-control required" type="text">
+				</div>
+			</div>
+
+		</form>
+    </div>
+    <div th:include="include::footer"></div>
+    <script type="text/javascript">
+		var prefix = ctx + "system/bizAgentia";
+		$("#form-bizAgentia-edit").validate({
+			rules:{
+				xxxx:{
+					required:true,
+				},
+			},
+			focusCleanup: true
+		});
+		
+		function submitHandler() {
+	        if ($.validate.form()) {
+	            $.operate.save(prefix + "/doseeditSave", $('#form-bizAgentia-edit').serialize());
+	        }
+	    }
+	</script>
+</body>
+</html>

@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<head>
+	<th:block th:include="include :: header('设备列表')" />
+</head>
+<body class="gray-bg">
+    
+     <div class="container-div">
+		<div class="row">
+			<div class="col-sm-12 search-collapse">
+				<form id="formId">
+					<input name="deviceWorks"  type="hidden"   id="treeId"/>
+					<div class="select-list">
+						<ul>
+							<li>
+								设备编号：<input type="text" name="deviceNo"/>
+							</li>
+
+							<li>
+								设备名称：<input type="text" name="deviceName"/>
+							</li>
+
+							<!--<li>-->
+								<!--所属水厂：<select name="deviceWorks" th:with="type=${@bizWorks.getBizWorks()}">-->
+								<!--<option value="">所有</option>-->
+								<!--<option th:each="bizWorks : ${type}" th:text="${bizWorks.worksName}" th:value="${bizWorks.worksId}"></option>-->
+							<!--</select>-->
+							<!--</li>-->
+
+							<li>
+								所属水厂：<input type="text" name="worksName"onclick="selectWorkTree()" id="treeName" >
+							</li>
+
+							<li>
+								<a class="btn btn-primary btn-rounded btn-sm" onclick="$.table.search()"><i class="fa fa-search"></i>&nbsp;搜索</a>
+								<a class="btn btn-warning btn-rounded btn-sm" onclick="reset()"><i class="fa fa-refresh"></i>&nbsp;重置</a>
+							</li>
+						</ul>
+					</div>
+				</form>
+			</div>
+			
+	        <div class="btn-group-sm" id="toolbar" role="group">
+				<a class="btn btn-success" onclick="$.operate.add()" shiro:hasPermission="system:bizDevice:add">
+					<i class="fa fa-plus"></i> 添加
+				</a>
+				<!--<a class="btn btn-primary btn-edit disabled" onclick="$.operate.edit()" shiro:hasPermission="system:bizDevice:edit">-->
+					<!--<i class="fa fa-edit"></i> 修改-->
+				<!--</a>-->
+				<!--<a class="btn btn-danger btn-del btn-del disabled" onclick="$.operate.removeAll()" shiro:hasPermission="system:bizDevice:remove">-->
+					<!--<i class="fa fa-remove"></i> 删除-->
+				<!--</a>-->
+				<a class="btn btn-warning" onclick="$.table.exportExcel()" shiro:hasPermission="system:bizDevice:export">
+						<i class="fa fa-download"></i> 导出
+				 </a>
+				<!--<a class="btn btn-info" onclick="$.table.importExcel()" shiro:hasPermission="system:user:import">-->
+					<!--<i class="fa fa-upload"></i> 打印-->
+				<!--</a>-->
+
+				<!--<a class="btn btn-info" onclick="open_video()" shiro:hasPermission="system:user:import">-->
+					<!--<i class="fa fa-edit"></i> 开启视频-->
+				<!--</a>-->
+
+			</div>
+			<div class="col-sm-12 select-table table-striped">
+				<table id="bootstrap-table" data-mobile-responsive="true"></table>
+			</div>
+		</div>
+	</div>
+
+	 <!--<div class="modal-body modal-body-screen video-body">-->
+		 <!--<iframe height="500px" width="500px" src="" id="ysOpenDevice" allowfullscreen ></iframe>-->
+	 <!--</div>-->
+
+    <div th:include="include :: footer"></div>
+    <script th:inline="javascript">
+        var editFlag = [[${@permission.hasPermi('system:bizDevice:edit')}]];
+        var removeFlag = [[${@permission.hasPermi('system:bizDevice:remove')}]];
+        var prefix = ctx + "system/bizDevice";
+
+        $(function() {
+            var options = {
+                url: prefix + "/list",
+                createUrl: prefix + "/add",
+                updateUrl: prefix + "/edit/{id}",
+                removeUrl: prefix + "/remove",
+				exportUrl: prefix + "/export",
+                modalName: "设备",
+		        showExport: true,
+                columns: [{
+		            checkbox: true
+		        },
+				{
+					field : 'deviceId', 
+					title : '设备ID',
+					visible: false
+				},
+				{
+					field : 'deviceNo', 
+					title : '设备编号',
+					sortable: true
+				},
+				{
+					field : 'deviceName', 
+					title : '设备名称',
+					sortable: true
+				},
+				{
+					field : 'deviceSn', 
+					title : '设备SN',
+					sortable: true
+				},
+				{
+					field : 'deviceModel', 
+					title : '设备型号',
+					sortable: true
+				},
+				{
+					field : 'works.worksName',
+					title : '所属水厂',
+					sortable: true,
+                    formatter: function(value, item, index) {
+                        var worksname="";
+                        if(item.works!=null){
+                            worksname = item.works.worksName
+                        }
+                        return '<span class="label label-success">'+worksname+'</span>';
+                    }
+				},
+//				{
+//					field : 'deviceMaintainer',
+//					title : '维护人员',
+//					sortable: true
+//				},
+//				{
+//					field : 'deviceTel',
+//					title : '维护人员电话',
+//					sortable: true
+//				},
+				{
+					field : 'deviceStatus', 
+					title : '设备状态',
+					sortable: true,
+                    formatter: function (value, row, index) {
+                        if (row.deviceStatus == 0) {
+                            return '<i class=\"btn btn-success btn-xs\" >正常</i> ';
+                        } else {
+                            return '<i class=\"btn btn-danger btn-xs\" >停用</i> ';
+                        }
+                    }
+				},
+                    {
+                        field : 'assayStatus',
+                        title : '化验状态',
+                        sortable: true,
+                        formatter: function (value, row, index) {
+                            var nowtime = new Date();
+                            var nt= nowtime.getTime();
+							var nTime=new Date();
+                            nTime.setTime(nt-1000*60*5);
+                            var assaytime = row.assayTime;
+                            var aTime = new Date(assaytime);
+                            if(nTime>aTime){
+                                return '<i class=\"btn btn-danger btn-xs\" >离线</i> ';
+							}else{
+                                if (row.assayStatus == 0) {
+                                    return '<i class=\"btn btn-success btn-xs\" >在线</i> ';
+                                } else if(row.assayStatus == 1){
+                                    return '<i class=\"btn btn-danger btn-xs\" >离线</i> ';
+                                }else if(row.assayStatus == 2){
+                                    return '<i class=\"btn btn-primary btn-xs\" >化验中</i> ';
+                                }else if(row.assayStatus == 3){
+                                    return '<i class=\"btn btn-warning btn-xs\" >化验结束</i> ';
+                                }else if(row.assayStatus == 4){
+                                    return '<i class=\"btn btn-danger btn-xs\" >化验故障</i> ';
+                                }
+							}
+
+                        }
+                    },
+				{
+					field : 'repairTim', 
+					title : '投入使用时间',
+					sortable: true
+				},
+		        {
+		            title: '操作',
+		            align: 'center',
+		            formatter: function(value, row, index) {
+		            	var actions = [];
+		            	actions.push('<a class="btn btn-success btn-xs ' + editFlag + '" href="#" onclick="$.operate.edit(\'' + row.deviceId + '\')"><i class="fa fa-edit"></i>编辑</a> ');
+                        actions.push('<a class="btn btn-danger btn-xs ' + removeFlag + '" href="#" onclick="$.operate.remove(\'' + row.deviceId + '\')"><i class="fa fa-remove"></i>删除</a>');
+						return actions.join('');
+		            }
+		        }]
+            };
+            $.table.init(options);
+        });
+
+
+        /*用户管理-修改-选择部门树*/
+        function selectWorkTree() {
+            var worksId = $.common.isEmpty($("#treeId").val()) ? "100" : $("#treeId").val();
+            var url = ctx + "system/bizWaterWork/selectWorksTree/" + worksId;
+            var options = {
+                title: '选择水厂',
+                width: "380",
+                url: url,
+                callBack: doSubmit
+            };
+            $.modal.openOptions(options);
+        }
+
+        function doSubmit(index, layero){
+            var tree = layero.find("iframe")[0].contentWindow.$._tree;
+            if ($.tree.notAllowParents(tree)) {
+                var body = layer.getChildFrame('body', index);
+                $("#treeId").val(body.find('#treeId').val());
+                $("#treeName").val(body.find('#treeName').val());
+                layer.close(index);
+            }
+        }
+
+        function reset(){
+            $.form.reset();
+            $("#treeId").val("");
+		}
+
+        function open_video(){
+            //$('#ysOpenDevice').attr('src','https://open.ys7.com/ezopen/h5/iframe?url=ezopen://LPQOTQ@open.ys7.com/D49700870/1.live&autoplay=0&accessToken=at.7148famz0s1c0htfcf3nsq8d25ot1tja-1hq6i21lz5-02inp3h-gc8mjdkg2');
+            $('#ysOpenDevice').attr('src','https://open.ys7.com/ezopen/h5/iframe?url=ezopen://WUSUDY@open.ys7.com/E23747728/1.live&autoplay=1&accessToken=at.4h9k2ync0xr0mdg114rnzh6c40jiu5ah-41w9krhbme-01nsw82-tbtddxigx');
+        }
+
+//
+//        setInterval(function(){
+//            $.table.search()
+//		}, 5000);
+
+    </script>
+</body>
+</html>

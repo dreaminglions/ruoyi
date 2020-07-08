@@ -1,0 +1,1051 @@
+<!DOCTYPE html>
+<html  lang="zh" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="renderer" content="webkit">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no">
+    <meta name="keywords" content="智能化验室运营中心">
+    <meta name="description" content="智能化验室运营中心">
+    <!--[if lt IE 9]>
+    <meta http-equiv="refresh" content="0;ie.html"/>
+    <![endif]-->
+    <script type="text/javascript" th:src="@{/water/view01/js/rem.js}"></script>
+    <link rel="stylesheet" th:href="@{/water/view01/css/style_tmp.css}" >
+    <title>智能化验室运营中心</title>
+</head>
+
+<body style="visibility: hidden;">
+<div class="container-flex" tabindex="0" hidefocus="true">
+         <a class="back-png"  >
+            <!--<img id="weatherImg1" th:src="@{/water/view01/images/back.png}"  height="40" width="40">-->
+            <img id="weatherImg2" th:src="@{/water/view01/images/Home.png}"  alt="" height="40" width="40" onclick="click2()">
+            <!--<img id="weatherImg3" th:src="@{/water/view01/images/back2.png}" alt="" height="40" width="40">-->
+        </a>
+    <div class="box-left">
+        <div class="left-top">
+            <div class="current-num">
+                <div>全国化验总量统计</div>
+                <p id="assaytotal">2568 次</p>
+            </div>
+        </div>
+        <div class="left-center">
+            <div class="title-box">
+                <h6>化验概况统计</h6>
+            </div>
+            <div class="chart-box pie-chart">
+                <div id="pie"></div>
+                <div>
+                    <div class="pie-data">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="left-bottom select" >
+            <div class="title-box">
+                <h6>化验告警统计</h6>
+            </div>
+
+            <div class="line-box">
+                <div id="linechart" style="width:100%;height:100%;"></div>
+            </div>
+
+        </div>
+    </div>
+    <div class="box-center">
+        <div class="center-top">
+            <h1>智能化验室运营中心</h1>
+        </div>
+        <div class="center-bottom">
+            <div class="map-box">
+                <!--<div id="chart4" style="width:100%;height:95%;"></div>-->
+                <h2 style="color: #0E94EB; font-size: 0.30rem; font-weight: 900;  text-align:center;height:10%;">智能化验中心分布图</h2>
+                <iframe th:src="@{/chinamap}" id="ifr1" name="ifr1" scrolling="yes" style="width:100%;height:95%;border-width:0px"></iframe>
+            </div>
+        </div>
+
+        <!-- <div class="center-center"> -->
+        <!-- <div class="weather-box">
+            <div class="data">
+                <p class="time" id="time">00:00:00</p>
+                <p id="date"></p>
+            </div>
+            <div class="weather">
+                <img id="weatherImg" src="images/weather/weather_img02.png" alt="">
+                <div id="weather">
+                    <p class="active">小雪</p>
+                    <p>-9-2℃</p>
+                    <p>哈尔滨市南岗区</p>
+                </div>
+            </div>
+        </div>
+        <img src="images/line_bg.png" alt="">
+        <div class="select-box">
+            <p class="p1">全国机器总量统计</p>
+            <p class="p2">106 台</p>
+        </div> -->
+
+        <!--                 <div  class="message-box">
+                            <div id="scrollNews" class="scrollNews">
+                                <ul id="p1">
+                                    <li>&nbsp&nbsp&nbsp&nbsp <a> 09:17:23 &nbsp | &nbsp  当日第一次化验开始进行，状态正常 &nbsp  |&nbsp (文昌污水处理厂)</a></li>
+                                    <li>&nbsp&nbsp&nbsp&nbsp <a> 11:22:05 &nbsp | &nbsp  当日第一次化验开始进行，状态正常 &nbsp  |&nbsp (太平污水处理厂)</a></li>
+                                    <li>&nbsp&nbsp&nbsp&nbsp <a> 12:09:31 &nbsp | &nbsp  当日第一次化验开始进行，状态正常 &nbsp  |&nbsp (磐石污水处理厂)</a></li>
+                                    <li>&nbsp&nbsp&nbsp&nbsp <a> 15:47:51 &nbsp | &nbsp  当日第一次化验正常结束 &nbsp  |&nbsp (文昌污水处理厂)</a></li>
+                                    <li>&nbsp&nbsp&nbsp&nbsp <a> 14:36:02 &nbsp | &nbsp  当日第一次化验开始进行 &nbsp  |&nbsp (信义污水处理厂)</a></li>
+                                    <li>&nbsp&nbsp&nbsp&nbsp <a> 17:55:04 &nbsp | &nbsp  当日第一次化验正常结束 &nbsp  |&nbsp (太平污水处理厂)</a></li>
+                                    <li>&nbsp&nbsp&nbsp&nbsp <a> 18:31:25 &nbsp | &nbsp  当日第一次化验正常结束 &nbsp  |&nbsp (磐石污水处理厂)</a></li>
+                                    <li>&nbsp&nbsp&nbsp&nbsp <a> 20:42:40 &nbsp | &nbsp  当日第一次化验正常结束 &nbsp  |&nbsp (信义污水处理厂)</a></li>
+                                </ul>
+                            </div>
+                        </div> -->
+
+        <!-- </div> -->
+
+    </div>
+    <div class="box-right">
+        <div class="right-top">
+
+            <div class="current-num">
+                <div>全国化验设备统计</div>
+                <p id="devicetotal">5 台</p>
+            </div>
+
+
+
+        </div>
+        <div class="right-center">
+
+            <!-- <div class="title-box">
+                <h6 id="barTitle">设备状态统计</h6>
+            </div>
+            <div class="devicepie-box">
+                <div id="devicepie" class="gd-map"></div>
+            </div> -->
+
+
+            <div class="title-box">
+                <h6>设备状态统计</h6>
+            </div>
+            <div class="chart-box pie-chart">
+                <div id="device-pie"></div>
+                <div>
+                    <div class="device-pie-data">
+                    </div>
+                </div>
+            </div>
+
+
+        </div>
+        <div class="right-bottom">
+            <!-- <div class="title-box">
+                <h6 id="barTitle">故障情况统计</h6>
+            </div>
+
+            <div class="devicepie-box">
+                <div id="alertpie" class="gd-map"></div>
+            </div>
+-->
+
+            <div class="title-box">
+                <p id="switchBtn">设备维护统计</span>
+            </div>
+
+            <div class="alert-box">
+                <div id="chart3" style="width:100%;height:100%;"></div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<div class="container" >
+    <div class="pop-up">
+        <span class="close-pop"></span>
+        <h2 class="title">正常设备</h2>
+        <div class="pop-data-box">
+            <p>明城污水处理厂--化验机器人MC005<br/>
+                磐石污水处理厂--化验机器人PS001<br/>
+                卡伦污水处理厂--化验机器人KL007<br/>
+            </p>
+        </div>
+    </div>
+
+    <div class="pop-up">
+        <span class="close-pop"></span>
+        <h2 class="title">维护设备</h2>
+        <div class="pop-data-box">
+            <p>
+                文昌污水处理厂--化验机器人WC002<br/>
+            </p>
+        </div>
+    </div>
+
+
+    <div class="pop-up">
+        <span class="close-pop"></span>
+        <h2 class="title">耗材维护设备</h2>
+        <div class="pop-data-box">
+            <p>
+                营城污水处理厂--化验机器人YC003<br/>
+            </p>
+        </div>
+    </div>
+</div>
+
+</body>
+<script type="text/javascript" th:src="@{/water/view01/js/jquery-3.3.1.min.js}"></script>
+<script type="text/javascript" th:src="@{/water/view01/js/layer/layer.min.js}"></script>
+<script type="text/javascript" th:src="@{/water/view01/js/layer/laydate/laydate.js}"></script>
+<script type="text/javascript" th:src="@{/water/view01/js/echarts.min.js}"></script>
+
+<script type="text/javascript" th:src="@{/water/view01/js/base.js}"></script>
+
+<script type="text/javascript">
+    $('document').ready(function () {
+        $("body").css('visibility', 'visible');
+        var localData = [$('#teacher').val(), $('#start').val() + '/' + $('#end').val(), $('#leader').val()]
+        localStorage.setItem("data", localData);
+        $('#conBtn').on('click', function () {
+            localData = [$('#teacher').val(), $('#start').val() + '/' + $('#end').val(), $('#leader').val()]
+            if (typeof (Storage) !== "undefined") {
+                localStorage.setItem("data", localData);
+                var arr = localStorage.getItem("data").split(',');
+                $('#name_a').html(arr[0]);
+                $('#date_a').html(arr[1]);
+                $('#lea_a').html(arr[2]);
+            }
+        })
+        $('#fangda').on('click', function () {
+            if ($(this).siblings('ul').is(":hidden")) {
+                $(this).addClass('active').siblings('ul').show();
+            } else {
+                $(this).removeClass('active').siblings('ul').hide();
+            }
+        })
+
+        $('.modal-btn>li').on('click', function () {
+            var index = $(this).index();
+            if (index <= 2) {
+                $('.container').attr('style', 'visibility: visible').find('.pop-up').eq(index).attr('style', 'visibility: visible').siblings().attr('style', 'visibility: hidden');
+            } else if (index > 2 && index < 5) {
+                $('.container').attr('style', 'visibility: visible').find('.pop-up').eq(3).attr('style', 'visibility: visible').siblings().attr('style', 'visibility: hidden');
+                if (index != 3) {
+                    $('.pop-data .ranking-box').hide();
+                } else {
+                    $('.pop-data .ranking-box').show();
+                }
+                $('.cont-div').eq(index - 3).attr('style', 'visibility: visible').siblings('.cont-div').attr('style', 'visibility: hidden');
+            } else if (index == 5) {
+                $('.container').attr('style', 'visibility: visible').find('.pop-up').eq(3).attr('style', 'visibility: visible').siblings().attr('style', 'visibility: hidden');
+                $('.pop-data .ranking-box').hide();
+                if ($('#switchBtn').find('.active').data('datatype') == "income") {
+                    $('#titles').html('收入数据');
+                    $('#totalProfits').html('123,456.5元');
+                    $('.cont-div').eq(2).attr('style', 'visibility: visible').siblings('.cont-div').attr('style', 'visibility: hidden');
+                } else if ($('#switchBtn').find('.active').data('datatype') == 'expend') {
+                    $('#titles').html('支出数据');
+                    $('#totalProfits').html('32,111.4元');
+                    $('.cont-div').eq(2).attr('style', 'visibility: visible').siblings('div').attr('style', 'visibility: hidden');
+                }
+            }
+        })
+    })
+</script>
+
+<script th:inline="javascript">
+    var ctx = [[@{/}]];
+
+
+    $(function () {
+        assayTotal();
+        deviceTotal();
+        alertTotal();
+        maintainTotal();
+    });
+
+    function assayTotal(){
+        $.ajax({
+            url: ctx + "index/assayTotal",
+            type: "POST",
+            cache: false,
+            contentType: false,
+            processData: false,
+            dataType: 'json',
+            success: function(result) {
+                var obj = eval('('+result.assayTotal+')');
+                var total =obj.total;
+                var assaypie = obj.assayValue;
+                $("#assaytotal").html(total);
+                chart1(assaypie);
+
+            },
+            error: function(error) {
+            }
+        })
+    }
+
+        function deviceTotal(){
+            $.ajax({
+                url: ctx + "index/deviceTotal",
+                type: "POST",
+                cache: false,
+                contentType: false,
+                processData: false,
+                dataType: 'json',
+                success: function(result) {
+                    var obj = eval('('+result.deviceTotal+')');
+                    var total =obj.total;
+                    var devicepie = obj.deviceValue;
+                    $("#devicetotal").html(total+" 台");
+                    chart2(devicepie);
+
+                },
+                error: function(error) {
+                }
+            })
+        }
+        
+        function  alertTotal() {
+            $.ajax({
+                url: ctx + "index/alertTotal",
+                type: "POST",
+                cache: false,
+                contentType: false,
+                processData: false,
+                dataType: 'json',
+                success: function(result) {
+                    var obj = eval('('+result.alertTotal+')');
+                    var alertName =obj.alertName;
+                    var alertNum = obj.alertNum;
+                    linechart(alertName,alertNum);
+
+                },
+                error: function(error) {
+                }
+            })
+
+        }
+
+        function  maintainTotal() {
+            $.ajax({
+                url: ctx + "index/maintainTotal",
+                type: "POST",
+                cache: false,
+                contentType: false,
+                processData: false,
+                dataType: 'json',
+                success: function(result) {
+                    var obj = eval('('+result.maintainTotal+')');
+                    var maintainName =obj.maintainName;
+                    var maintainNum = obj.maintainNum;
+                    chart3(maintainName,maintainNum);
+
+                },
+                error: function(error) {
+                }
+            })
+
+        }
+
+
+//    定时刷新首页项目列表 15s
+    setInterval(function(){
+        assayTotal();
+        deviceTotal();
+        alertTotal();
+    }, 30000);
+</script>
+
+<script th:inline="javascript">
+    //  //日期js
+    //  function fnW(str) {
+    //     var num;
+    //     str >= 10 ? num = str : num = "0" + str;
+    //     return num;
+    // }
+
+    // //获取当前时间
+    // var timer = setInterval(function () {
+    //     var date = new Date();
+    //     var year = date.getFullYear(); //当前年份
+    //     var month = date.getMonth(); //当前月份
+    //     var data = date.getDate(); //天
+    //     var hours = date.getHours(); //小时
+    //     var minute = date.getMinutes(); //分
+    //     var second = date.getSeconds(); //秒
+    //     var day = date.getDay(); //获取当前星期几
+    //     var dayweek;
+    //     if(day=='1'){
+    //         dayweek="一";
+    //     }else if(day=='2'){
+    //         dayweek="二";
+    //     }else if(day=='3'){
+    //         dayweek="三";
+    //     }else if(day=='4'){
+    //         dayweek="四";
+    //     }else if(day=='5'){
+    //         dayweek="五";
+    //     }else if(day=='6'){
+    //         dayweek="六";
+    //     }else if(day=='0'){
+    //         dayweek="日";
+    //     }
+    //     var ampm = hours < 12 ? 'am' : 'pm';
+    //     $('#time').html(fnW(hours) + ":" + fnW(minute) + ":" + fnW(second));
+    //     $('#date').html('<span>' + year + '/' + (month + 1) + '/' + data + '</span><span>' + ampm + '</span><span>周' + dayweek + '</span>')
+
+    // }, 1000)
+
+</script>
+
+<script th:inline="javascript">
+    //化验概况
+
+    var startColor = ['#34f1f6', '#c440ef', '#efb013', '#2fda07', '#d8ef13', '#2e4af8', '#0eebc4', '#f129b1', '#17defc', '#f86363'];
+    var borderStartColor = ['#0077c5', '#a819d7', '#c99002', '#24bc00', '#b6cb04', '#112ee2', '#00bd9c', '#ce078f', '#00b2cd', '#ec3c3c'];
+
+
+
+    //化验概况占比，带边框效果的饼图
+    function chart1(data) {
+        var myChart = echarts.init(document.getElementById('pie'));
+        window.addEventListener('resize', function () {
+            myChart.resize();
+            myChart1.resize();
+        });
+
+        var str = '';
+        for (var i = 0; i < data.length; i++) {
+            str += '<p>' + data[i].name + '<span class="pie-number" style="color:' + startColor[i] + '">' + data[i].value + '</span></p>';// + Number(data[i].percent).toFixed(2) + '%</p>';
+        }
+
+        $('.pie-data').html(str);
+
+
+        function deepCopy(obj) {
+            if (typeof obj !== 'object') {
+                return obj;
+            }
+            var newobj = {};
+            for (var attr in obj) {
+                newobj[attr] = obj[attr];
+            }
+            return newobj;
+        }
+        var xData = [],
+            yData = [];
+        data.map((a, b) => {
+            xData.push(a.name);
+        yData.push(a.value);
+    });
+
+
+        var RealData = [];
+        var borderData = [];
+        data.map((item, index) => {
+            var newobj = deepCopy(item);
+        var newobj1 = deepCopy(item);
+        RealData.push(newobj);
+        borderData.push(newobj1);
+    });
+        RealData.map((item, index) => {
+            item.itemStyle = {
+            normal: {
+                color: {
+                    type: 'linear',
+                    x: 0,
+                    y: 0,
+                    x2: 0,
+                    y2: 1,
+                    colorStops: [{
+                        offset: 0,
+                        color: startColor[index] // 0% 处的颜色
+                    }, {
+                        offset: 1,
+                        color: startColor[index] // 100% 处的颜色
+                    }],
+                    globalCoord: false // 缺省为 false
+                },
+            }
+        }
+    });
+        borderData.map((item, index) => {
+            item.itemStyle = {
+            normal: {
+                color: {
+                    type: 'linear',
+                    x: 0,
+                    y: 0,
+                    x2: 0,
+                    y2: 1,
+                    colorStops: [{
+                        offset: 0,
+                        color: borderStartColor[index] // 0% 处的颜色
+                    }, {
+                        offset: 1,
+                        color: borderStartColor[index] // 100% 处的颜色
+                    }],
+                    globalCoord: false // 缺省为 false
+                },
+            }
+        }
+    });
+        var option = {
+            tooltip: {
+                trigger: 'item',
+                //            position: ['30%', '50%'],
+                confine: true,
+                formatter: "{a} <br/>{b}: {c} ({d}%)"
+            },
+            series: [
+                // 主要展示层的
+                {
+                    radius: ['50%', '85%'],
+                    center: ['50%', '50%'],
+                    type: 'pie',
+                    label: {
+                        normal: {
+                            show: false
+                        },
+                        emphasis: {
+                            show: false
+                        }
+                    },
+                    labelLine: {
+                        normal: {
+                            show: false
+                        },
+                        emphasis: {
+                            show: false
+                        }
+                    },
+                    name: "化验概况",
+                    data: RealData
+                },
+                // 边框的设置
+                {
+                    radius: ['45%', '50%'],
+                    center: ['50%', '50%'],
+                    type: 'pie',
+                    label: {
+                        normal: {
+                            show: false
+                        },
+                        emphasis: {
+                            show: false
+                        }
+                    },
+                    labelLine: {
+                        normal: {
+                            show: false
+                        },
+                        emphasis: {
+                            show: false
+                        }
+                    },
+                    animation: false,
+                    tooltip: {
+                        show: false
+                    },
+                    data: borderData
+                }
+            ]
+        };
+
+        myChart.setOption(option);
+    }
+
+    //----------------------化验概况占比内容end---------------
+</script>
+
+<script th:inline="javascript">
+
+    var de_startColor = ['#0FA2FF', '#FE7801', '#8FCB9A', '#2fda07', '#d8ef13', '#2e4af8', '#0eebc4', '#f129b1', '#17defc', '#f86363'];
+    var de_borderStartColor = ['#0077c5', '#FE7801', '#8ABF99', '#24bc00', '#b6cb04', '#112ee2', '#00bd9c', '#ce078f', '#00b2cd', '#ec3c3c'];
+
+    //设备状态统计
+    function chart2( data){
+        var myChart = echarts.init(document.getElementById('device-pie'));
+        window.addEventListener('resize', function () {
+            myChart.resize();
+            myChart1.resize();
+        });
+
+        var str = '';
+        for (var i = 0; i < data.length; i++) {
+            str += '<p>' + data[i].name + '<span class="pie-number" style="color:' + de_startColor[i] + '">' + data[i].value + '</span></p>';// + Number(data[i].percent).toFixed(2) + '%</p>';
+        }
+
+        $('.device-pie-data').html(str);
+
+
+        function deepCopy(obj) {
+            if (typeof obj !== 'object') {
+                return obj;
+            }
+            var newobj = {};
+            for (var attr in obj) {
+                newobj[attr] = obj[attr];
+            }
+            return newobj;
+        }
+        var xData = [],
+            yData = [];
+        data.map((a, b) => {
+            xData.push(a.name);
+        yData.push(a.value);
+    });
+
+
+        var RealData = [];
+        var borderData = [];
+        data.map((item, index) => {
+            var newobj = deepCopy(item);
+        var newobj1 = deepCopy(item);
+        RealData.push(newobj);
+        borderData.push(newobj1);
+    });
+        RealData.map((item, index) => {
+            item.itemStyle = {
+            normal: {
+                color: {
+                    type: 'linear',
+                    x: 0,
+                    y: 0,
+                    x2: 0,
+                    y2: 1,
+                    colorStops: [{
+                        offset: 0,
+                        color: de_startColor[index] // 0% 处的颜色
+                    }, {
+                        offset: 1,
+                        color: de_startColor[index] // 100% 处的颜色
+                    }],
+                    globalCoord: false // 缺省为 false
+                },
+            }
+        }
+    });
+        borderData.map((item, index) => {
+            item.itemStyle = {
+            normal: {
+                color: {
+                    type: 'linear',
+                    x: 0,
+                    y: 0,
+                    x2: 0,
+                    y2: 1,
+                    colorStops: [{
+                        offset: 0,
+                        color: de_borderStartColor[index] // 0% 处的颜色
+                    }, {
+                        offset: 1,
+                        color: de_borderStartColor[index] // 100% 处的颜色
+                    }],
+                    globalCoord: false // 缺省为 false
+                },
+            }
+        }
+    });
+        var option = {
+            tooltip: {
+                trigger: 'item',
+                //            position: ['30%', '50%'],
+                confine: true,
+                formatter: "{a} <br/>{b}: {c} ({d}%)"
+            },
+            series: [
+                // 主要展示层的
+                {
+                    radius: ['50%', '85%'],
+                    center: ['50%', '50%'],
+                    type: 'pie',
+                    label: {
+                        normal: {
+                            show: false
+                        },
+                        emphasis: {
+                            show: false
+                        }
+                    },
+                    labelLine: {
+                        normal: {
+                            show: false
+                        },
+                        emphasis: {
+                            show: false
+                        }
+                    },
+                    name: "设备状态",
+                    data: RealData
+                },
+                // 边框的设置
+                {
+                    radius: ['45%', '50%'],
+                    center: ['50%', '50%'],
+                    type: 'pie',
+                    label: {
+                        normal: {
+                            show: false
+                        },
+                        emphasis: {
+                            show: false
+                        }
+                    },
+                    labelLine: {
+                        normal: {
+                            show: false
+                        },
+                        emphasis: {
+                            show: false
+                        }
+                    },
+                    animation: false,
+                    tooltip: {
+                        show: false
+                    },
+                    data: borderData
+                }
+            ]
+        };
+
+        myChart.setOption(option);
+    }
+
+
+</script>
+
+
+<script th:inline="javascript">
+    //柱状图
+    function chart3(maintainName,maintainNum) {
+        var linechart = echarts.init(document.getElementById('chart3'));
+        window.addEventListener('resize', function () {
+            linechart.resize();
+        });
+
+        //    设置背景阴影的参数，获取数据的最大值
+//
+//        maintainName = ['正常', '设备维护', '药液维护', '试管维护', '部件维护'];
+//        maintainNum = [5, 0, 0,0,0];
+
+        var option = {
+            title: '',
+            grid: {
+                top: '15%',
+                bottom: '5%',
+                containLabel: true
+            },
+            tooltip: {
+                show: true,
+                trigger: 'item'
+            },
+            legend: {
+                data:maintainName,
+                textStyle:{
+                    color:'#ccc'
+                }
+            },
+            xAxis: [{
+                type: 'category',
+                show: true,
+                axisTick: {show: false},
+                axisLine: {
+                    lineStyle: {
+                        color: '#0e94eb',
+                        width: 1, //这里是为了突出显示加上的
+                    }
+                },
+                data: maintainName,
+                axisLabel : {
+                    interval: 0,
+                    rotate : -30
+                }
+            }
+            ],
+            yAxis: [{
+                show: true,
+                name: '（台）',
+                splitLine: {
+                    show: false,
+                    lineStyle: {
+                        color: '#34f1f6'
+                    }
+                },
+                axisTick: {
+                    show: false
+                },
+                axisLine: {
+                    show: false,
+                    lineStyle: {
+                        color: '#0e94eb',
+                        width: 1, //这里是为了突出显示加上的
+                    }
+                },
+                axisLabel: {
+                    show: true,
+                    color: '#0e94eb'
+                }
+            }],
+            series: [
+                {
+                    type: 'bar',
+                    barWidth:30,
+                    itemStyle: {
+                        normal: {
+                            color: function(params) {
+                                var colorList = ['#11C3FF','#E98F6F','#FFD739','#EFB09A','#4DD0D0'];
+                                return colorList[params.dataIndex];
+                            }
+                        },
+                    },
+                    data: maintainNum,
+                }
+            ]
+        }
+        linechart.clear();
+        linechart.setOption(option);
+//        linechart.on('click', function (params) {
+//
+//            if(params.name=="正常"){
+//                $('.container').attr('style', 'visibility: visible').find('.pop-up').eq(0).attr('style', 'visibility: visible');
+//            } else if(params.name=="设备维护"){
+//                $('.container').attr('style', 'visibility: visible').find('.pop-up').eq(1).attr('style', 'visibility: visible');
+//            }  else if(params.name=="药液维护"){
+//                $('.container').attr('style', 'visibility: visible').find('.pop-up').eq(2).attr('style', 'visibility: visible');
+//            }   else if(params.name=="试管维护"){
+//                $('.container').attr('style', 'visibility: visible').find('.pop-up').eq(2).attr('style', 'visibility: visible');
+//            }   else if(params.name=="部件维护"){
+//                $('.container').attr('style', 'visibility: visible').find('.pop-up').eq(2).attr('style', 'visibility: visible');
+//            }
+//        });
+    }
+
+    chart3()
+
+    $('.close-pop').on('click', function () {
+        $(this).parent().parent().hide()
+        $(this).parent().attr('style', 'visibility: hidden');
+    })
+
+</script>
+
+<script th:inline="javascript">
+    //实时信息滚动
+    var $this = $("#scrollNews");
+    var scrollTimer;
+    $this.hover(function () {
+        clearInterval(scrollTimer);
+    }, function () {
+        scrollTimer = setInterval(function () {
+            scrollNews($this);
+        }, 4000);
+    }).trigger("mouseleave");
+    function scrollNews(obj) {
+        var $self = obj.find("ul");
+        var lineHeight = $self.find("li:first").height();
+        $self.animate({
+            "marginTop": -lineHeight + "px"
+        }, 500, function () {
+            $self.css({
+                marginTop: 0
+            }).find("li:first").appendTo($self);
+        })
+    }
+
+</script>
+
+<script th:inline="javascript">
+    //化验数据走势
+    function linechart(alertName,alertNum) {
+        var linechart = echarts.init(document.getElementById('linechart'));
+        window.addEventListener('resize', function () {
+            linechart.resize();
+        });
+
+        //    设置背景阴影的参数，获取数据的最大值
+
+//        alertName = ['正常', '数据告警', '药剂异常', '碰撞故障', '运行故障'];
+//        alertNum = [2562,6,5,3,2];
+
+        var option = {
+            title: '',
+            grid: {
+                top: '15%',
+                bottom: '5%',
+                containLabel: true
+            },
+            tooltip: {
+                show: true,
+                trigger: 'item'
+            },
+            legend: {
+                data:alertName,
+                show:false,
+                textStyle:{
+                    color:'#ccc'
+                }
+            },
+            xAxis: [{
+                type: 'category',
+                show: true,
+                axisTick: {show: false},
+                axisLine: {
+                    lineStyle: {
+                        color: '#0e94eb',
+                        width: 1, //这里是为了突出显示加上的
+                    }
+                },
+                data: alertName,
+                axisLabel : {
+                    interval: 0,
+                    rotate : -30
+                }
+            }
+            ],
+            yAxis: [{
+                show: true,
+                name: '（次）',
+                splitLine: {
+                    show: false,
+                    lineStyle: {
+                        color: '#34f1f6'
+                    }
+                },
+                axisTick: {
+                    show: false
+                },
+                axisLine: {
+                    show: false,
+                    lineStyle: {
+                        color: '#0e94eb',
+                        width: 1, //这里是为了突出显示加上的
+                    }
+                },
+                axisLabel: {
+                    show: true,
+                    color: '#0e94eb'
+                }
+            }],
+            series: [{
+                name: '化验告警',
+                type: 'bar',
+                barWidth:20,
+                itemStyle: {
+                    normal: {
+                        color: function(params) {
+                            var colorList = ['#11C3FF','#FFD739','#8355CF','#DB3E26'];
+                            return colorList[params.dataIndex];
+                        }
+                    },
+                },
+                data: alertNum,
+            }
+            ]
+        }
+        linechart.clear();
+        linechart.setOption(option);
+    }
+
+    linechart()
+
+</script>
+
+
+<script th:inline="javascript">
+
+    //设备状态统计
+    function chart5(){
+        var alerChart = echarts.init(document.getElementById('alertpie'));
+        alerOption = {
+            tooltip: {
+                trigger: 'item',
+                formatter: "{a} <br/>{b}: {c} 台",
+                confine:true
+            },
+            title : {
+                text: '项目设备',
+                show:false,
+                x:'center',
+                y: 'bottom',
+                textStyle: {
+                    color: '#fff'
+                }
+            },
+            legend: {
+                show:false,
+                orient: 'vertical',
+                x: 'left',
+                y: 'bottom',
+                icon: "rect",
+                textStyle: {
+                    color: '#fff'
+                },
+                data:['药剂异常','设备故障','工艺报警','化验异常','指标超标'],
+                selectedMode:true
+            },
+            series: [
+                {
+                    name:'故障情况统计',
+                    type:'pie',
+                    // roseType: 'area',
+                    radius: [20, 60],
+                    center : ['50%', '50%'],
+                    data:[
+                        {name: '药剂异常', value: 5},
+                        {name: '设备故障', value: 2},
+                        {name: '工艺报警', value: 1},
+                        {name: '化验异常', value: 1},
+                        {name: '指标超标', value: 3}],
+                    labelLine: {
+                        normal: {
+                            show: true
+                        }
+                    },
+                    label: {
+                        normal: {
+                            show: true
+                        },
+                        confine:true
+                    },
+                    itemStyle: {
+                        normal:{
+                            borderColor: '#142537',
+                            borderWidth: 3,
+                            label:{
+                                formatter: "{b}: {c} 次",
+                                confine:true
+                            },
+                            color:function(params) {
+                                //自定义颜色
+                                var colorList = [
+                                    '#F76E05','#DD3023','#EFB013','#0E94EB','#C440EF'
+                                ];
+                                return colorList[params.dataIndex]
+                            }
+                        }
+                    },
+                    hoverAnimation:false,
+                    avoidLabelOverlap: false
+                }
+            ]
+        };
+        alerChart.setOption(alerOption, true);
+        //diagram self adaption
+        window.addEventListener("resize", () => {
+            alerChart.resize();
+    })
+    }
+
+    chart5();
+
+    function click2(){
+        history.back(-1);
+    }
+
+</script>
+
+
+
+</html>

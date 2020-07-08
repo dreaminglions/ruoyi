@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" >
+<head>
+	<th:block th:include="include :: header('新增设备')" />
+</head>
+<body class="white-bg">
+    <div class="wrapper wrapper-content animated fadeInRight ibox-content">
+        <form class="form-horizontal m" id="form-bizDevice-add">
+			<input name="deviceWorks" type="hidden" id="treeId"/>
+			<div class="form-group">
+				<label class="col-sm-3 control-label">设备编号：</label>
+				<div class="col-sm-6">
+					<input id="deviceNo" name="deviceNo" class="form-control required" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">设备名称：</label>
+				<div class="col-sm-6">
+					<input id="deviceName" name="deviceName" class="form-control required" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">设备SN：</label>
+				<div class="col-sm-6">
+					<input id="deviceSn" name="deviceSn" class="form-control required" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">设备型号：</label>
+				<div class="col-sm-6">
+					<input id="deviceModel" name="deviceModel" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">设备厂家：</label>
+				<div class="col-sm-6">
+					<input id="deviceMaker" name="deviceMaker" class="form-control" type="text">
+				</div>
+			</div>
+			<!--<div class="form-group">	-->
+				<!--<label class="col-sm-3 control-label">所属水厂：</label>-->
+				<!--<div class="col-sm-6">-->
+					<!--<select id="deviceWorks" name="deviceWorks" class="form-control"  th:with="type=${@bizWorks.getBizWorks()}">-->
+						<!--<option value="">请选择</option>-->
+						<!--<option th:each="bizWorks : ${type}" th:text="${bizWorks.worksName}" th:value="${bizWorks.worksId}"></option>-->
+					<!--</select>-->
+				<!--</div>-->
+			<!--</div>-->
+
+			<div class="form-group">
+				<label class="col-sm-3 control-label"><span style="color: red; ">*</span>所属水厂：</label>
+				<div class="col-sm-6">
+					<div class="input-group">
+						<input name="worksName" onclick="selectWorkTree()" id="treeName" type="text" placeholder="请选择归属机构" class="form-control" required>
+						<span class="input-group-addon"><i class="fa fa-search"></i></span>
+					</div>
+				</div>
+			</div>
+
+			<!--<div class="form-group">-->
+				<!--<label class="col-sm-3 control-label">设备类型：</label>-->
+				<!--<div class="col-sm-6">-->
+					<!--<input id="deviceType" name="deviceType" class="form-control" type="text">-->
+				<!--</div>-->
+			<!--</div>-->
+			<div class="form-group">
+				<label class="col-sm-3 control-label">设备状态：</label>
+				<div class="col-sm-6">
+					<div class="onoffswitch">
+						<input type="checkbox" th:checked="true" class="onoffswitch-checkbox" id="deviceStatus">
+						<label class="onoffswitch-label" for="deviceStatus">
+							<span class="onoffswitch-inner"></span>
+							<span class="onoffswitch-switch"></span>
+						</label>
+					</div>
+				</div>
+			</div>
+
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">维护人员：</label>
+				<div class="col-sm-6">
+					<input id="deviceMaintainer" name="deviceMaintainer" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">维护人员电话：</label>
+				<div class="col-sm-6">
+					<input id="deviceTel" name="deviceTel" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label">维护时间：</label>
+				<div class="col-sm-6">
+					<input type="text" class="time-input-all form-control" id="repairTime" placeholder="维护时间" name="repairTime" />
+				</div>
+			</div>
+			<!--<div class="form-group">	-->
+				<!--<label class="col-sm-3 control-label">维护人：</label>-->
+				<!--<div class="col-sm-6">-->
+					<!--<input id="repairBy" name="repairBy" class="form-control" type="text">-->
+				<!--</div>-->
+			<!--</div>-->
+
+		</form>
+	</div>
+    <div th:include="include::footer"></div>
+    <script type="text/javascript">
+		var prefix = ctx + "system/bizDevice"
+		$("#form-bizDevice-add").validate({
+			rules:{
+				xxxx:{
+					required:true,
+				},
+			},
+			focusCleanup: true
+		});
+
+
+        /*设备管理-新增-选择水厂树*/
+        function selectWorkTree() {
+            var treeId = $("#treeId").val();
+            var worksId = $.common.isEmpty(treeId) ? "100" : $("#treeId").val();
+            var url = ctx + "system/bizWaterWork/selectWorksTree/" + worksId;
+            var options = {
+                title: '选择水厂',
+                width: "380",
+                url: ctx + "system/bizWaterWork/selectWorksTree/" + worksId,
+                callBack: doSubmit
+            };
+            $.modal.openOptions(options);
+        }
+
+        function doSubmit(index, layero){
+            var tree = layero.find("iframe")[0].contentWindow.$._tree;
+			if ($.tree.notAllowParents(tree)) {
+            var body = layer.getChildFrame('body', index);
+            $("#treeId").val(body.find('#treeId').val());
+            $("#treeName").val(body.find('#treeName').val());
+            layer.close(index);
+			}
+        }
+		
+		function submitHandler() {
+	        if ($.validate.form()) {
+                var data = $('#form-bizDevice-add').serializeArray();
+                var status = $("input[id='deviceStatus']").is(':checked') == true ? 0 : 1;
+                data.push({"name": "deviceStatus", "value": status});
+	            $.operate.save(prefix + "/add", data);
+	        }
+	    }
+	</script>
+</body>
+</html>

@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" >
+<head>
+	<th:block th:include="include :: header('新增药剂')" />
+</head>
+<body class="white-bg">
+    <div class="wrapper wrapper-content animated fadeInRight ibox-content">
+        <form class="form-horizontal m" id="form-bizAgentia-add">
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">药剂编号：</label>
+				<div class="col-sm-6">
+					<input id="agentiaNo" name="agentiaNo" class="form-control required" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">药剂名称：</label>
+				<div class="col-sm-6">
+					<input id="agentiaName" name="agentiaName" class="form-control required" type="text">
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label">所属集团：</label>
+				<div class="col-sm-6">
+					<select id="agentiaBelong" name="agentiaBelong" class="form-control required"  th:with="type=${@bizWorks.getOnlyGroup()}" >
+						<option value="">请选择</option>
+						<option th:each="bizWorks : ${type}" th:text="${bizWorks.worksName}" th:value="${bizWorks.worksId}"></option>
+					</select>
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">药剂总量（g）：</label>
+				<div class="col-sm-6">
+					<input id="agentiaTotal" name="agentiaTotal" class="form-control required" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">药剂剩余量（g）：</label>
+				<div class="col-sm-6">
+					<input id="agentiaRemain" name="agentiaRemain" class="form-control required" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">药剂告警量（g）：</label>
+				<div class="col-sm-6">
+					<input id="agentiaAlert" name="agentiaAlert" class="form-control required" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">药剂类型：</label>
+				<div class="col-sm-6">
+					<input id="agentiaType" name="agentiaType" class="form-control required" type="hidden" value="0">
+					<input id="agentiaTypeName"  class="form-control" type="text" value="集团药剂" readonly="readonly">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">药剂厂家：</label>
+				<div class="col-sm-6">
+					<input id="agentiaMaker" name="agentiaMaker" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">药剂状态：</label>
+				<div class="col-sm-6">
+					<div class="radio-box" th:each="dict : ${@dict.getType('sys_normal_disable')}">
+						<input type="radio" th:id="${dict.dictCode}" name="agentiaStatus" th:value="${dict.dictValue}" th:checked="${dict.isDefault == 'Y' ? true : false}">
+						<label th:for="${dict.dictCode}" th:text="${dict.dictLabel}"></label>
+					</div>
+					<!--<input id="agentiaStatus" name="agentiaStatus" class="form-control" type="text">-->
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label">投入使用时间：</label>
+				<div class="col-sm-6">
+					<input type="text" class="time-input-all form-control required" id="useTime" placeholder="投入使用时间" name="useTime" />
+				</div>
+			</div>
+			<!--<div class="form-group">-->
+				<!--<label class="col-sm-3 control-label">上次维护时间：</label>-->
+				<!--<div class="col-sm-6">-->
+					<!--<input type="text" class="time-input-all form-control" id="lastRepairTime" placeholder="上次维护时间" name="lastRepairTime" />-->
+				<!--</div>-->
+			<!--</div>-->
+			<div class="form-group">
+				<label class="col-sm-3 control-label">维护时间：</label>
+				<div class="col-sm-6">
+					<input type="text" class="time-input-all form-control" id="repairTime" placeholder="维护时间" name="repairTime" />
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label">维护人：</label>
+				<div class="col-sm-6">
+					<input id="repairBy" name="repairBy" class="form-control" type="text">
+				</div>
+			</div>
+
+		</form>
+	</div>
+    <div th:include="include::footer"></div>
+    <script type="text/javascript">
+		var prefix = ctx + "system/bizAgentia"
+		$("#form-bizAgentia-add").validate({
+			rules:{
+				xxxx:{
+					required:true,
+				},
+			},
+			focusCleanup: true
+		});
+		
+		function submitHandler() {
+	        if ($.validate.form()) {
+	            $.operate.save(prefix + "/add", $('#form-bizAgentia-add').serialize());
+	        }
+	    }
+	</script>
+</body>
+</html>

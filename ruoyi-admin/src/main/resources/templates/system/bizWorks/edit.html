@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" >
+<head>
+	<th:block th:include="include :: header('修改水厂')" />
+</head>
+<body class="white-bg">
+    <div class="wrapper wrapper-content animated fadeInRight ibox-content">
+        <form class="form-horizontal m" id="form-bizWorks-edit" th:object="${bizWorks}">
+            <input id="worksId" name="worksId" th:field="*{worksId}"  type="hidden">
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">水厂编号：</label>
+				<div class="col-sm-6">
+					<input id="worksNo" name="worksNo" th:field="*{worksNo}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">水厂名称：</label>
+				<div class="col-sm-6">
+					<input id="worksName" name="worksName" th:field="*{worksName}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">省：</label>
+				<div class="col-sm-6">
+					<input id="worksProvince" name="worksProvince" th:field="*{worksProvince}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">市：</label>
+				<div class="col-sm-6">
+					<input id="worksCity" name="worksCity" th:field="*{worksCity}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">区：</label>
+				<div class="col-sm-6">
+					<input id="worksArea" name="worksArea" th:field="*{worksArea}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">详细地址：</label>
+				<div class="col-sm-6">
+					<input id="worksAddress" name="worksAddress" th:field="*{worksAddress}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">设备数量：</label>
+				<div class="col-sm-6">
+					<input id="worksCount" name="worksCount" th:field="*{worksCount}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">水厂类型：</label>
+				<div class="col-sm-6">
+					<select name="worksType" class="form-control m-b" th:with="type=${@dict.getType('works_type')}" th:field="*{worksType}">
+						<option th:each="dict : ${type}" th:text="${dict.dictLabel}" th:value="${dict.dictValue}"></option>
+					</select>
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">水厂所属集团：</label>
+				<div class="col-sm-6">
+					<input id="worksBelong" name="worksBelong" th:field="*{worksBelong}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">水厂状态：</label>
+				<div class="col-sm-6">
+					<div class="onoffswitch">
+						<input type="checkbox"  th:checked="${bizWorks.worksStatus == '0' ? true : false}"  class="onoffswitch-checkbox" id="worksStatus" >
+						<label class="onoffswitch-label" for="worksStatus">
+							<span class="onoffswitch-inner"></span>
+							<span class="onoffswitch-switch"></span>
+						</label>
+					</div>
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">水厂联系人：</label>
+				<div class="col-sm-6">
+					<input id="worksMaintainer" name="worksMaintainer" th:field="*{worksMaintainer}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">联系电话：</label>
+				<div class="col-sm-6">
+					<input id="worksTel" name="worksTel" th:field="*{worksTel}" class="form-control" type="text">
+				</div>
+			</div>
+
+		</form>
+    </div>
+    <div th:include="include::footer"></div>
+    <script type="text/javascript">
+		var prefix = ctx + "system/bizWorks";
+		$("#form-bizWorks-edit").validate({
+			rules:{
+				xxxx:{
+					required:true,
+				},
+			},
+			focusCleanup: true
+		});
+		
+		function submitHandler() {
+	        if ($.validate.form()) {
+                var data = $("#form-bizWorks-edit").serializeArray();
+                var status = $("input[id='worksStatus']").is(':checked') == true ? 0 : 1;
+                data.push({"name": "worksStatus", "value": status});
+	            $.operate.save(prefix + "/edit",data);
+	        }
+	    }
+	</script>
+</body>
+</html>

@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<head>
+	<th:block th:include="include :: header('废液报表')" />
+</head>
+<body class="gray-bg">
+    
+     <div class="container-div">
+		<div class="row">
+			<div class="col-sm-12 search-collapse">
+				<form id="formId">
+					<div class="select-list">
+						<ul>
+
+							<li>
+								产生设备：<select id="resultDevice" name="resultDevice" th:with="type=${@bizDevice.getBizDevice()}">
+									<option value="">请选择</option>
+									<option th:each="bizDevice : ${type}" th:text="${bizDevice.deviceName}" th:value="${bizDevice.deviceId}"></option>
+								</select>
+							</li>
+
+							<li>
+								所属水厂：<select id="resultWorks" name="resultWorks" th:with="type=${@bizWorks.getOnlyWorks()}">
+								<option value="">请选择</option>
+								<option th:each="bizWorks : ${type}" th:text="${bizWorks.worksName}" th:value="${bizWorks.worksId}"></option>
+							</select>
+							</li>
+
+							<li class="select-time">
+								<label>告警日期： </label>
+								<input type="text" class="time-input" id="beginDate" placeholder="告警日期" name="beginDate" value="2020-03-09"/>
+								<label> -- </label>
+								<input type="text" class="time-input" id="endDate" placeholder="告警日期" name="endDate" value="2020-03-12"/>
+							</li>
+
+							<li>
+								<a class="btn btn-primary btn-rounded btn-sm" onclick="assaySearch()"><i class="fa fa-search"></i>&nbsp;搜索</a>
+								<a class="btn btn-warning btn-rounded btn-sm" onclick="$.form.reset()"><i class="fa fa-refresh"></i>&nbsp;重置</a>
+							</li>
+						</ul>
+					</div>
+				</form>
+			</div>
+			
+
+			<div class="col-sm-12 ">
+				<div  id="waste_bar" style="width: 900px; height: 500px;"></div>
+			</div>
+		</div>
+	</div>
+    <div th:include="include :: footer"></div>
+
+	 <script th:src="@{/water/view02/js/echarts-all.js}"></script>
+
+    <script th:inline="javascript">
+        var editFlag = [[${@permission.hasPermi('system:bizAssayResult:edit')}]];
+        var removeFlag = [[${@permission.hasPermi('system:bizAssayResult:remove')}]];
+        var prefix = ctx + "system/bizAlert";
+
+
+        var lineoption = {
+            title : {
+                text: '告警情况',
+                subtext: '',
+                x:'center',
+                textStyle: {
+                    fontWeight: 'bold',
+                    color: '#33A3DB'
+                }
+            },
+            tooltip : {
+                trigger: 'axis'
+            },
+            grid: {
+                x: 46,
+                y:30,
+                x2:30,
+                y2:80,
+                borderWidth: 0
+            },
+
+            calculable : false,
+            xAxis : [
+                {
+                    type : 'category',
+                    data : [],
+                    splitLine: {
+                        show: false
+                    },
+                    axisLabel: {
+                        show: true,
+                        textStyle: {
+                            color: '#a4a7ab',
+                            align: 'center'
+                        }
+                    },
+                    axisLine: {
+                        lineStyle: {
+                            color: '#33A3DB'
+                        }
+                    },
+
+                }
+            ],
+            yAxis : {
+                type: 'value',
+                name : '(值)',
+                axisLabel : {
+                    formatter: '{value} ',
+                    textStyle: {
+                        color: '#a4a7ab',
+                        align: 'right'
+                    }
+                },
+                splitLine: {
+                    show: false
+                },
+                axisLine: {
+                    lineStyle: {
+                        color: '#33A3DB'
+                    }
+                },
+            },
+            series : [
+                {
+                    name:'告警量',
+                    type:'bar',
+                    data:[],
+                    itemStyle: {
+                        normal: {
+                            color:"#33A3DB"
+                        }
+                    }
+                },
+            ]
+        };
+
+        function assaySearch(){
+            var deviceId = $("#resultDevice").val();
+            var worksId = $("#resultWorks").val();
+            var beginDate = $("#beginDate").val();
+            var endDate = $("#endDate").val();
+            if(deviceId==""||deviceId==null){
+				alert("请选择化验设备");
+				return false;
+			}
+            if(worksId==""||worksId==null){
+                alert("请选择化验水厂");
+                return false;
+            }
+            if(beginDate==""||beginDate==null){
+                alert("请选择化验开始日期");
+                return false;
+            }
+            if(endDate==""||endDate==null){
+                alert("请选择化验结束日期	");
+                return false;
+            }
+            var formdata = {};
+            formdata.deviceId = deviceId;
+            formdata.worksId = worksId;
+            formdata.beginDate = beginDate;
+            formdata.endDate = endDate;
+            $.ajax({
+                url: prefix + "/getAlert",
+                data: JSON.stringify(formdata),
+                type: "POST",
+                cache: false,
+                contentType: "application/json;charset=utf-8",
+                processData: false,
+                success: function(result) {
+                    var obj = eval('('+result.resultdata+')');
+                    initLine(obj);
+                },
+                error: function(error) {
+                }
+            });
+
+		}
+
+		function initLine(obj){
+            var resultdate =obj.resultdate;
+            var waste_total =obj.waste_total;
+
+            waste_barchart(resultdate,waste_total);
+		}
+
+
+        function waste_barchart(data,obj) {
+            var linechart = echarts.init(document.getElementById('waste_bar'));
+            window.addEventListener('resize', function () {
+                linechart.resize();
+            });
+
+            lineoption.title.text="告警情况";
+            lineoption.title.textStyle.color="#33A3DB";
+            lineoption.xAxis[0].axisLine.lineStyle.color="#33A3DB";
+            lineoption.yAxis.axisLine.lineStyle.color="#33A3DB";
+            lineoption.xAxis[0].data=data;
+            lineoption.series[0].data=obj;
+            lineoption.series[0].itemStyle.normal.color="#33A3DB";
+
+            linechart.clear();
+            linechart.setOption(lineoption);
+        }
+
+
+    </script>
+</body>
+</html>

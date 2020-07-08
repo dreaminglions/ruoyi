@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" >
+<head>
+	<th:block th:include="include :: header('修改水厂')" />
+</head>
+<body class="white-bg">
+    <div class="wrapper wrapper-content animated fadeInRight ibox-content">
+        <form class="form-horizontal m" id="form-bizWaterWork-edit" th:object="${bizWaterWork}">
+            <input id="worksId" name="worksId" th:field="*{worksId}"  type="hidden">
+			<input id="treeId" name="parentId" type="hidden" th:field="*{parentId}" />
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">水厂编号：</label>
+				<div class="col-sm-8">
+					<input id="worksNo" name="worksNo" th:field="*{worksNo}" class="form-control required" type="text">
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label ">上级部门：</label>
+				<div class="col-sm-8">
+					<div class="input-group">
+						<input class="form-control required" type="text" id="treeName" onclick="selectWorksTree()" readonly="true" th:field="*{parentName}">
+						<span class="input-group-addon"><i class="fa fa-search"></i></span>
+					</div>
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">水厂名称：</label>
+				<div class="col-sm-8">
+					<input id="worksName" name="worksName" th:field="*{worksName}" class="form-control required" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">显示顺序：</label>
+				<div class="col-sm-8">
+					<input id="orderNum" name="orderNum" th:field="*{orderNum}" class="form-control required" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">省：</label>
+				<div class="col-sm-8">
+					<!--<input id="worksProvince" name="worksProvince" th:field="*{worksProvince}" class="form-control" type="text">-->
+					<select id="worksProvince" name="worksProvince" class="form-control required"  th:with="type=${@sysRegion.selectByParentCode(100000)}" onchange="changeProvince(0)" th:field="*{worksProvince}">
+						<option value="">请选择</option>
+						<option th:each="sysRegion : ${type}" th:text="${sysRegion.regionName}" th:value="${sysRegion.regionCod}"></option>
+					</select>
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">市：</label>
+				<div class="col-sm-8">
+					<!--<input id="worksCity" name="worksCity" th:field="*{worksCity}" class="form-control" type="text">-->
+					<select id="worksCity" name="worksCity" class="form-control required"  onchange="changeCity(0)" >
+						<option value="">请选择</option>
+					</select>
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">区：</label>
+				<div class="col-sm-8">
+					<!--<input id="worksArea" name="worksArea" th:field="*{worksArea}" class="form-control" type="text">-->
+					<select id="worksArea" name="worksArea" class="form-control required" >
+						<option value="">请选择</option>
+					</select>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label">经度：</label>
+				<div class="col-sm-8">
+					<input id="worksLongitude" name="worksLongitude" th:field="*{worksLongitude}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label">纬度：</label>
+				<div class="col-sm-8">
+					<input id="worksLatitude" name="worksLatitude" th:field="*{worksLatitude}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">详细地址：</label>
+				<div class="col-sm-8">
+					<input id="worksAddress" name="worksAddress" th:field="*{worksAddress}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">设备数量：</label>
+				<div class="col-sm-8">
+					<input id="worksCount" name="worksCount" th:field="*{worksCount}" class="form-control required" type="text">
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label">水厂类型：</label>
+				<div class="col-sm-8">
+					<label class="radio-box"> <input type="radio" name="worksType" th:field="*{worksType}" value="0" /> 管理上级 </label>
+					<label class="radio-box"> <input type="radio" name="worksType" th:field="*{worksType}" value="1" /> 普通水厂 </label>
+					<label class="radio-box"> <input type="radio" name="worksType" th:field="*{worksType}" value="2" /> 临时水厂 </label>
+				</div>
+			</div>
+
+			<div class="form-group">
+				<label class="col-sm-3 control-label">区域类型：</label>
+				<div class="col-sm-8">
+					<label class="radio-box"> <input type="radio" name="worksCenter" th:field="*{worksCenter}" value="0" /> 区域中心 </label>
+					<label class="radio-box"> <input type="radio" name="worksCenter" th:field="*{worksCenter}" value="1" /> 一般水厂 </label>
+				</div>
+			</div>
+			<!--<div class="form-group">	-->
+				<!--<label class="col-sm-3 control-label">水厂所属集团：</label>-->
+				<!--<div class="col-sm-8">-->
+					<!--<input id="worksBelong" name="worksBelong" th:field="*{worksBelong}" class="form-control" type="text">-->
+				<!--</div>-->
+			<!--</div>-->
+			<div class="form-group">
+				<label class="col-sm-3 control-label">水厂状态：</label>
+				<div class="col-sm-8">
+					<div class="radio-box" th:each="dict : ${@dict.getType('sys_normal_disable')}">
+						<input type="radio" th:id="${dict.dictCode}" name="worksStatus" th:value="${dict.dictValue}"  th:field="*{worksStatus}">
+						<label th:for="${dict.dictCode}" th:text="${dict.dictLabel}"></label>
+					</div>
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">水厂联系人：</label>
+				<div class="col-sm-8">
+					<input id="worksMaintainer" name="worksMaintainer" th:field="*{worksMaintainer}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">联系电话：</label>
+				<div class="col-sm-8">
+					<input id="worksTel" name="worksTel" th:field="*{worksTel}" class="form-control" type="text">
+				</div>
+			</div>
+
+		</form>
+    </div>
+    <div th:include="include::footer"></div>
+    <script type="text/javascript" th:inline="javascript">
+
+
+        var worksCity;
+        var worksArea;
+
+		var prefix = ctx + "system/bizWaterWork";
+		$("#form-bizWaterWork-edit").validate({
+			rules:{
+				xxxx:{
+					required:true,
+				},
+			},
+			focusCleanup: true
+		});
+
+        /*水厂管理-新增-选择父水厂树*/
+        function selectWorksTree() {
+            var options = {
+                title: '水厂选择',
+                width: "380",
+                url: prefix + "/selectWorksTree/" + $("#treeId").val(),
+                callBack: doSubmit
+            };
+            $.modal.openOptions(options);
+        }
+
+        function doSubmit(index, layero){
+            var body = layer.getChildFrame('body', index);
+            $("#treeId").val(body.find('#treeId').val());
+            $("#treeName").val(body.find('#treeName').val());
+            layer.close(index);
+        }
+		
+		function submitHandler() {
+	        if ($.validate.form()) {
+	            $.operate.save(prefix + "/edit", $('#form-bizWaterWork-edit').serialize());
+	        }
+	    }
+
+        $(document).ready(function(){
+
+            var message = [[${bizWaterWork}]];
+            worksCity = message.worksCity;
+        	worksArea = message.worksArea;
+            changeProvince(1);
+
+        });
+
+
+        function  changeProvince(obj) {
+            var d = {};
+            d.ParentCode = $('#worksProvince').val();
+
+            $.ajax({
+                url: ctx + "index/selectByParentCode",
+                data: JSON.stringify(d),
+                type: "POST",
+                cache: false,
+                contentType: "application/json;charset=utf-8",
+                processData: false,
+//            dataType: 'json',
+                success: function(result) {
+                    var regionData = eval('('+result.regionData+')');
+                    if(regionData !=''&& regionData != null&& regionData !== 'undefined'){
+                        var region = regionData.region;
+                        $('#worksCity').html("<option value=\"\">请选择</option>");
+                        $.each(region, function(i, item){
+                            $('#worksCity').append("<option value=\""+item[0]+"\">"+item[1]+"</option>")
+                        });
+                        if(obj==1){
+                            $('#worksCity').val(worksCity);
+                            changeCity(1);
+						}
+                    }
+                },
+                error: function(error) {
+                }
+            })
+        }
+
+        function changeCity(obj){
+            var d = {};
+            d.ParentCode = $('#worksCity').val();
+
+            $.ajax({
+                url: ctx + "index/selectByParentCode",
+                data: JSON.stringify(d),
+                type: "POST",
+                cache: false,
+                contentType: "application/json;charset=utf-8",
+                processData: false,
+//            dataType: 'json',
+                success: function(result) {
+                    var regionData = eval('('+result.regionData+')');
+                    if(regionData !=''&& regionData != null&& regionData !== 'undefined'){
+                        var region = regionData.region;
+                        $('#worksArea').html("<option value=\"\">请选择</option>");
+                        $.each(region, function(i, item){
+                            $('#worksArea').append("<option value=\""+item[0]+"\">"+item[1]+"</option>")
+                        });
+
+                        if(obj==1){
+                            $('#worksArea').val(worksArea);
+                        }
+                    }
+                },
+                error: function(error) {
+                }
+            })
+        }
+	</script>
+</body>
+</html>

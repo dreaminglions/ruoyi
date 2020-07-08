@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html  lang="zh" xmlns:th="http://www.thymeleaf.org">
+<head>
+	<meta charset="UTF-8">
+	<meta name="renderer" content="webkit">
+	<meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no">
+	<meta name="keywords" content="智能化验室运营中心">
+	<meta name="description" content="智能化验室运营中心">
+	<!--[if lt IE 9]>
+	<meta http-equiv="refresh" content="0;ie.html"/>
+	<![endif]-->
+	<meta charset="UTF-8">
+
+	<script th:src="@{/water/view02/js/jquery.js}"></script>
+	<title></title>
+	<style>
+		*{margin: 0;padding: 0;color:#fff;}
+		h3,h4,h5,h6{font-weight: normal;}
+		.clear{clear:both;}
+		body,html{font-family:"微软雅黑";margin:0px;padding:0;height:100%}
+		a{text-decoration: none;color: #333;}
+		#charts{width:100%;height:90%;margin:0 auto;}
+		.market_map_title{font-size:32px;text-align:left;padding-left:50px;}
+		.back_btn{
+			display: table;
+			font-size:0.87rem;
+			padding: 0.2rem 0.4rem;
+			border-radius:0.2rem;
+			margin: 0 auto;
+			color:#0E94EB;
+			background:none;
+			border:none;
+		}
+	</style>
+</head>
+<body style="background-color:'rgba(0,0,0,0.1)';">
+<!-- <body style="background-color:#fff;"> -->
+<button id="backbtn" class="back_btn" onclick="back_china()" style="visibility: hidden;">返回全国地图</button>
+<div id="charts"></div>
+</body>
+
+<script th:src="@{/water/view01/js/chinamap/echarts.min.js}"></script>
+<script th:src="@{/water/view01/js/chinamap/china.js}"></script>
+
+<script th:src="@{/water/view01/js/chinamap/province/heilongjiang.js}"></script>
+<script th:src="@{/water/view01/js/chinamap/province/jilin.js}"></script>
+<script th:src="@{/water/view01/js/chinamap/province/liaoning.js}"></script>
+<script th:src="@{/water/view01/js/chinamap/province/neimenggu.js}"></script>
+
+
+<script th:inline="javascript">
+
+    var ctx = [[@{/}]];
+
+    var markDataChina = [{
+        "name": "哈尔滨设备",
+        "coord": [
+            126.5, 45.80
+        ],
+        "runConut": '537',
+        "num": '234'
+    },{
+        "name": "吉林设备",
+        "coord": [
+            126.57, 43.87
+        ],
+        "runConut": '537',
+        "num": '234'
+    }
+    ];
+
+    var markDataHLJ = [{
+        "name": "文昌处理厂",
+        "coord": [
+            126.5, 45.80
+        ],
+        "runConut": '537',
+        "num": '234'
+    }
+    ];
+
+    var markDataJL = [{
+        "name": "明城处理厂",
+        "coord": [
+            125.32, 43.90
+        ],
+        "runConut": '537',
+        "num": '234'
+    },{
+        "name": "磐石处理厂",
+        "coord": [
+            125.83, 44.20
+        ],
+        "runConut": '537',
+        "num": '234'
+    },{
+        "name": "卡伦处理厂",
+        "coord": [
+            125.62, 43.94
+        ],
+        "runConut": '537',
+        "num": '234'
+    },{
+        "name": "营城处理厂",
+        "coord": [
+            126.17, 43.27
+        ],
+        "runConut": '537',
+        "num": '234'
+    },
+    ];
+
+    var mycharts = echarts.init(document.getElementById('charts'))
+    var nowCityList = [] // 当前城市列表
+    var option = {
+        title: {
+            show:false,
+            text: '化验机器人全国分布图',
+            x: 'center',
+            textStyle: {
+                fontSize: 24.0,
+                fontWeight: 'bold',
+                color: '#0E94EB'
+            },
+        },
+        //鼠标悬浮tip
+        tooltip: {
+            show:true,
+            trigger: 'item',
+        },
+        // 缩放漫游组件，仅对地图有效
+        //  roamController: {
+        //      // 显示策略，可选为：true（显示） | false（隐藏）
+        //      show: true,
+        //      // 水平安放位置，默认为左侧，可选为：'center' | 'left' | 'right' | {number}（x坐标，单位px）
+        //      x: 'right',
+        //      // 垂直安放位置，默认为全图顶端，可选为：'top' | 'bottom' | 'center' | {number}（y坐标，单位px）
+        //      y: '50%',
+        //      // 指定宽度，决定4向漫游圆盘大小，可指定 {number}（宽度，单位px）
+        //      width: 50,
+        //      // 指定高度，缩放控制键默认会在指定高度的最下方最大化显示，可指定 {number}（高度，单位px）
+        //      height:80,
+        //      // 缩放漫游组件背景颜色，默认透明
+        //      backgroundColor:'rgba(0,0,0,0.1)',
+        //      // 漫游组件文字填充颜色
+        //      fillerColor:'#000',
+        //      // 控制手柄主体颜色
+        //      handleColor:'#e3655a',
+        //      // 4向漫游移动步伐，单位px
+        //      step:10,
+        //      // 必须，指定漫游组件可控地图类型
+        //      mapTypeControl: {
+        //              'china': true
+        //      }
+        // },
+        // dataRange: {
+        //             min : 0,
+        //             max : 500,
+        //             calculable : false,
+        //             color: ['#EC071A','#FF8002','#3CFC06','#FFE658','#74FC01','#24BAFF'],//['maroon','purple','red','orange','yellow','lightgreen'],//['#0e94eb','#75ddff'],
+        //             textStyle: {
+        //                 color: '#fff'          // 值域文字颜色
+        //             }
+        //         },
+        // 左下角lengend
+        dataRange: {
+            show:false,
+            x: 'left',
+            y: 'bottom',
+            text: [ '低','高'],
+            orient: 'horizontal',
+            // calculable : false,
+            splitList: [
+                {start: 0, end: 0, color: 'rgba(0,0,0,0.1)'},//当值为0时，区域背景
+                {start: 1, end: 5, color: '#73DCFF'},//当值为1~5时，区域背景
+                {start: 6, end: 10, color: '#52C4F8'},//当值为6~10时，区域背景
+                {start: 11, end: 20, color: '#35B0F3'},//当值为11~20时，区域背景
+                {start: 21, end: 30, color: '#2FABF1'},//当值为21~30时，区域背景
+                {start: 31, end: 40, color: '#1498EC'},//当值为31~40时，区域背景
+                {start: 41, end: 50, color: '#0F95EB'},//当值为41~50时，区域背景
+            ],
+            //左下值域文字样式
+            textStyle: {
+                color: '#fff'          // 值域文字颜色
+            }
+        },
+        // 图像样式
+        series: [
+            {
+                name: '机器分布',
+                type: 'map',
+                mapType: 'china',
+                "zoom": 1, //当前视角的缩放比例。
+                // hoverable: false, // 禁止hover事件
+                roam: false,//true, // 是否开启缩放和平移漫游
+                itemStyle: { // 区域样式
+                    // 普通样式
+                    normal: {
+                        label: {show: true,
+                            textStyle: {
+                                color: '#fff'
+                            }
+                        },
+                        borderWidth: 1.0, // 区域边框宽度
+                        borderColor: '#0e94eb',//'#0550c3', // 区域边框颜色
+                        areaColor: "#4ea397", // 区域颜色
+                    },
+                    // hover样式
+                    emphasis: {
+                        label: {show: true},
+                        borderColor: '#4b0082',
+                        areaColor:"#ece39e",
+                    },
+                },
+                data: [],
+
+                "markPoint": { //图表标注。
+                    // "symbol": 'path://M512 39.384615l169.353846 295.384615 342.646154 63.015385-240.246154 248.123077L827.076923 984.615385l-315.076923-145.723077L196.923077 984.615385l43.323077-334.769231L0 401.723077l342.646154-63.015385L512 39.384615',
+                    "symbolSize": 24,//图形大小
+                    "label": {
+                        "normal": {
+                            "show": true,
+                        },
+                        "emphasis": {
+                            show: true,
+                        }
+                    },
+                    "itemStyle": {
+                        "normal": {
+                            "color": '#F04429'
+                        }
+                    },
+                    "data": markDataChina
+                }
+            }
+
+        ],
+        animation:false
+    };
+    var provnameArr = ['上海', '河北', '山西', '内蒙古', '辽宁', '吉林', '黑龙江', '江苏', '浙江', '安徽', '福建', '江西', '山东', '河南', '湖北', '湖南', '广东', '广西', '海南', '四川', '贵州', '云南', '西藏', '陕西', '甘肃', '青海', '宁夏', '新疆', '北京', '天津', '重庆', '香港', '澳门', '台湾', '南海诸岛'];//获取的省份，有可能是从后台获取
+    var provArr = [{name: '上海', value: 0}, {name: '河北', value: 0}, {name: '山西', value: 0}, {name: '内蒙古', value: 0},
+        {name: '辽宁', value: 0},
+        {name: '吉林', value: 4},
+        {name: '黑龙江', value: 1},
+        {name: '江苏', value: 0},
+        {name: '浙江', value: 0},
+        {name: '安徽', value: 0}, {name: '福建', value: 0}, {name: '江西', value: 0}, {name: '山东', value: 0},
+        {name: '河南', value: 0}, {name: '湖北', value: 0}, {name: '湖南', value: 0},
+        {name: '广东', value: 0},
+        {name: '广西', value: 0}, {name: '海南', value: 0},
+        {name: '四川', value: 0}, {name: '贵州', value: 0}, {name: '云南', value: 0}, {name: '西藏', value: 0}, {name: '陕西', value: 0}, {name: '甘肃', value: 0},
+        {name: '青海', value: 0}, {name: '宁夏', value: 0}, {name: '新疆', value: 0}, {name: '北京', value: 0},
+        {name: '天津', value: 0}, {name: '重庆', value: 0}, {name: '香港', value: 0}, {name: '澳门', value: 0}, {name: '台湾', value: 0}, {name: '南海诸岛', value: 0}];
+    var HLJArr = [{name: '哈尔滨市', value: 1}, {name: '牡丹江市', value: 0}, {name: '绥化市', value: 0}, {name: '大庆市', value: 0},
+        {name: '大兴安岭地区', value: 0}, {name: '黑河市', value: 1}, {name: '齐齐哈尔市', value: 0}, {name: '鹤岗市', value: 0}, {name: '佳木斯市', value: 0},
+        {name: '双鸭山市', value: 0},{name: '鸡西市', value: 0},{name: '七台河市', value: 0},{name: '伊春市', value: 0}];
+    var LNArr =[{name: '葫芦岛市', value: 0},{name: '大连市', value: 0},{name: '营口市', value: 0},{name: '锦州市', value: 0},{name: '盘锦市', value: 0},
+        {name: '阜新市', value: 0},{name: '铁岭市', value: 0},{name: '抚顺市', value: 0},{name: '本溪市', value: 0},{name: '丹东市', value: 0},
+        {name: '鞍山市', value: 0},{name: '辽阳市', value: 0},{name: '朝阳市', value: 0},{name: '沈阳市', value: 0}];
+    var JLArr =[{name: '白城市', value: 0},{name: '松原市', value: 0},{name: '长春市', value: 3},{name: '四平市', value: 0},{name: '吉林市', value: 1},{name: '辽源市', value: 0},            {name: '通化市', value: 0},{name: '白山市', value: 0},{name: '延边朝鲜族自治州', value: 0}];
+    var NMGArr  =[{name: '阿拉善盟', value: 0},{name: '乌海市', value: 0},{name: '巴彦淖尔市', value: 0},{name: '包头市', value: 0},{name: '呼和浩特市', value: 1},
+        {name: '乌兰察布市', value: 0},{name: '锡林郭勒盟', value: 0},{name: '赤峰市', value: 1},{name: '通辽市', value: 0},{name: '兴安盟', value: 0},{name: '呼伦贝尔市', value: 1},{name: '鄂尔多斯市', value: 0}];
+    option.series[0].data=provArr;//将拼接好的数组赋给参数集合
+    mycharts.setOption(option);//跟新图表
+    //鼠标滑过事件
+    var testStr=','+provArr.join(",")+",";
+    mycharts.on('hover', function (param){
+        if(testStr.indexOf(","+param.name+",")!=-1){//如果滑到选中省份
+            if(option.tooltip.showContent==false){//如果tip显示为false
+                option.tooltip.showContent=true;
+                mycharts.setOption(option);
+            }
+        }else{
+            if(option.tooltip.showContent==true){
+                option.tooltip.showContent=false;
+                param.value=15;
+                mycharts.setOption(option);
+            }
+        }
+    });
+    //点击事件
+    mycharts.on('click', function (params) {//点击事件
+        if (option.series[0].mapType === 'china') { // 点击省份
+            enter_provence(params.name)
+        } else {
+            // for(var i=0;i<provnameArr.length;i++){
+            //  if(provnameArr[i]==option.series[0].mapType){
+            //      enter_city(params.name)
+            //  }
+            // }
+
+            // 点击城市
+            // var newArr = option.series[0].data.filter(function (item) {
+            //          if (item.name === params.name) {
+            //            item.value = 10
+            //          } else {
+            //            item.value = 15
+            //          }
+            //          return item.name === params.name
+            //        })
+            //        mycharts.setOption(option) // 跟新图表
+            //        console.log('城市名称：' + params.name, '城市id:' + newArr[0].id)
+        }
+        // select_province(params.name);
+    });
+    //初始化省颜色
+    function ini_province(){
+        var ini_len=option.series[0].data.length;
+        for(var i=0;i<ini_len;i++){
+            //初始化颜色
+            option.series[0].data[i].value=15;
+            mycharts.setOption(option);
+        }
+    }
+    //选中省颜色
+    function enter_provence(name){
+        var len=option.series[0].data.length;
+        for(var i=0;i<len;i++){
+            if(option.series[0].data[i].name==name){//如果匹配正确
+                // 便利省份
+                // for (let item in areaArr) {
+                //  if (areaArr[item].name.indexOf(name) > -1) {
+                //  let olist = areaArr[item].items
+                //  nowCityList = []
+                //  for (let item2 in olist) {
+                //      //alert(olist[item2].name);
+                //      let str2 = {name: olist[item2].name, value: 15, id: olist[item2].id} // 拼接对象数组
+                //      nowCityList.push(str2)
+                //  }
+                //  option.series[0].data = nowCityList // 将拼接好的数组赋给参数集合
+                //  }
+                // }
+                var count = option.series[0].data[i].value;
+                if(count>0){
+                    //进入子图
+                    if("黑龙江"==name){
+                        var d = {};
+                        d.area = '230000';
+                        $.ajax({
+                            url: ctx + "index/getAreamap",
+                            data: JSON.stringify(d),
+                            type: "POST",
+                            cache: false,
+                            contentType: "application/json;charset=utf-8",
+                            processData: false,
+                            success: function(result) {
+                                var areamap = eval('('+result.areamap+')');
+                                if(areamap !=''&& areamap != null&& areamap !== 'undefined'){
+                                    var area_markDataHLJ = JSON.stringify(areamap.area);
+                                    var markDataHLJ_json = eval('('+area_markDataHLJ+')');
+                                    option.series[0].data = HLJArr;
+                                    option.series[0].markPoint.data = markDataHLJ_json;
+                                    option.series[0].zoom = 0.7
+
+                                    option.series[0].mapType = name
+                                    mycharts.setOption(option)
+                                    document.getElementById("backbtn").style.visibility="visible";
+                                }
+                            },
+                            error: function(error) {
+                            }
+                        })
+
+//                        option.series[0].data = HLJArr;
+//                        option.series[0].markPoint.data = markDataHLJ;
+//                        option.series[0].zoom = 0.7
+
+                    }else if("辽宁"==name){
+                        option.series[0].data = LNArr;
+                        option.series[0].markPoint.data = []
+                    }else if("吉林"==name){
+                        var d = {};
+                        d.area = '220000';
+                        $.ajax({
+                            url: ctx + "index/getAreamap",
+                            data: JSON.stringify(d),
+                            type: "POST",
+                            cache: false,
+                            contentType: "application/json;charset=utf-8",
+                            processData: false,
+                            success: function(result) {
+                                var areamap = eval('('+result.areamap+')');
+                                if(areamap !=''&& areamap != null&& areamap !== 'undefined'){
+                                    var area_markDataHLJ = JSON.stringify(areamap.area);
+                                    var markDataHLJ_json = eval('('+area_markDataHLJ+')');
+                                    option.series[0].data = JLArr;
+                                    option.series[0].markPoint.data = markDataHLJ_json;
+
+                                    option.series[0].mapType = name
+                                    mycharts.setOption(option)
+                                    document.getElementById("backbtn").style.visibility="visible";
+                                }
+                            },
+                            error: function(error) {
+                                option.series[0].data = JLArr;
+                                option.series[0].markPoint.data = markDataJL
+                            }
+                        })
+//
+//                        option.series[0].data = JLArr;
+//                        option.series[0].markPoint.data = markDataJL
+                    }else if("内蒙古"==name){
+                        option.series[0].data = NMGArr;
+                        option.series[0].markPoint.data = []
+                    }
+                    // option.series[0].data = nowCityList
+                }
+
+            }else{
+//                console.log(name)
+            }
+        }
+    }
+
+    //选中市颜色
+    function enter_city(name){
+        var len=option.series[0].data.length;
+        for(var i=0;i<len;i++){
+            if(option.series[0].data[i].name==name){//如果匹配正确
+                // 便利城市
+                for (let item_area in areaArr) {
+                    var item_city = areaArr[item_area].items;
+                    for(let item in item_city){
+                        if (item_city[item].name.indexOf(name) > -1) {
+                            //alert(item_city[item].items);
+                            let olist = item_city[item].items
+                            nowCityList = []
+                            for (let item2 in olist) {
+                                //alert(olist[item2].name);
+                                let str2 = {name: olist[item2].name, value: 15, id: olist[item2].id} // 拼接对象数组
+                                nowCityList.push(str2)
+                            }
+                            option.series[0].data = nowCityList // 将拼接好的数组赋给参数集合
+                        }
+                    }
+                }
+                //进入子图
+                option.series[0].mapType = name
+                mycharts.setOption(option)
+            }else{
+                console.log(name)
+            }
+        }
+    }
+
+    // 回到全国地图
+    function back_china () {
+        option.series[0].zoom = 1
+        option.series[0].mapType = 'china'
+        option.series[0].data = provArr
+        option.series[0].markPoint.data = markDataChina;
+        mycharts.setOption(option)
+        document.getElementById("backbtn").style.visibility="hidden";
+    }
+    // 自定义缩放事件
+    function scale_even(){
+        let obj={
+            a:1,
+            b:2
+        }
+        mycharts.scal_map(obj)
+    }
+
+</script>
+</html>

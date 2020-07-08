@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" >
+<head>
+	<th:block th:include="include :: header('新增化验单据')" />
+</head>
+<body class="white-bg">
+    <div class="wrapper wrapper-content animated fadeInRight ibox-content">
+        <form class="form-horizontal m" id="form-bizOrder-add">
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">化验单据编号：</label>
+				<div class="col-sm-8">
+					<input id="orderNo" name="orderNo" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">化验结果唯一ID（用于修改溯源）：</label>
+				<div class="col-sm-8">
+					<input id="reportId" name="reportId" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">化验设备：</label>
+				<div class="col-sm-8">
+					<input id="orderDevice" name="orderDevice" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">化验水厂：</label>
+				<div class="col-sm-8">
+					<input id="orderWorks" name="orderWorks" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">化验开始时间：</label>
+				<div class="col-sm-8">
+					<input id="beginTime" name="beginTime" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">化验结束时间：</label>
+				<div class="col-sm-8">
+					<input id="endTime" name="endTime" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">化验日期：</label>
+				<div class="col-sm-8">
+					<input id="orderDate" name="orderDate" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">负责人：</label>
+				<div class="col-sm-8">
+					<input id="orderMaintainer" name="orderMaintainer" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">联系方式：</label>
+				<div class="col-sm-8">
+					<input id="orderTel" name="orderTel" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">化验结果：</label>
+				<div class="col-sm-8">
+					<input id="orderResult" name="orderResult" class="form-control" type="text">
+				</div>
+			</div>
+
+		</form>
+	</div>
+    <div th:include="include::footer"></div>
+    <script type="text/javascript">
+		var prefix = ctx + "system/bizOrder"
+		$("#form-bizOrder-add").validate({
+			rules:{
+				xxxx:{
+					required:true,
+				},
+			},
+			focusCleanup: true
+		});
+		
+		function submitHandler() {
+	        if ($.validate.form()) {
+	            $.operate.save(prefix + "/add", $('#form-bizOrder-add').serialize());
+	        }
+	    }
+	</script>
+</body>
+</html>

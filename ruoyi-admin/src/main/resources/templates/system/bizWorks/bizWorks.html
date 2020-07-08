@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<head>
+	<th:block th:include="include :: header('水厂列表')" />
+</head>
+<body class="gray-bg">
+    
+     <div class="container-div">
+		<div class="row">
+			<div class="col-sm-12 search-collapse">
+				<form id="formId">
+					<div class="select-list">
+						<ul>
+							<li>
+								水厂名称：<input type="text" name="worksName"/>
+							</li>
+							<li>
+								水厂类型：
+								<select name="worksType" th:with="type=${@dict.getType('works_type')}">
+									<option value="">所有</option>
+									<option th:each="dict : ${type}" th:text="${dict.dictLabel}" th:value="${dict.dictValue}"></option>
+								</select>
+
+							</li>
+							<li>
+								城市：<input type="text" name="worksCity"/>
+							</li>
+
+							<li>
+								<a class="btn btn-primary btn-rounded btn-sm" onclick="$.table.search()"><i class="fa fa-search"></i>&nbsp;搜索</a>
+								<a class="btn btn-warning btn-rounded btn-sm" onclick="$.form.reset()"><i class="fa fa-refresh"></i>&nbsp;重置</a>
+							</li>
+						</ul>
+					</div>
+				</form>
+			</div>
+			
+	        <div class="btn-group-sm" id="toolbar" role="group">
+				<a class="btn btn-success" onclick="$.operate.add()" shiro:hasPermission="system:bizWorks:add">
+					<i class="fa fa-plus"></i> 添加
+				</a>
+				<!--<a class="btn btn-primary btn-edit disabled" onclick="$.operate.edit()" shiro:hasPermission="system:bizWorks:edit">-->
+					<!--<i class="fa fa-edit"></i> 修改-->
+				<!--</a>-->
+				<!--<a class="btn btn-danger btn-del btn-del disabled" onclick="$.operate.removeAll()" shiro:hasPermission="system:bizWorks:remove">-->
+					<!--<i class="fa fa-remove"></i> 删除-->
+				<!--</a>-->
+				<a class="btn btn-warning" onclick="$.table.exportExcel()" shiro:hasPermission="system:bizWorks:export">
+						<i class="fa fa-download"></i> 导出
+				 </a>
+				<!--<a class="btn btn-info" onclick="$.table.importExcel()" shiro:hasPermission="system:user:import">-->
+					<!--<i class="fa fa-upload"></i> 打印-->
+				<!--</a>-->
+			</div>
+			<div class="col-sm-12 select-table table-striped">
+				<table id="bootstrap-table" data-mobile-responsive="true"></table>
+			</div>
+		</div>
+	</div>
+    <div th:include="include :: footer"></div>
+    <script th:inline="javascript">
+        var editFlag = [[${@permission.hasPermi('system:bizWorks:edit')}]];
+        var removeFlag = [[${@permission.hasPermi('system:bizWorks:remove')}]];
+        var prefix = ctx + "system/bizWorks";
+
+        $(function() {
+            var options = {
+                url: prefix + "/list",
+                createUrl: prefix + "/add",
+                updateUrl: prefix + "/edit/{id}",
+                removeUrl: prefix + "/remove",
+				exportUrl: prefix + "/export",
+                modalName: "水厂",
+		        showExport: true,
+                columns: [{
+		            checkbox: true
+		        },
+				{
+					field : 'worksId', 
+					title : '水厂ID',
+					visible: false
+				},
+				{
+					field : 'worksNo', 
+					title : '水厂编号',
+					sortable: true
+				},
+				{
+					field : 'worksName', 
+					title : '水厂名称',
+					sortable: false
+				},
+				{
+					field : 'worksArea', 
+					title : '地区',
+					sortable: false,
+                    formatter: function(value, item, index) {
+                        return item.worksProvince +" - "+ item.worksCity+" - " + item.worksArea;
+                    }
+				},
+				{
+					field : 'worksMaintainer',
+					title : '负责人',
+					sortable: false
+				},
+				{
+					field : 'worksTel',
+					title : '联系方式',
+					sortable: false
+				},
+				{
+					field : 'worksCount', 
+					title : '设备数量',
+					sortable: false
+				},
+				{
+					field : 'worksType', 
+					title : '水厂类型',
+					sortable: true,
+                    formatter: function(value, item, index) {
+                        if (item.worksType == '0') {
+                            return '<span class="label label-success">集团水厂</span>';
+                        }
+                        else if (item.worksType == '1') {
+                            return '<span class="label label-primary">区域中心</span>';
+                        }
+                        else if (item.worksType == '2') {
+                            return '<span class="label label-warning">临时水厂</span>';
+                        }
+                    }
+				},
+//				{
+//					field : 'worksStatus',
+//					title : '水厂状态',
+//					sortable: true,
+//                    formatter: function (value, row, index) {
+//                        if (row.worksStatus == 0) {
+//                            return '<i class=\"btn btn-success btn-xs\" >正常</i> ';
+//                        } else {
+//                            return '<i class=\"btn btn-danger btn-xs\" >停用</i> ';
+//                        }
+//					}
+//				},
+		        {
+		            title: '操作',
+		            align: 'center',
+		            formatter: function(value, row, index) {
+		            	var actions = [];
+		            	actions.push('<a class="btn btn-success btn-xs ' + editFlag + '" href="#" onclick="$.operate.edit(\'' + row.worksId + '\')"><i class="fa fa-edit"></i>编辑</a> ');
+                        actions.push('<a class="btn btn-danger btn-xs ' + removeFlag + '" href="#" onclick="$.operate.remove(\'' + row.worksId + '\')"><i class="fa fa-remove"></i>删除</a>');
+						return actions.join('');
+		            }
+		        }]
+            };
+            $.table.init(options);
+        });
+
+
+    </script>
+</body>
+</html>
