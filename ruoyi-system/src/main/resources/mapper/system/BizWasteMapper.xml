@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.BizWasteMapper">
+    
+    <resultMap type="BizWaste" id="BizWasteResult">
+        <result property="wasteId"    column="waste_id"    />
+        <result property="wasteNo"    column="waste_no"    />
+        <result property="wasteName"    column="waste_name"    />
+        <result property="wasteType"    column="waste_type"    />
+        <result property="wasteDevice"    column="waste_device"    />
+        <result property="wasteWorks"    column="waste_works"    />
+        <result property="assayId"    column="assay_id"    />
+        <result property="wasteStatus"    column="waste_status"    />
+        <result property="wasteTotal"    column="waste_total"    />
+        <result property="repairTime"    column="repair_time"    />
+        <result property="repairBy"    column="repair_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <association property="device"    column="waste_device" javaType="BizDevice" resultMap="deviceResult" />
+        <association property="works"    column="waste_works" javaType="BizWaterWork" resultMap="worksResult" />
+    </resultMap>
+
+
+    <resultMap id="deviceResult" type="BizDevice">
+        <result property="deviceId"    column="device_id"    />
+        <result property="deviceNo"    column="device_no"    />
+        <result property="deviceName"    column="device_name"    />
+        <result property="deviceStatus"    column="device_status"    />
+    </resultMap>
+
+    <resultMap id="worksResult" type="BizWaterWork">
+        <result property="worksId"    column="works_id"    />
+        <result property="worksNo"    column="works_no"    />
+        <result property="worksName"    column="works_name"    />
+        <result property="worksStatus"    column="works_status"    />
+    </resultMap>
+	
+	<sql id="selectBizWasteVo">
+        select a.waste_id, a.waste_no, a.waste_name, a.waste_type, a.waste_device, a.waste_works,a.assay_id, a.waste_status, a.waste_total, a.repair_time, a.repair_by, a.create_time, a.create_by, a.update_time, a.update_by,
+        d.device_id,d.device_no,d.device_name,d.device_status,d.device_works,
+        w.works_id,w.works_no,w.works_name,w.works_status
+        from biz_waste a
+        LEFT JOIN biz_device d on a.waste_device = d.device_id
+		LEFT JOIN biz_water_work w on a.waste_works = w.works_id
+    </sql>
+	
+    <select id="selectBizWasteList" parameterType="BizWaste" resultMap="BizWasteResult">
+        <include refid="selectBizWasteVo"/>
+        where 1=1
+            <if test="wasteId != null "> and a.waste_id = #{wasteId}</if>
+             <if test="wasteNo != null  and wasteNo != '' "> and a.waste_no = #{wasteNo}</if>
+             <if test="wasteName != null  and wasteName != '' "> and a.waste_name = #{wasteName}</if>
+             <if test="wasteType != null  and wasteType != '' "> and a.waste_type = #{wasteType}</if>
+             <if test="wasteDevice != null "> and a.waste_device = #{wasteDevice}</if>
+             <if test="assayId != null "> and a.assay_id = #{assayId}</if>
+             <if test="wasteWorks != null "> and a.waste_works = #{wasteWorks}</if>
+             <if test="wasteStatus != null  and wasteStatus != '' "> and a.waste_status = #{wasteStatus}</if>
+             <if test="wasteTotal != null "> and a.waste_total = #{wasteTotal}</if>
+             <if test="repairTime != null and repairTime != ''">
+                 and date_format(a.repair_time,'%y%m%d') &gt;= date_format(#{repairTime},'%y%m%d')
+             </if>
+             <if test="repairBy != null  and repairBy != '' "> and a.repair_by = #{repairBy}</if>
+
+            <if test="params.beginTime != null and params.beginTime != ''"><!-- 开始时间检索 -->
+                AND date_format(a.repair_time,'%y%m%d') &gt;= date_format(#{params.beginTime},'%y%m%d')
+            </if>
+            <if test="params.endTime != null and params.endTime != ''"><!-- 结束时间检索 -->
+                AND date_format(a.repair_time,'%y%m%d') &lt;= date_format(#{params.endTime},'%y%m%d')
+            </if>
+        <!-- 数据范围过滤 -->
+        ${params.dataScope}
+    </select>
+    
+    <select id="selectBizWasteById" parameterType="Long" resultMap="BizWasteResult">
+        <include refid="selectBizWasteVo"/>
+        where a.waste_id = #{wasteId}
+    </select>
+        
+    <insert id="insertBizWaste" parameterType="BizWaste" useGeneratedKeys="true" keyProperty="wasteId">
+        insert into biz_waste
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="wasteNo != null  and wasteNo != ''  ">waste_no,</if>
+			<if test="wasteName != null  and wasteName != ''  ">waste_name,</if>
+			<if test="wasteType != null  and wasteType != ''  ">waste_type,</if>
+			<if test="wasteDevice != null  ">waste_device,</if>
+			<if test="wasteWorks != null  ">waste_works,</if>
+            <if test="assayId != null  and assayId != ''  ">assay_id,</if>
+			<if test="wasteStatus != null  and wasteStatus != ''  ">waste_status,</if>
+			<if test="wasteTotal != null  ">waste_total,</if>
+			<if test="repairTime != null  and repairTime != ''    ">repair_time,</if>
+			<if test="repairBy != null  and repairBy != ''  ">repair_by,</if>
+			<if test="createBy != null  and createBy != ''  ">create_by,</if>
+            create_time
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="wasteNo != null  and wasteNo != ''  ">#{wasteNo},</if>
+			<if test="wasteName != null  and wasteName != ''  ">#{wasteName},</if>
+			<if test="wasteType != null  and wasteType != ''  ">#{wasteType},</if>
+			<if test="wasteDevice != null  ">#{wasteDevice},</if>
+			<if test="wasteWorks != null  ">#{wasteWorks},</if>
+            <if test="assayId != null  and assayId != ''  ">#{assayId},</if>
+			<if test="wasteStatus != null  and wasteStatus != ''  ">#{wasteStatus},</if>
+			<if test="wasteTotal != null  ">#{wasteTotal},</if>
+			<if test="repairTime != null and repairTime != '' ">#{repairTime},</if>
+			<if test="repairBy != null  and repairBy != ''  ">#{repairBy},</if>
+			<if test="createBy != null  and createBy != ''  ">#{createBy},</if>
+            sysdate()
+         </trim>
+    </insert>
+	 
+    <update id="updateBizWaste" parameterType="BizWaste">
+        update biz_waste
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="wasteNo != null  and wasteNo != ''  ">waste_no = #{wasteNo},</if>
+            <if test="wasteName != null  and wasteName != ''  ">waste_name = #{wasteName},</if>
+            <if test="wasteType != null  and wasteType != ''  ">waste_type = #{wasteType},</if>
+            <if test="wasteDevice != null  ">waste_device = #{wasteDevice},</if>
+            <if test="wasteWorks != null  ">waste_works = #{wasteWorks},</if>
+            <if test="assayId != null  and assayId != ''  ">assay_id = #{assayId},</if>
+            <if test="wasteStatus != null  and wasteStatus != ''  ">waste_status = #{wasteStatus},</if>
+            <if test="wasteTotal != null  ">waste_total = #{wasteTotal},</if>
+            <if test="repairTime != null  and repairTime != ''">repair_time = #{repairTime},</if>
+            <if test="repairBy != null  and repairBy != ''  ">repair_by = #{repairBy},</if>
+            <if test="updateBy != null  and updateBy != ''  ">update_by = #{updateBy},</if>
+            update_time = sysdate()
+        </trim>
+        where waste_id = #{wasteId}
+    </update>
+
+	<delete id="deleteBizWasteById" parameterType="Long">
+        delete from biz_waste where waste_id = #{wasteId}
+    </delete>
+	
+    <delete id="deleteBizWasteByIds" parameterType="String">
+        delete from biz_waste where waste_id in 
+        <foreach item="wasteId" collection="array" open="(" separator="," close=")">
+            #{wasteId}
+        </foreach>
+    </delete>
+
+
+    <select id="getWasteBar" resultType="DataEnity">
+        SELECT "本次" as 'key',t.waste_total as 'value' FROM `biz_waste` t
+            where t.assay_id = #{assayId}
+            and t.waste_works = #{worksId}
+        union
+        SELECT "平均" as 'key',CAST(AVG(t.waste_total) AS DECIMAL(10,2)) as 'value' FROM `biz_waste` t
+                where t.waste_works= #{worksId}
+				and date_format(t.repair_time,'%Y-%m') = #{month}
+        union
+        SELECT "总值" as 'key',sum(t.waste_total ) as 'value' FROM `biz_waste` t
+                where t.waste_works= #{worksId}
+				and date_format(t.repair_time,'%Y-%m') = #{month}
+    </select>
+    
+</mapper>

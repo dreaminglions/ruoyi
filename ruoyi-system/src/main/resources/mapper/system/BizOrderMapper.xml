@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.BizOrderMapper">
+    
+    <resultMap type="BizOrder" id="BizOrderResult">
+        <result property="orderId"    column="order_id"    />
+        <result property="orderNo"    column="order_no"    />
+        <result property="reportId"    column="report_id"    />
+        <result property="orderDevice"    column="order_device"    />
+        <result property="orderWorks"    column="order_works"    />
+        <result property="beginTime"    column="begin_time"    />
+        <result property="endTime"    column="end_time"    />
+        <result property="orderDate"    column="order_date"    />
+        <result property="orderMaintainer"    column="order_maintainer"    />
+        <result property="orderTel"    column="order_tel"    />
+        <result property="orderResult"    column="order_result"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <association property="device"    column="order_device" javaType="BizDevice" resultMap="deviceResult" />
+        <association property="works"    column="order_works" javaType="BizWaterWork" resultMap="worksResult" />
+    </resultMap>
+
+
+    <resultMap id="deviceResult" type="BizDevice">
+        <result property="deviceId"    column="device_id"    />
+        <result property="deviceNo"    column="device_no"    />
+        <result property="deviceName"    column="device_name"    />
+        <result property="deviceStatus"    column="device_status"    />
+    </resultMap>
+
+    <resultMap id="worksResult" type="BizWaterWork">
+        <result property="worksId"    column="works_id"    />
+        <result property="worksNo"    column="works_no"    />
+        <result property="worksName"    column="works_name"    />
+        <result property="worksStatus"    column="works_status"    />
+    </resultMap>
+	
+	<sql id="selectBizOrderVo">
+        select a.order_id, a.order_no, a.report_id, a.order_device, a.order_works, a.begin_time, a.end_time, a.order_date, a.order_maintainer, a.order_tel, a.order_result, a.create_time, a.create_by, a.update_time, a.update_by,
+                d.device_id,d.device_no,d.device_name,d.device_status,d.device_works,
+                w.works_id,w.works_no,w.works_name,w.works_status
+		from biz_order a
+        LEFT JOIN biz_device d on a.order_device = d.device_id
+		LEFT JOIN biz_water_work w on a.order_works = w.works_id
+
+    </sql>
+	
+    <select id="selectBizOrderList" parameterType="BizOrder" resultMap="BizOrderResult">
+        <include refid="selectBizOrderVo"/>
+        <where>  
+            <if test="orderId != null "> and a.order_id = #{orderId}</if>
+             <if test="orderNo != null  and orderNo != '' "> and a.order_no = #{orderNo}</if>
+             <if test="reportId != null  and reportId != '' "> and a.report_id = #{reportId}</if>
+             <if test="orderDevice != null "> and a.order_device = #{orderDevice}</if>
+             <if test="orderWorks != null "> and a.order_works = #{orderWorks}</if>
+             <if test="beginTime != null "> and a.begin_time = #{beginTime}</if>
+             <if test="endTime != null "> and a.end_time = #{endTime}</if>
+             <if test="orderDate != null  and orderDate != '' "> and a.order_date = #{orderDate}</if>
+             <if test="orderMaintainer != null  and orderMaintainer != '' "> and a.order_maintainer = #{orderMaintainer}</if>
+             <if test="orderTel != null  and orderTel != '' "> and a.order_tel = #{orderTel}</if>
+             <if test="orderResult != null  and orderResult != '' "> and a.order_result = #{orderResult}</if>
+         </where>
+    </select>
+    
+    <select id="selectBizOrderById" parameterType="Long" resultMap="BizOrderResult">
+        <include refid="selectBizOrderVo"/>
+        where a.order_id = #{orderId}
+    </select>
+
+    <select id="selectOrderResultByNo" parameterType="String" resultMap="BizOrderResult">
+        <include refid="selectBizOrderVo"/>
+        where a.order_no = #{orderNo}
+    </select>
+
+        
+    <insert id="insertBizOrder" parameterType="BizOrder" useGeneratedKeys="true" keyProperty="orderId">
+        insert into biz_order
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="orderNo != null  and orderNo != ''  ">order_no,</if>
+			<if test="reportId != null  and reportId != ''  ">report_id,</if>
+			<if test="orderDevice != null  ">order_device,</if>
+			<if test="orderWorks != null  ">order_works,</if>
+			<if test="beginTime != null  ">begin_time,</if>
+			<if test="endTime != null  ">end_time,</if>
+			<if test="orderDate != null  and orderDate != ''  ">order_date,</if>
+			<if test="orderMaintainer != null  and orderMaintainer != ''  ">order_maintainer,</if>
+			<if test="orderTel != null  and orderTel != ''  ">order_tel,</if>
+			<if test="orderResult != null  and orderResult != ''  ">order_result,</if>
+			<if test="createBy != null  and createBy != ''  ">create_by,</if>
+            create_time
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="orderNo != null  and orderNo != ''  ">#{orderNo},</if>
+			<if test="reportId != null  and reportId != ''  ">#{reportId},</if>
+			<if test="orderDevice != null  ">#{orderDevice},</if>
+			<if test="orderWorks != null  ">#{orderWorks},</if>
+			<if test="beginTime != null  ">#{beginTime},</if>
+			<if test="endTime != null  ">#{endTime},</if>
+			<if test="orderDate != null  and orderDate != ''  ">#{orderDate},</if>
+			<if test="orderMaintainer != null  and orderMaintainer != ''  ">#{orderMaintainer},</if>
+			<if test="orderTel != null  and orderTel != ''  ">#{orderTel},</if>
+			<if test="orderResult != null  and orderResult != ''  ">#{orderResult},</if>
+			<if test="createBy != null  and createBy != ''  ">#{createBy},</if>
+            sysdate()
+         </trim>
+    </insert>
+	 
+    <update id="updateBizOrder" parameterType="BizOrder">
+        update biz_order
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="orderNo != null  and orderNo != ''  ">order_no = #{orderNo},</if>
+            <if test="reportId != null  and reportId != ''  ">report_id = #{reportId},</if>
+            <if test="orderDevice != null  ">order_device = #{orderDevice},</if>
+            <if test="orderWorks != null  ">order_works = #{orderWorks},</if>
+            <if test="beginTime != null  ">begin_time = #{beginTime},</if>
+            <if test="endTime != null  ">end_time = #{endTime},</if>
+            <if test="orderDate != null  and orderDate != ''  ">order_date = #{orderDate},</if>
+            <if test="orderMaintainer != null  and orderMaintainer != ''  ">order_maintainer = #{orderMaintainer},</if>
+            <if test="orderTel != null  and orderTel != ''  ">order_tel = #{orderTel},</if>
+            <if test="orderResult != null  and orderResult != ''  ">order_result = #{orderResult},</if>
+            <if test="updateBy != null  and updateBy != ''  ">update_by = #{updateBy},</if>
+            update_time = sysdate()
+        </trim>
+        where order_id = #{orderId}
+    </update>
+
+	<delete id="deleteBizOrderById" parameterType="Long">
+        delete from biz_order where order_id = #{orderId}
+    </delete>
+	
+    <delete id="deleteBizOrderByIds" parameterType="String">
+        delete from biz_order where order_id in 
+        <foreach item="orderId" collection="array" open="(" separator="," close=")">
+            #{orderId}
+        </foreach>
+    </delete>
+    
+</mapper>

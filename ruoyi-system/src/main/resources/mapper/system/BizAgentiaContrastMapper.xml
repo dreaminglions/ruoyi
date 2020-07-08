@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.BizAgentiaContrastMapper">
+    
+    <resultMap type="BizAgentiaContrast" id="BizAgentiaContrastResult">
+        <result property="contrastId"    column="contrast_id"    />
+        <result property="contrastDevice"    column="contrast_device"    />
+        <result property="contrastAgentia"    column="contrast_agentia"    />
+        <result property="contrastName"    column="contrast_name"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <association property="device"    column="contrast_device" javaType="BizDevice" resultMap="deviceResult" />
+        <association property="agentia"    column="contrast_agentia" javaType="BizAgentia" resultMap="agentiaResult" />
+    </resultMap>
+
+    <resultMap id="deviceResult" type="BizDevice">
+        <result property="deviceId"    column="device_id"    />
+        <result property="deviceNo"    column="device_no"    />
+        <result property="deviceName"    column="device_name"    />
+        <result property="deviceStatus"    column="device_status"    />
+    </resultMap>
+
+    <resultMap id="agentiaResult" type="BizAgentia">
+        <result property="agentiaId"    column="agentia_id"    />
+        <result property="agentiaNo"    column="agentia_no"    />
+        <result property="agentiaName"    column="agentia_name"    />
+        <result property="agentiaStatus"    column="agentia_status"    />
+    </resultMap>
+	
+	<sql id="selectBizAgentiaContrastVo">
+        select a.contrast_id, a.contrast_device, a.contrast_agentia, a.contrast_name, a.create_time, a.create_by, a.update_time, a.update_by,
+                d.device_id,d.device_no,d.device_name,d.device_status,
+                g.agentia_id, g.agentia_no, g.agentia_name,g.agentia_status
+        from biz_agentia_contrast a
+        LEFT JOIN biz_device d on a.contrast_device = d.device_id
+        LEFT JOIN biz_agentia g on a.contrast_agentia = g.agentia_id
+    </sql>
+	
+    <select id="selectBizAgentiaContrastList" parameterType="BizAgentiaContrast" resultMap="BizAgentiaContrastResult">
+        <include refid="selectBizAgentiaContrastVo"/>
+        <where>  
+            <if test="contrastId != null "> and a.contrast_id = #{contrastId}</if>
+             <if test="contrastDevice != null "> and a.contrast_device = #{contrastDevice}</if>
+             <if test="contrastAgentia != null "> and contrast_agentia = #{contrastAgentia}</if>
+             <if test="contrastName != null  and contrastName != '' "> and a.contrast_name = #{contrastName}</if>
+             <if test="createTime != null "> and a.create_time = #{createTime}</if>
+             <if test="createBy != null  and createBy != '' "> and a.create_by = #{createBy}</if>
+             <if test="updateTime != null "> and a.update_time = #{updateTime}</if>
+             <if test="updateBy != null  and updateBy != '' "> and a.update_by = #{updateBy}</if>
+         </where>
+    </select>
+    
+    <select id="selectBizAgentiaContrastById" parameterType="Long" resultMap="BizAgentiaContrastResult">
+        <include refid="selectBizAgentiaContrastVo"/>
+        where a.contrast_id = #{contrastId}
+    </select>
+
+    <select id="selectContrastByAgentia" parameterType="Long" resultMap="BizAgentiaContrastResult">
+        select a.contrast_id, a.contrast_device, a.contrast_agentia, a.contrast_name, a.create_time, a.create_by, a.update_time, a.update_by
+        from biz_agentia_contrast
+        where contrast_id = #{AgentiaId}
+    </select>
+
+    <insert id="insertBizAgentiaContrast" parameterType="BizAgentiaContrast">
+        insert into biz_agentia_contrast
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="contrastId != null  ">contrast_id,</if>
+			<if test="contrastDevice != null  ">contrast_device,</if>
+			<if test="contrastAgentia != null  ">contrast_agentia,</if>
+			<if test="contrastName != null  and contrastName != ''  ">contrast_name,</if>
+			<if test="createBy != null  and createBy != ''  ">create_by,</if>
+            create_time
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="contrastId != null  ">#{contrastId},</if>
+			<if test="contrastDevice != null  ">#{contrastDevice},</if>
+			<if test="contrastAgentia != null  ">#{contrastAgentia},</if>
+			<if test="contrastName != null  and contrastName != ''  ">#{contrastName},</if>
+			<if test="createBy != null  and createBy != ''  ">#{createBy},</if>
+            sysdate()
+         </trim>
+    </insert>
+	 
+    <update id="updateBizAgentiaContrast" parameterType="BizAgentiaContrast">
+        update biz_agentia_contrast
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="contrastDevice != null  ">contrast_device = #{contrastDevice},</if>
+            <if test="contrastAgentia != null  ">contrast_agentia = #{contrastAgentia},</if>
+            <if test="contrastName != null  and contrastName != ''  ">contrast_name = #{contrastName},</if>
+            <if test="updateBy != null  and updateBy != ''  ">update_by = #{updateBy},</if>
+            update_time = sysdate()
+        </trim>
+        where contrast_id = #{contrastId}
+    </update>
+
+	<delete id="deleteBizAgentiaContrastById" parameterType="Long">
+        delete from biz_agentia_contrast where contrast_id = #{contrastId}
+    </delete>
+	
+    <delete id="deleteBizAgentiaContrastByIds" parameterType="String">
+        delete from biz_agentia_contrast where contrast_id in 
+        <foreach item="contrastId" collection="array" open="(" separator="," close=")">
+            #{contrastId}
+        </foreach>
+    </delete>
+    
+</mapper>

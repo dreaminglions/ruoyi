@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.BizWorksMapper">
+
+    <resultMap type="BizWorks" id="BizWorksResult">
+        <result property="worksId"    column="works_id"    />
+        <result property="worksNo"    column="works_no"    />
+        <result property="worksName"    column="works_name"    />
+        <result property="worksProvince"    column="works_province"    />
+        <result property="worksCity"    column="works_city"    />
+        <result property="worksArea"    column="works_area"    />
+        <result property="worksAddress"    column="works_address"    />
+        <result property="worksCount"    column="works_count"    />
+        <result property="worksType"    column="works_type"    />
+        <result property="worksBelong"    column="works_belong"    />
+        <result property="worksStatus"    column="works_status"    />
+        <result property="worksMaintainer"    column="works_maintainer"    />
+        <result property="worksTel"    column="works_tel"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="updateBy"    column="update_by"    />
+    </resultMap>
+
+    <sql id="selectBizWorksVo">
+        select t.works_id, t.works_no, t.works_name,
+        a.`region_name` works_province, b.`region_name` works_city, c.`region_name` works_area,
+        t.works_address, t.works_count, t.works_type, t.works_belong, t.works_status, t.works_maintainer, t.works_tel, t.create_time, t.create_by, t.update_time, t.update_by
+        from biz_works t
+        LEFT JOIN sys_region a on t.works_province =a.region_cod
+        LEFT JOIN sys_region b on t.works_city =b.region_cod
+        LEFT JOIN sys_region c on t.works_area =c.region_cod
+    </sql>
+
+    <sql id="selectsingleVo">
+        select works_id, works_no, works_name, works_province, works_city, works_area, works_address, works_count, works_type, works_belong, works_status, works_maintainer, works_tel, create_time, create_by, update_time, update_by from biz_works
+    </sql>
+
+    <select id="selectBizWorksList" parameterType="BizWorks" resultMap="BizWorksResult">
+        <include refid="selectBizWorksVo"/>
+        <where>
+            <if test="worksId != null "> and t.works_id = #{worksId}</if>
+            <if test="worksNo != null  and worksNo != '' "> and t.works_no = #{worksNo}</if>
+            <if test="worksName != null  and worksName != '' "> and t.works_name = #{worksName}</if>
+            <if test="worksProvince != null  and worksProvince != '' "> and t.works_province = #{worksProvince}</if>
+            <if test="worksCity != null  and worksCity != '' "> and t.works_city = #{worksCity}</if>
+            <if test="worksArea != null  and worksArea != '' "> and t.works_area = #{worksArea}</if>
+            <if test="worksAddress != null  and worksAddress != '' "> and t.works_address = #{worksAddress}</if>
+            <if test="worksCount != null "> and t.works_count = #{worksCount}</if>
+            <if test="worksType != null  and worksType != '' "> and t.works_type = #{worksType}</if>
+            <if test="worksBelong != null "> and t.works_belong = #{worksBelong}</if>
+            <if test="worksStatus != null  and worksStatus != '' "> and t.works_status = #{worksStatus}</if>
+            <if test="worksMaintainer != null  and worksMaintainer != '' "> and t.works_maintainer = #{worksMaintainer}</if>
+            <if test="worksTel != null  and worksTel != '' "> and t.works_tel = #{worksTel}</if>
+        </where>
+    </select>
+
+    <select id="selectBizWorksById" parameterType="Long" resultMap="BizWorksResult">
+        <include refid="selectsingleVo"/>
+        where works_id = #{worksId}
+    </select>
+
+    <insert id="insertBizWorks" parameterType="BizWorks" useGeneratedKeys="true" keyProperty="worksId">
+        insert into biz_works
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="worksNo != null  and worksNo != ''  ">works_no,</if>
+            <if test="worksName != null  and worksName != ''  ">works_name,</if>
+            <if test="worksProvince != null  and worksProvince != ''  ">works_province,</if>
+            <if test="worksCity != null  and worksCity != ''  ">works_city,</if>
+            <if test="worksArea != null  and worksArea != ''  ">works_area,</if>
+            <if test="worksAddress != null  and worksAddress != ''  ">works_address,</if>
+            <if test="worksCount != null  ">works_count,</if>
+            <if test="worksType != null  and worksType != ''  ">works_type,</if>
+            <if test="worksBelong != null  ">works_belong,</if>
+            <if test="worksStatus != null  and worksStatus != ''  ">works_status,</if>
+            <if test="worksMaintainer != null  and worksMaintainer != ''  ">works_maintainer,</if>
+            <if test="worksTel != null  and worksTel != ''  ">works_tel,</if>
+            <if test="createBy != null  and createBy != ''  ">create_by,</if>
+            create_time
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="worksNo != null  and worksNo != ''  ">#{worksNo},</if>
+            <if test="worksName != null  and worksName != ''  ">#{worksName},</if>
+            <if test="worksProvince != null  and worksProvince != ''  ">#{worksProvince},</if>
+            <if test="worksCity != null  and worksCity != ''  ">#{worksCity},</if>
+            <if test="worksArea != null  and worksArea != ''  ">#{worksArea},</if>
+            <if test="worksAddress != null  and worksAddress != ''  ">#{worksAddress},</if>
+            <if test="worksCount != null  ">#{worksCount},</if>
+            <if test="worksType != null  and worksType != ''  ">#{worksType},</if>
+            <if test="worksBelong != null  ">#{worksBelong},</if>
+            <if test="worksStatus != null  and worksStatus != ''  ">#{worksStatus},</if>
+            <if test="worksMaintainer != null  and worksMaintainer != ''  ">#{worksMaintainer},</if>
+            <if test="worksTel != null  and worksTel != ''  ">#{worksTel},</if>
+            <if test="createBy != null  and createBy != ''  ">#{createBy},</if>
+            sysdate()
+        </trim>
+    </insert>
+
+    <update id="updateBizWorks" parameterType="BizWorks">
+        update biz_works
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="worksNo != null  and worksNo != ''  ">works_no = #{worksNo},</if>
+            <if test="worksName != null  and worksName != ''  ">works_name = #{worksName},</if>
+            <if test="worksProvince != null  and worksProvince != ''  ">works_province = #{worksProvince},</if>
+            <if test="worksCity != null  and worksCity != ''  ">works_city = #{worksCity},</if>
+            <if test="worksArea != null  and worksArea != ''  ">works_area = #{worksArea},</if>
+            <if test="worksAddress != null  and worksAddress != ''  ">works_address = #{worksAddress},</if>
+            <if test="worksCount != null  ">works_count = #{worksCount},</if>
+            <if test="worksType != null  and worksType != ''  ">works_type = #{worksType},</if>
+            <if test="worksBelong != null  ">works_belong = #{worksBelong},</if>
+            <if test="worksStatus != null  and worksStatus != ''  ">works_status = #{worksStatus},</if>
+            <if test="worksMaintainer != null  and worksMaintainer != ''  ">works_maintainer = #{worksMaintainer},</if>
+            <if test="worksTel != null  and worksTel != ''  ">works_tel = #{worksTel},</if>
+            <if test="updateBy != null  and updateBy != ''  ">update_by = #{updateBy},</if>
+            update_time = sysdate()
+        </trim>
+        where works_id = #{worksId}
+    </update>
+
+    <delete id="deleteBizWorksById" parameterType="Long">
+        delete from biz_works where works_id = #{worksId}
+    </delete>
+
+    <delete id="deleteBizWorksByIds" parameterType="String">
+        delete from biz_works where works_id in
+        <foreach item="worksId" collection="array" open="(" separator="," close=")">
+            #{worksId}
+        </foreach>
+    </delete>
+
+</mapper>

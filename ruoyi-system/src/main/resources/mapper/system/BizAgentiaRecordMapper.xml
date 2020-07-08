@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.BizAgentiaRecordMapper">
+    
+    <resultMap type="BizAgentiaRecord" id="BizAgentiaRecordResult">
+        <result property="recordId"    column="record_id"    />
+        <result property="recordNo"    column="record_no"    />
+        <result property="recordName"    column="record_name"    />
+        <result property="agentiaId"    column="agentia_id"    />
+        <result property="recordDevice"    column="record_device"    />
+        <result property="recordWorks"    column="record_works"    />
+        <result property="recordType"    column="record_type"    />
+        <result property="recordStatus"    column="record_status"    />
+        <result property="assayId"    column="assay_id"    />
+        <result property="beforeTotal"    column="before_total"    />
+        <result property="beforeRemain"    column="before_remain"    />
+        <result property="afterTotal"    column="after_total"    />
+        <result property="afterRemain"    column="after_remain"    />
+        <result property="agentiaChange"    column="agentia_change"    />
+        <result property="recordDate"    column="record_date"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <association property="bizAgentia"    column="agentia_id" javaType="BizAgentia" resultMap="bizAgentiaResult" />
+    </resultMap>
+
+    <resultMap id="bizAgentiaResult" type="BizAgentia">
+        <result property="agentiaId"    column="agentia_id"    />
+        <result property="agentiaNo"    column="agentia_no"    />
+        <result property="agentiaName"    column="agentia_name"    />
+        <result property="agentiaStatus"    column="agentia_status"    />
+    </resultMap>
+	
+	<sql id="selectBizAgentiaRecordVo">
+        select a.record_id, a.record_no, a.record_name, a.agentia_id, a.record_device, a.record_works, a.record_type, a.record_status,a.assay_id, a.before_total, a.before_remain, a.after_total, a.after_remain, a.agentia_change, a.record_date, a.create_time, a.create_by, a.update_time, a.update_by,
+          w.agentia_no, w.agentia_name, w.agentia_status
+         from biz_agentia_record a
+        LEFT JOIN biz_agentia w on a.agentia_id = w.agentia_id
+    </sql>
+	
+    <select id="selectBizAgentiaRecordList" parameterType="BizAgentiaRecord" resultMap="BizAgentiaRecordResult">
+        <include refid="selectBizAgentiaRecordVo"/>
+        <where>
+            <if test="recordId != null "> and a.record_id = #{recordId}</if>
+             <if test="recordNo != null  and recordNo != '' "> and a.record_no = #{recordNo}</if>
+             <if test="recordName != null  and recordName != '' "> and a.record_name = #{recordName}</if>
+             <if test="agentiaId != null "> and a.agentia_id = #{agentiaId}</if>
+            <if test="recordDevice != null  and recordDevice != '' "> and a.record_device = #{recordDevice}</if>
+            <if test="recordWorks != null  and recordWorks != '' "> and a.record_works = #{recordWorks}</if>
+             <if test="assayId != null "> and a.assay_id = #{assayId}</if>
+             <if test="recordType != null  and recordType != '' "> and a.record_type = #{recordType}</if>
+             <if test="recordStatus != null  and recordStatus != '' "> and a.record_status = #{recordStatus}</if>
+             <if test="beforeTotal != null "> and a.before_total = #{beforeTotal}</if>
+             <if test="beforeRemain != null "> and a.before_remain = #{beforeRemain}</if>
+             <if test="afterTotal != null "> and a.after_total = #{afterTotal}</if>
+             <if test="afterRemain != null "> and a.after_remain = #{afterRemain}</if>
+             <if test="agentiaChange != null "> and a.agentia_change = #{agentiaChange}</if>
+             <if test="recordDate != null  and recordDate != '' "> and a.record_date = #{recordDate}</if>
+         </where>
+    </select>
+    
+    <select id="selectBizAgentiaRecordById" parameterType="Long" resultMap="BizAgentiaRecordResult">
+        <include refid="selectBizAgentiaRecordVo"/>
+        where a.record_id = #{recordId}
+    </select>
+        
+    <insert id="insertBizAgentiaRecord" parameterType="BizAgentiaRecord" useGeneratedKeys="true" keyProperty="recordId">
+        insert into biz_agentia_record
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="recordNo != null  and recordNo != ''  ">record_no,</if>
+			<if test="recordName != null  and recordName != ''  ">record_name,</if>
+			<if test="agentiaId != null  ">agentia_id,</if>
+            <if test="recordDevice != null  and recordDevice != '' ">record_device</if>
+            <if test="recordWorks != null  and recordWorks != '' "> record_works</if>
+			<if test="recordType != null  and recordType != ''  ">record_type,</if>
+			<if test="recordStatus != null  and recordStatus != ''  ">record_status,</if>
+            <if test="assayId != null  and assayId != ''  ">assay_id,</if>
+			<if test="beforeTotal != null  ">before_total,</if>
+			<if test="beforeRemain != null  ">before_remain,</if>
+			<if test="afterTotal != null  ">after_total,</if>
+			<if test="afterRemain != null  ">after_remain,</if>
+			<if test="agentiaChange != null  ">agentia_change,</if>
+			<if test="recordDate != null  and recordDate != ''  ">record_date,</if>
+			<if test="createBy != null  and createBy != ''  ">create_by,</if>
+            create_time
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="recordNo != null  and recordNo != ''  ">#{recordNo},</if>
+			<if test="recordName != null  and recordName != ''  ">#{recordName},</if>
+			<if test="agentiaId != null  ">#{agentiaId},</if>
+            <if test="recordDevice != null  and recordDevice != '' ">#{recordDevice},</if>
+            <if test="recordWorks != null  and recordWorks != '' "> #{recordWorks},</if>
+			<if test="recordType != null  and recordType != ''  ">#{recordType},</if>
+			<if test="recordStatus != null  and recordStatus != ''  ">#{recordStatus},</if>
+            <if test="assayId != null  and assayId != ''  ">#{assayId},</if>
+			<if test="beforeTotal != null  ">#{beforeTotal},</if>
+			<if test="beforeRemain != null  ">#{beforeRemain},</if>
+			<if test="afterTotal != null  ">#{afterTotal},</if>
+			<if test="afterRemain != null  ">#{afterRemain},</if>
+			<if test="agentiaChange != null  ">#{agentiaChange},</if>
+			<if test="recordDate != null  and recordDate != ''  ">#{recordDate},</if>
+			<if test="createBy != null  and createBy != ''  ">#{createBy},</if>
+            sysdate()
+         </trim>
+    </insert>
+	 
+    <update id="updateBizAgentiaRecord" parameterType="BizAgentiaRecord">
+        update biz_agentia_record
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="recordNo != null  and recordNo != ''  ">record_no = #{recordNo},</if>
+            <if test="recordName != null  and recordName != ''  ">record_name = #{recordName},</if>
+            <if test="agentiaId != null  ">agentia_id = #{agentiaId},</if>
+            <if test="recordDevice != null  and recordDevice != '' ">record_device = #{recordDevice},</if>
+            <if test="recordWorks != null  and recordWorks != '' "> record_works = #{recordWorks},</if>
+            <if test="recordType != null  and recordType != ''  ">record_type = #{recordType},</if>
+            <if test="recordStatus != null  and recordStatus != ''  ">record_status = #{recordStatus},</if>
+            <if test="assayId != null  and assayId != ''  ">assay_id = #{assayId},</if>
+            <if test="beforeTotal != null  ">before_total = #{beforeTotal},</if>
+            <if test="beforeRemain != null  ">before_remain = #{beforeRemain},</if>
+            <if test="afterTotal != null  ">after_total = #{afterTotal},</if>
+            <if test="afterRemain != null  ">after_remain = #{afterRemain},</if>
+            <if test="agentiaChange != null  ">agentia_change = #{agentiaChange},</if>
+            <if test="recordDate != null  and recordDate != ''  ">record_date = #{recordDate},</if>
+            <if test="updateTime != null  ">update_time = #{updateTime},</if>
+            <if test="updateBy != null  and updateBy != ''  ">update_by = #{updateBy},</if>
+            update_time = sysdate()
+        </trim>
+        where record_id = #{recordId}
+    </update>
+
+	<delete id="deleteBizAgentiaRecordById" parameterType="Long">
+        delete from biz_agentia_record where record_id = #{recordId}
+    </delete>
+	
+    <delete id="deleteBizAgentiaRecordByIds" parameterType="String">
+        delete from biz_agentia_record where record_id in 
+        <foreach item="recordId" collection="array" open="(" separator="," close=")">
+            #{recordId}
+        </foreach>
+    </delete>
+
+    <select id="getAgentiaTotal" resultType="DataEnity">
+    SELECT a.agentia_name as 'key',t.agentia_change as 'value' FROM `biz_agentia_record` t
+    left join biz_agentia a on t.agentia_id = a.agentia_id
+    where t.record_type = '2'
+    and t.assay_id = #{assayId}
+    and t.record_works = #{worksId}
+    GROUP BY t.agentia_id,t.agentia_change
+
+    </select>
+
+    <select id="getAgentiaMonthAvg" resultType="DataEnity">
+        SELECT a.agentia_name as 'key',AVG(t.agentia_change ) as 'value' FROM `biz_agentia_record` t
+        left join biz_agentia a on t.agentia_id = a.agentia_id
+        where  t.record_type='2'
+        and t.record_works=#{worksId}
+        and date_format(t.record_date,'%Y-%m') = #{month}
+        GROUP BY t.agentia_id
+    </select>
+    
+</mapper>

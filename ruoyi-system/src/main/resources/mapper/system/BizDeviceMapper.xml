@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.BizDeviceMapper">
+    
+    <resultMap type="BizDevice" id="BizDeviceResult">
+        <result property="deviceId"    column="device_id"    />
+        <result property="deviceNo"    column="device_no"    />
+        <result property="deviceName"    column="device_name"    />
+        <result property="deviceSn"    column="device_sn"    />
+        <result property="deviceModel"    column="device_model"    />
+        <result property="deviceMaker"    column="device_maker"    />
+        <result property="deviceWorks"    column="device_works"    />
+        <result property="deviceMaintainer"    column="device_maintainer"    />
+        <result property="deviceTel"    column="device_tel"    />
+        <result property="deviceType"    column="device_type"    />
+        <result property="deviceStatus"    column="device_status"    />
+        <result property="assayStatus"    column="assay_status"    />
+        <result property="repairTime"    column="repair_time"    />
+        <result property="assayTime"    column="assay_time"    />
+        <result property="repairBy"    column="repair_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <association property="works"    column="device_works" javaType="BizWaterWork" resultMap="worksResult" />
+
+    </resultMap>
+
+    <resultMap id="worksResult" type="BizWaterWork">
+        <result property="worksId"    column="works_id"    />
+        <result property="worksNo"    column="works_no"    />
+        <result property="worksName"    column="works_name"    />
+        <result property="worksStatus"    column="works_status"    />
+    </resultMap>
+	
+	<sql id="selectBizDeviceVo">
+        select d.device_id, d.device_no, d.device_name, d.device_sn, d.device_model, d.device_maker, d.device_works, d.device_maintainer, d.device_tel, d.device_type, d.device_status, assay_status, d.repair_time, d.assay_time, d.repair_by, d.create_time, d.create_by, d.update_time, d.update_by,
+        w.works_id,w.works_no,w.works_name,w.works_status
+        from biz_device d
+        LEFT JOIN biz_water_work w on d.device_works = w.works_id
+    </sql>
+	
+    <select id="selectBizDeviceList" parameterType="BizDevice" resultMap="BizDeviceResult">
+        <include refid="selectBizDeviceVo"/>
+        where  1=1
+            <if test="deviceId != null "> and d.device_id = #{deviceId}</if>
+             <if test="deviceNo != null  and deviceNo != '' "> and d.device_no = #{deviceNo}</if>
+             <if test="deviceName != null  and deviceName != '' "> and d.device_name like concat('%', #{deviceName}, '%') </if>
+             <if test="deviceSn != null  and deviceSn != '' "> and d.device_sn = #{deviceSn}</if>
+             <if test="deviceModel != null  and deviceModel != '' "> and d.device_model = #{deviceModel}</if>
+             <if test="deviceMaker != null  and deviceMaker != '' "> and d.device_maker = #{deviceMaker}</if>
+             <if test="deviceWorks != null "> and d.device_works = #{deviceWorks}</if>
+             <if test="deviceMaintainer != null  and deviceMaintainer != '' "> and d.device_maintainer = #{deviceMaintainer}</if>
+             <if test="deviceTel != null  and deviceTel != '' "> and d.device_tel = #{deviceTel}</if>
+             <if test="deviceType != null  and deviceType != '' "> and d.device_type = #{deviceType}</if>
+             <if test="assayStatus != null  and assayStatus != '' "> and d.assay_status = #{assayStatus}</if>
+             <if test="deviceStatus != null  and deviceStatus != '' "> and d.device_status = #{deviceStatus}</if>
+             <if test="repairTime != null   and repairTime != ''"> and d.repair_time = #{repairTime}</if>
+             <if test="repairBy != null  and repairBy != '' "> and d.repair_by = #{repairBy}</if>
+        <!-- 数据范围过滤 -->
+        ${params.dataScope}
+    </select>
+
+    <select id="selectBizDeviceMaintainList" parameterType="BizDevice" resultMap="BizDeviceResult">
+    <include refid="selectBizDeviceVo"/>
+        where  1=1
+        and d.device_id not in (select DISTINCT m.maintain_device from biz_device_maintain m where m.maintain_result='1')
+        <!-- 数据范围过滤 -->
+        ${params.dataScope}
+    </select>
+    
+    <select id="selectBizDeviceById" parameterType="Long" resultMap="BizDeviceResult">
+        <include refid="selectBizDeviceVo"/>
+        where d.device_id = #{deviceId}
+    </select>
+
+    <select id="selectBizDeviceByNo" parameterType="String" resultMap="BizDeviceResult">
+        <include refid="selectBizDeviceVo"/>
+        where d.device_no = #{deviceNo}
+    </select>
+
+    <select id="selectBizDeviceByWork" parameterType="Long" resultMap="BizDeviceResult">
+        <include refid="selectBizDeviceVo"/>
+        where d.device_works = #{workId}
+    </select>
+
+
+
+    <select id="selectOnlydeviceList" parameterType="BizDevice" resultMap="BizDeviceResult">
+        <include refid="selectBizDeviceVo"/>
+        where 1=1
+        <if test="deviceName != null  and deviceName != '' "> and d.device_name like concat('%', #{deviceName}, '%') </if>
+        <if test="deviceStatus != null  and deviceStatus != '' "> and d.device_status = #{deviceStatus}</if>
+        <!-- 数据范围过滤 -->
+        ${params.dataScope}
+    </select>
+
+
+        
+    <insert id="insertBizDevice" parameterType="BizDevice" useGeneratedKeys="true" keyProperty="deviceId">
+        insert into biz_device
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="deviceNo != null  and deviceNo != ''  ">device_no,</if>
+			<if test="deviceName != null  and deviceName != ''  ">device_name,</if>
+			<if test="deviceSn != null  and deviceSn != ''  ">device_sn,</if>
+			<if test="deviceModel != null  and deviceModel != ''  ">device_model,</if>
+			<if test="deviceMaker != null  and deviceMaker != ''  ">device_maker,</if>
+			<if test="deviceWorks != null  ">device_works,</if>
+			<if test="deviceMaintainer != null  and deviceMaintainer != ''  ">device_maintainer,</if>
+			<if test="deviceTel != null  and deviceTel != ''  ">device_tel,</if>
+			<if test="deviceType != null  and deviceType != ''  ">device_type,</if>
+			<if test="deviceStatus != null  and deviceStatus != ''  ">device_status,</if>
+            <if test="assayStatus != null  and assayStatus != ''  ">assay_status,</if>
+			<if test="repairTime != null   and repairTime != ''">repair_time,</if>
+            <if test="assayTime != null   and assayTime != ''">assay_time,</if>
+			<if test="repairBy != null  and repairBy != ''  ">repair_by,</if>
+			<if test="createBy != null  and createBy != ''  ">create_by,</if>
+            create_time
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="deviceNo != null  and deviceNo != ''  ">#{deviceNo},</if>
+			<if test="deviceName != null  and deviceName != ''  ">#{deviceName},</if>
+			<if test="deviceSn != null  and deviceSn != ''  ">#{deviceSn},</if>
+			<if test="deviceModel != null  and deviceModel != ''  ">#{deviceModel},</if>
+			<if test="deviceMaker != null  and deviceMaker != ''  ">#{deviceMaker},</if>
+			<if test="deviceWorks != null  ">#{deviceWorks},</if>
+			<if test="deviceMaintainer != null  and deviceMaintainer != ''  ">#{deviceMaintainer},</if>
+			<if test="deviceTel != null  and deviceTel != ''  ">#{deviceTel},</if>
+			<if test="deviceType != null  and deviceType != ''  ">#{deviceType},</if>
+			<if test="deviceStatus != null  and deviceStatus != ''  ">#{deviceStatus},</if>
+            <if test="assayStatus != null  and assayStatus != ''  ">#{assayStatus},</if>
+			<if test="repairTime != null   and repairTime != ''">#{repairTime},</if>
+            <if test="assayTime != null   and assayTime != ''">#{assayTime},</if>
+			<if test="repairBy != null  and repairBy != ''  ">#{repairBy},</if>
+			<if test="createTime != null  ">#{createTime},</if>
+			<if test="createBy != null  and createBy != ''  ">#{createBy},</if>
+            sysdate()
+         </trim>
+    </insert>
+	 
+    <update id="updateBizDevice" parameterType="BizDevice">
+        update biz_device
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="deviceNo != null  and deviceNo != ''  ">device_no = #{deviceNo},</if>
+            <if test="deviceName != null  and deviceName != ''  ">device_name = #{deviceName},</if>
+            <if test="deviceSn != null  and deviceSn != ''  ">device_sn = #{deviceSn},</if>
+            <if test="deviceModel != null  and deviceModel != ''  ">device_model = #{deviceModel},</if>
+            <if test="deviceMaker != null  and deviceMaker != ''  ">device_maker = #{deviceMaker},</if>
+            <if test="deviceWorks != null  ">device_works = #{deviceWorks},</if>
+            <if test="deviceMaintainer != null  and deviceMaintainer != ''  ">device_maintainer = #{deviceMaintainer},</if>
+            <if test="deviceTel != null  and deviceTel != ''  ">device_tel = #{deviceTel},</if>
+            <if test="deviceType != null  and deviceType != ''  ">device_type = #{deviceType},</if>
+            <if test="deviceStatus != null  and deviceStatus != ''  ">device_status = #{deviceStatus},</if>
+            <if test="assayStatus != null  and assayStatus != ''  ">assay_status = #{assayStatus},</if>
+            <if test="repairTime != null  and repairTime != ''">repair_time = #{repairTime},</if>
+            <if test="assayTime != null  and assayTime != ''">assay_time = #{assayTime},</if>
+            <if test="repairBy != null  and repairBy != ''  ">repair_by = #{repairBy},</if>
+            <if test="updateBy != null  and updateBy != ''  ">update_by = #{updateBy},</if>
+            update_time = sysdate()
+        </trim>
+        where device_id = #{deviceId}
+    </update>
+
+	<delete id="deleteBizDeviceById" parameterType="Long">
+        delete from biz_device where device_id = #{deviceId}
+    </delete>
+	
+    <delete id="deleteBizDeviceByIds" parameterType="String">
+        delete from biz_device where device_id in 
+        <foreach item="deviceId" collection="array" open="(" separator="," close=")">
+            #{deviceId}
+        </foreach>
+    </delete>
+
+    <select id="getDeviceTotal" resultType="DataEnity">
+            SELECT '在线设备' as 'key',count(*) as 'value' FROM biz_device t
+            where t.device_status ='0' and t.assay_status='0' and t.assay_time &gt; date_sub(now(),interval 300 second)
+            UNION
+            SELECT '离线设备' as 'key',count(*) as 'value' FROM biz_device t
+            where t.device_status ='0'  and ( t.assay_time &lt; date_sub(now(),interval 300 second) or t.assay_time is null)
+            UNION
+            SELECT '化验中设备' as 'key',count(*) as 'value' FROM biz_device t
+            where t.device_status ='0' and t.assay_status='2'and t.assay_time &gt; date_sub(now(),interval 300 second)
+    </select>
+    
+</mapper>

@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.BizWeatherMapper">
+    
+    <resultMap type="BizWeather" id="BizWeatherResult">
+        <result property="weatherId"    column="weather_id"    />
+        <result property="weatherProvince"    column="weather_province"    />
+        <result property="weatherCity"    column="weather_city"    />
+        <result property="weatherArea"    column="weather_area"    />
+        <result property="weatherDate"    column="weather_date"    />
+        <result property="weatherDaytemp"    column="weather_daytemp"    />
+        <result property="weatherNighttemp"    column="weather_nighttemp"    />
+        <result property="weatherDaypower"    column="weather_daypower"    />
+        <result property="weatherNightpower"    column="weather_nightpower"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="updateBy"    column="update_by"    />
+    </resultMap>
+	
+	<sql id="selectBizWeatherVo">
+        select weather_id, weather_province, weather_city, weather_area, weather_date, weather_daytemp, weather_nighttemp, weather_daypower, weather_nightpower, create_time, create_by, update_time, update_by from biz_weather
+    </sql>
+	
+    <select id="selectBizWeatherList" parameterType="BizWeather" resultMap="BizWeatherResult">
+        <include refid="selectBizWeatherVo"/>
+        <where>  
+            <if test="weatherId != null "> and weather_id = #{weatherId}</if>
+             <if test="weatherProvince != null  and weatherProvince != '' "> and weather_province = #{weatherProvince}</if>
+             <if test="weatherCity != null  and weatherCity != '' "> and weather_city = #{weatherCity}</if>
+             <if test="weatherArea != null  and weatherArea != '' "> and weather_area = #{weatherArea}</if>
+             <if test="weatherDate != null  and weatherDate != '' "> and weather_date = #{weatherDate}</if>
+             <if test="weatherDaytemp != null "> and weather_daytemp = #{weatherDaytemp}</if>
+             <if test="weatherNighttemp != null "> and weather_nighttemp = #{weatherNighttemp}</if>
+            <if test="weatherDaypower != null "> and weather_daypower = #{weatherDaypower}</if>
+            <if test="weatherNightpower != null "> and weather_nightpower = #{weatherNightpower}</if>
+             <if test="createTime != null   and createTime != ''"> and create_time = #{createTime}</if>
+             <if test="createBy != null  and createBy != '' "> and create_by = #{createBy}</if>
+             <if test="updateTime != null  and updateTime != '' "> and update_time = #{updateTime}</if>
+             <if test="updateBy != null  and updateBy != '' "> and update_by = #{updateBy}</if>
+         </where>
+    </select>
+    
+    <select id="selectBizWeatherById" parameterType="Long" resultMap="BizWeatherResult">
+        <include refid="selectBizWeatherVo"/>
+        where weather_id = #{weatherId}
+    </select>
+        
+    <insert id="insertBizWeather" parameterType="BizWeather" useGeneratedKeys="true" keyProperty="weatherId">
+        insert into biz_weather
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="weatherProvince != null  and weatherProvince != ''  ">weather_province,</if>
+			<if test="weatherCity != null  and weatherCity != ''  ">weather_city,</if>
+			<if test="weatherArea != null  and weatherArea != ''  ">weather_area,</if>
+			<if test="weatherDate != null  and weatherDate != ''  ">weather_date,</if>
+			<if test="weatherDaytemp != null  ">weather_daytemp,</if>
+			<if test="weatherNighttemp != null  ">weather_nighttemp,</if>
+            <if test="weatherDaypower != null ">  weather_daypower,</if>
+            <if test="weatherNightpower != null ">  weather_nightpower,</if>
+			<if test="createBy != null  and createBy != ''  ">create_by,</if>
+            create_time
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="weatherProvince != null  and weatherProvince != ''  ">#{weatherProvince},</if>
+			<if test="weatherCity != null  and weatherCity != ''  ">#{weatherCity},</if>
+			<if test="weatherArea != null  and weatherArea != ''  ">#{weatherArea},</if>
+			<if test="weatherDate != null  and weatherDate != ''  ">#{weatherDate},</if>
+			<if test="weatherDaytemp != null  ">#{weatherDaytemp},</if>
+			<if test="weatherNighttemp != null  ">#{weatherNighttemp},</if>
+            <if test="weatherDaypower != null "> #{weatherDaypower},</if>
+            <if test="weatherNightpower != null "> #{weatherNightpower},</if>
+			<if test="createBy != null  and createBy != ''  ">#{createBy},</if>
+            sysdate()
+         </trim>
+    </insert>
+	 
+    <update id="updateBizWeather" parameterType="BizWeather">
+        update biz_weather
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="weatherProvince != null  and weatherProvince != ''  ">weather_province = #{weatherProvince},</if>
+            <if test="weatherCity != null  and weatherCity != ''  ">weather_city = #{weatherCity},</if>
+            <if test="weatherArea != null  and weatherArea != ''  ">weather_area = #{weatherArea},</if>
+            <if test="weatherDate != null  and weatherDate != ''  ">weather_date = #{weatherDate},</if>
+            <if test="weatherDaytemp != null  ">weather_daytemp = #{weatherDaytemp},</if>
+            <if test="weatherNighttemp != null  ">weather_nighttemp = #{weatherNighttemp},</if>
+            <if test="weatherDaypower != null ">weather_daypower = #{weatherDaypower},</if>
+            <if test="weatherNightpower != null ">weather_nightpower = #{weatherNightpower},</if>
+            <if test="updateBy != null  and updateBy != ''  ">update_by = #{updateBy},</if>
+            update_time = sysdate()
+        </trim>
+        where weather_id = #{weatherId}
+    </update>
+
+	<delete id="deleteBizWeatherById" parameterType="Long">
+        delete from biz_weather where weather_id = #{weatherId}
+    </delete>
+	
+    <delete id="deleteBizWeatherByIds" parameterType="String">
+        delete from biz_weather where weather_id in 
+        <foreach item="weatherId" collection="array" open="(" separator="," close=")">
+            #{weatherId}
+        </foreach>
+    </delete>
+
+
+    <select id="selectWeatherLine"  resultMap="BizWeatherResult">
+        <include refid="selectBizWeatherVo"/>
+        where weather_area = #{areacode}
+        and weather_date BETWEEN  #{startTime} and #{endTime}
+    </select>
+    
+</mapper>

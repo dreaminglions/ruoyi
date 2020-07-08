@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.BizAlertMapper">
+    
+    <resultMap type="BizAlert" id="BizAlertResult">
+        <result property="alertId"    column="alert_id"    />
+        <result property="reportId"    column="report_id"    />
+        <result property="alertDevice"    column="alert_device"    />
+        <result property="alertWorks"    column="alert_works"    />
+        <result property="alertContent"    column="alert_content"    />
+        <result property="alertType"    column="alert_type"    />
+        <result property="alertDate"    column="alert_date"    />
+        <result property="alertTime"    column="alert_time"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <association property="device"    column="alert_device" javaType="BizDevice" resultMap="deviceResult" />
+        <association property="works"    column="alert_works" javaType="BizWaterWork" resultMap="worksResult" />
+    </resultMap>
+
+    <resultMap id="deviceResult" type="BizDevice">
+        <result property="deviceId"    column="device_id"    />
+        <result property="deviceNo"    column="device_no"    />
+        <result property="deviceName"    column="device_name"    />
+        <result property="deviceStatus"    column="device_status"    />
+    </resultMap>
+
+    <resultMap id="worksResult" type="BizWaterWork">
+        <result property="worksId"    column="works_id"    />
+        <result property="worksNo"    column="works_no"    />
+        <result property="worksName"    column="works_name"    />
+        <result property="worksStatus"    column="works_status"    />
+    </resultMap>
+	
+	<sql id="selectBizAlertVo">
+        select a.alert_id, a.report_id, a.alert_device, a.alert_works, a.alert_content, a.alert_type, a.alert_date,a.alert_time, a.create_time, a.create_by, a.update_time, a.update_by,
+                d.device_id,d.device_no,d.device_name,d.device_status,d.device_works,
+                w.works_id,w.works_no,w.works_name,w.works_status
+		from biz_alert a
+        LEFT JOIN biz_device d on a.alert_device = d.device_id
+		LEFT JOIN biz_water_work w on a.alert_works = w.works_id
+    </sql>
+	
+    <select id="selectBizAlertList" parameterType="BizAlert" resultMap="BizAlertResult">
+        <include refid="selectBizAlertVo"/>
+        where 1=1
+            <if test="alertId != null "> and a.alert_id = #{alertId}</if>
+             <if test="reportId != null  and reportId != '' "> and a.report_id = #{reportId}</if>
+             <if test="alertDevice != null "> and a.alert_device = #{alertDevice}</if>
+             <if test="alertWorks != null "> and a.alert_works = #{alertWorks}</if>
+             <if test="alertContent != null  and alertContent != '' "> and a.alert_content = #{alertContent}</if>
+             <if test="alertType != null  and alertType != '' "> and a.alert_type = #{alertType}</if>
+             <if test="alertDate != null  and alertDate != '' "> and a.alert_date = #{alertDate}</if>
+            <if test="alertTime != null  and alertTime != '' "> and a.alert_time = #{alertTime}</if>
+
+        <!-- 数据范围过滤 -->
+        ${params.dataScope}
+    </select>
+    
+    <select id="selectBizAlertById" parameterType="Long" resultMap="BizAlertResult">
+        <include refid="selectBizAlertVo"/>
+        where a.alert_id = #{alertId}
+    </select>
+
+    <select id="selectBizAlertByReportId" parameterType="String" resultMap="BizAlertResult">
+        <include refid="selectBizAlertVo"/>
+        where a.report_id = #{reportId}
+    </select>
+
+    <insert id="insertBizAlert" parameterType="BizAlert">
+        insert into biz_alert
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="alertId != null  ">alert_id,</if>
+			<if test="reportId != null  and reportId != ''  ">report_id,</if>
+			<if test="alertDevice != null  ">alert_device,</if>
+			<if test="alertWorks != null  ">alert_works,</if>
+			<if test="alertContent != null  and alertContent != ''  ">alert_content,</if>
+			<if test="alertType != null  and alertType != ''  ">alert_type,</if>
+			<if test="alertDate != null  and alertDate != ''  ">alert_date,</if>
+            <if test="alertTime != null  and alertTime != ''  ">alert_time,</if>
+			<if test="createBy != null  and createBy != ''  ">create_by,</if>
+            create_time
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="alertId != null  ">#{alertId},</if>
+			<if test="reportId != null  and reportId != ''  ">#{reportId},</if>
+			<if test="alertDevice != null  ">#{alertDevice},</if>
+			<if test="alertWorks != null  ">#{alertWorks},</if>
+			<if test="alertContent != null  and alertContent != ''  ">#{alertContent},</if>
+			<if test="alertType != null  and alertType != ''  ">#{alertType},</if>
+            <if test="alertDate != null  and alertDate != ''  ">#{alertDate},</if>
+            <if test="alertTime != null  and alertTime != ''  ">#{alertTime},</if>
+			<if test="createBy != null  and createBy != ''  ">#{createBy},</if>
+            sysdate()
+         </trim>
+    </insert>
+	 
+    <update id="updateBizAlert" parameterType="BizAlert">
+        update biz_alert
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="reportId != null  and reportId != ''  ">report_id = #{reportId},</if>
+            <if test="alertDevice != null  ">alert_device = #{alertDevice},</if>
+            <if test="alertWorks != null  ">alert_works = #{alertWorks},</if>
+            <if test="alertContent != null  and alertContent != ''  ">alert_content = #{alertContent},</if>
+            <if test="alertType != null  and alertType != ''  ">alert_type = #{alertType},</if>
+            <if test="alertDate != null  and alertDate != ''  ">alert_date = #{alertDate},</if>
+            <if test="alertTime != null  and alertTime != ''  ">alert_time = #{alertTime},</if>
+            <if test="updateBy != null  and updateBy != ''  ">update_by = #{updateBy},</if>
+            update_time = sysdate()
+        </trim>
+        where alert_id = #{alertId}
+    </update>
+
+	<delete id="deleteBizAlertById" parameterType="Long">
+        delete from biz_alert where alert_id = #{alertId}
+    </delete>
+	
+    <delete id="deleteBizAlertByIds" parameterType="String">
+        delete from biz_alert where alert_id in 
+        <foreach item="alertId" collection="array" open="(" separator="," close=")">
+            #{alertId}
+        </foreach>
+    </delete>
+
+
+    <insert id="batchAlert">
+        insert into biz_alert(report_id, alert_device,alert_works,alert_content,alert_type,alert_date,alert_time,create_time) values
+        <foreach item="item" index="index" collection="list" separator=",">
+            (#{item.reportId},#{item.alertDevice},#{item.alertWorks},#{item.alertContent},#{item.alertType},#{item.alertDate},#{item.alertTime},sysdate())
+        </foreach>
+    </insert>
+    
+</mapper>

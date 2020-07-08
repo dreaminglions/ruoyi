@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.BizAssayMethodMapper">
+    
+    <resultMap type="BizAssayMethod" id="BizAssayMethodResult">
+        <result property="methodId"    column="method_id"    />
+        <result property="reportId"    column="report_id"    />
+        <result property="codName"    column="cod_name"    />
+        <result property="tpName"    column="tp_name"    />
+        <result property="tnName"    column="tn_name"    />
+        <result property="nhName"    column="nh_name"    />
+        <result property="codWave1"    column="cod_wave1"    />
+        <result property="codWave2"    column="cod_wave2"    />
+        <result property="codOptical"    column="cod_optical"    />
+        <result property="tpWave1"    column="tp_wave1"    />
+        <result property="tpOptical"    column="tp_optical"    />
+        <result property="tnWave1"    column="tn_wave1"    />
+        <result property="tnOptical"    column="tn_optical"    />
+        <result property="nhWave1"    column="nh_wave1"    />
+        <result property="nhOptical"    column="nh_optical"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="updateBy"    column="update_by"    />
+    </resultMap>
+	
+	<sql id="selectBizAssayMethodVo">
+        select method_id, report_id, cod_name, tp_name, tn_name, nh_name, cod_wave1, cod_wave2, cod_optical, tp_wave1, tp_optical, tn_wave1, tn_optical, nh_wave1, nh_optical, create_time, create_by, update_time, update_by from biz_assay_method
+    </sql>
+	
+    <select id="selectBizAssayMethodList" parameterType="BizAssayMethod" resultMap="BizAssayMethodResult">
+        <include refid="selectBizAssayMethodVo"/>
+        <where>  
+            <if test="methodId != null "> and method_id = #{methodId}</if>
+             <if test="reportId != null  and reportId != '' "> and report_id = #{reportId}</if>
+             <if test="codName != null  and codName != '' "> and cod_name = #{codName}</if>
+             <if test="tpName != null  and tpName != '' "> and tp_name = #{tpName}</if>
+             <if test="tnName != null  and tnName != '' "> and tn_name = #{tnName}</if>
+             <if test="nhName != null  and nhName != '' "> and nh_name = #{nhName}</if>
+             <if test="codWave1 != null "> and cod_wave1 = #{codWave1}</if>
+             <if test="codWave2 != null "> and cod_wave2 = #{codWave2}</if>
+             <if test="codOptical != null "> and cod_optical = #{codOptical}</if>
+             <if test="tpWave1 != null "> and tp_wave1 = #{tpWave1}</if>
+             <if test="tpOptical != null "> and tp_optical = #{tpOptical}</if>
+             <if test="tnWave1 != null "> and tn_wave1 = #{tnWave1}</if>
+             <if test="tnOptical != null "> and tn_optical = #{tnOptical}</if>
+             <if test="nhWave1 != null "> and nh_wave1 = #{nhWave1}</if>
+             <if test="nhOptical != null "> and nh_optical = #{nhOptical}</if>
+             <if test="createTime != null "> and create_time = #{createTime}</if>
+             <if test="createBy != null  and createBy != '' "> and create_by = #{createBy}</if>
+             <if test="updateTime != null "> and update_time = #{updateTime}</if>
+             <if test="updateBy != null  and updateBy != '' "> and update_by = #{updateBy}</if>
+         </where>
+    </select>
+    
+    <select id="selectBizAssayMethodById" parameterType="Long" resultMap="BizAssayMethodResult">
+        <include refid="selectBizAssayMethodVo"/>
+        where method_id = #{methodId}
+    </select>
+
+    <select id="selectBizAssayMethodByReportId" parameterType="String" resultMap="BizAssayMethodResult">
+        <include refid="selectBizAssayMethodVo"/>
+        where report_id = #{reportId}
+    </select>
+        
+    <insert id="insertBizAssayMethod" parameterType="BizAssayMethod" useGeneratedKeys="true" keyProperty="methodId">
+        insert into biz_assay_method
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="reportId != null  and reportId != ''  ">report_id,</if>
+			<if test="codName != null  and codName != ''  ">cod_name,</if>
+			<if test="tpName != null  and tpName != ''  ">tp_name,</if>
+			<if test="tnName != null  and tnName != ''  ">tn_name,</if>
+			<if test="nhName != null  and nhName != ''  ">nh_name,</if>
+			<if test="codWave1 != null  ">cod_wave1,</if>
+			<if test="codWave2 != null  ">cod_wave2,</if>
+			<if test="codOptical != null  ">cod_optical,</if>
+			<if test="tpWave1 != null  ">tp_wave1,</if>
+			<if test="tpOptical != null  ">tp_optical,</if>
+			<if test="tnWave1 != null  ">tn_wave1,</if>
+			<if test="tnOptical != null  ">tn_optical,</if>
+			<if test="nhWave1 != null  ">nh_wave1,</if>
+			<if test="nhOptical != null  ">nh_optical,</if>
+			<if test="createTime != null  ">create_time,</if>
+			<if test="createBy != null  and createBy != ''  ">create_by,</if>
+			<if test="updateTime != null  ">update_time,</if>
+			<if test="updateBy != null  and updateBy != ''  ">update_by,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="reportId != null  and reportId != ''  ">#{reportId},</if>
+			<if test="codName != null  and codName != ''  ">#{codName},</if>
+			<if test="tpName != null  and tpName != ''  ">#{tpName},</if>
+			<if test="tnName != null  and tnName != ''  ">#{tnName},</if>
+			<if test="nhName != null  and nhName != ''  ">#{nhName},</if>
+			<if test="codWave1 != null  ">#{codWave1},</if>
+			<if test="codWave2 != null  ">#{codWave2},</if>
+			<if test="codOptical != null  ">#{codOptical},</if>
+			<if test="tpWave1 != null  ">#{tpWave1},</if>
+			<if test="tpOptical != null  ">#{tpOptical},</if>
+			<if test="tnWave1 != null  ">#{tnWave1},</if>
+			<if test="tnOptical != null  ">#{tnOptical},</if>
+			<if test="nhWave1 != null  ">#{nhWave1},</if>
+			<if test="nhOptical != null  ">#{nhOptical},</if>
+			<if test="createTime != null  ">#{createTime},</if>
+			<if test="createBy != null  and createBy != ''  ">#{createBy},</if>
+			<if test="updateTime != null  ">#{updateTime},</if>
+			<if test="updateBy != null  and updateBy != ''  ">#{updateBy},</if>
+         </trim>
+    </insert>
+	 
+    <update id="updateBizAssayMethod" parameterType="BizAssayMethod">
+        update biz_assay_method
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="reportId != null  and reportId != ''  ">report_id = #{reportId},</if>
+            <if test="codName != null  and codName != ''  ">cod_name = #{codName},</if>
+            <if test="tpName != null  and tpName != ''  ">tp_name = #{tpName},</if>
+            <if test="tnName != null  and tnName != ''  ">tn_name = #{tnName},</if>
+            <if test="nhName != null  and nhName != ''  ">nh_name = #{nhName},</if>
+            <if test="codWave1 != null  ">cod_wave1 = #{codWave1},</if>
+            <if test="codWave2 != null  ">cod_wave2 = #{codWave2},</if>
+            <if test="codOptical != null  ">cod_optical = #{codOptical},</if>
+            <if test="tpWave1 != null  ">tp_wave1 = #{tpWave1},</if>
+            <if test="tpOptical != null  ">tp_optical = #{tpOptical},</if>
+            <if test="tnWave1 != null  ">tn_wave1 = #{tnWave1},</if>
+            <if test="tnOptical != null  ">tn_optical = #{tnOptical},</if>
+            <if test="nhWave1 != null  ">nh_wave1 = #{nhWave1},</if>
+            <if test="nhOptical != null  ">nh_optical = #{nhOptical},</if>
+            <if test="createTime != null  ">create_time = #{createTime},</if>
+            <if test="createBy != null  and createBy != ''  ">create_by = #{createBy},</if>
+            <if test="updateTime != null  ">update_time = #{updateTime},</if>
+            <if test="updateBy != null  and updateBy != ''  ">update_by = #{updateBy},</if>
+        </trim>
+        where method_id = #{methodId}
+    </update>
+
+	<delete id="deleteBizAssayMethodById" parameterType="Long">
+        delete from biz_assay_method where method_id = #{methodId}
+    </delete>
+	
+    <delete id="deleteBizAssayMethodByIds" parameterType="String">
+        delete from biz_assay_method where method_id in 
+        <foreach item="methodId" collection="array" open="(" separator="," close=")">
+            #{methodId}
+        </foreach>
+    </delete>
+    
+</mapper>

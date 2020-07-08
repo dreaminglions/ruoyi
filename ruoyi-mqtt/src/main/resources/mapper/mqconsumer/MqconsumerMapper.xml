@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.mqtt.mapper.MqconsumerMapper">
+
+	<resultMap type="Mqconsumer" id="MqconsumerResult">
+		<id     property="id"          column="id"          />
+		<result property="name"        column="name"        />
+		<result property="topic"       column="topic"       />
+		<result property="ip"     column="ip"     />
+		<result property="username"   column="username"   />
+		<result property="pwd" column="pwd" />
+		<result property="clientid"  column="clientid"  />
+		<result property="virtualhosts"     column="virtualhosts"      />
+		<result property="port"     column="port"      />
+		<result property="status"         column="status"          />
+		<result property="createBy"       column="create_by"       />
+		<result property="createTime"     column="create_time"     />
+		<result property="updateBy"       column="update_by"       />
+		<result property="updateTime"     column="update_time"     />
+		<result property="remark"         column="remark"          />
+	</resultMap>
+
+	<sql id="selectMqconsumerVo">
+		select id, name, topic, ip, username, pwd, clientid, virtualhosts, port, status, create_by, create_time, remark
+		from mqtt_consumer
+	</sql>
+
+	<select id="selectMqconsumerList" parameterType="Consumer" resultMap="MqconsumerResult">
+		<include refid="selectMqconsumerVo"/>
+		<where>
+			<if test="id != null and id != ''">
+				AND id = #{id}
+			</if>
+			<if test="name != null and name != ''">
+				AND name = #{name}
+			</if>
+			<if test="status != null and status != ''">
+				AND status = #{status}
+			</if>
+		</where>
+	</select>
+
+	<select id="getAll" parameterType="Mqconsumer" resultMap="MqconsumerResult">
+		<include refid="selectMqconsumerVo"/>
+		<where>
+			<if test="status != null and status != ''">
+				AND status = #{status}
+			</if>
+		</where>
+	</select>
+
+	<insert id="insertMqconsumer" parameterType="Mqconsumer" useGeneratedKeys="true" keyProperty="id">
+		insert into mqtt_consumer(
+		<if test="id != null and id != 0">id,</if>
+		<if test="name != null and name != ''">name,</if>
+		<if test="topic != null and topic != ''">topic,</if>
+		<if test="ip != null and ip != ''">ip,</if>
+		<if test="username != null and username != ''">username,</if>
+		<if test="pwd != null and pwd != ''">pwd,</if>
+		<if test="clientid != null and clientid != ''">clientid,</if>
+		<if test="virtualhosts != null and virtualhosts != ''">virtualhosts,</if>
+		<if test="port != null and port != ''">port,</if>
+		<if test="status != null and status != ''">status,</if>
+		<if test="createBy != null and createBy != ''">create_by,</if>
+		<if test="remark != null and remark != ''">remark,</if>
+		create_time
+		)values(
+		<if test="id != null and id != 0">#{id},</if>
+		<if test="name != null and name != ''">#{name},</if>
+		<if test="topic != null and topic != ''">#{topic},</if>
+		<if test="ip != null and ip != ''">#{ip},</if>
+		<if test="username != null and username != ''">#{username},</if>
+		<if test="pwd != null and pwd != ''">#{pwd},</if>
+		<if test="clientid != null and clientid != ''">#{clientid},</if>
+		<if test="virtualhosts != null and virtualhosts != ''">#{virtualhosts},</if>
+		<if test="port != null and port != ''">#{port},</if>
+		<if test="status != null and status != ''">#{status},</if>
+		<if test="createBy != null and createBy != ''">#{createBy},</if>
+		<if test="remark != null and remark != ''">#{remark},</if>
+		sysdate()
+		)
+	</insert>
+
+
+	<update id="updateMqconsumer" parameterType="Mqconsumer">
+		update mqtt_consumer
+		<trim prefix="SET" suffixOverrides=",">
+			<if test="name != null  and name != ''  ">name = #{name},</if>
+			<if test="topic != null  and topic != ''  ">topic = #{topic},</if>
+			<if test="clientid != null  and clientid != ''  ">clientid = #{clientid},</if>
+			<if test="ip != null  and ip != ''  ">ip = #{ip},</if>
+			<if test="username != null  and username != ''  ">username = #{username},</if>
+			<if test="pwd != null  and pwd != ''  ">pwd = #{pwd},</if>
+			<if test="virtualhosts != null  and virtualhosts != ''  ">virtualhosts = #{virtualhosts},</if>
+			<if test="port != null  ">port = #{port},</if>
+			<if test="status != null  and status != ''  ">status = #{status},</if>
+			<if test="updateBy != null  and updateBy != ''  ">update_by = #{updateBy},</if>
+			<if test="remark != null  and remark != ''  ">remark = #{remark},</if>
+			update_time = sysdate()
+		</trim>
+		where id = #{id}
+	</update>
+
+	<delete id="deleteMqconsumerById" parameterType="Long">
+		delete from mqtt_consumer where id = #{id}
+	</delete>
+
+	<delete id="deleteMqconsumerByIds" parameterType="String">
+		delete from mqtt_consumer where id in
+		<foreach item="id" collection="array" open="(" separator="," close=")">
+			#{id}
+		</foreach>
+	</delete>
+
+	<select id="selectMqconsumerById" parameterType="Long" resultMap="MqconsumerResult">
+		<include refid="selectMqconsumerVo"/>
+		where id = #{id}
+	</select>
+
+</mapper> 

@@ -1,0 +1,313 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.BizAssayResultMapper">
+    
+    <resultMap type="BizAssayResult" id="BizAssayResultResult">
+        <result property="resultId"    column="result_id"    />
+        <result property="resultNo"    column="result_no"    />
+        <result property="reportId"    column="report_id"    />
+        <result property="resultDevice"    column="result_device"    />
+        <result property="resultWorks"    column="result_works"    />
+        <result property="resultType"    column="result_type"    />
+        <result property="assayDate"    column="assay_date"    />
+        <result property="beginTime"    column="begin_time"    />
+        <result property="endTime"    column="end_time"    />
+        <result property="resultMethod"    column="result_method"    />
+        <result property="resultParameter"    column="result_parameter"    />
+        <result property="resultCurve"    column="result_curve"    />
+        <result property="resultScope"    column="result_scope"    />
+        <result property="inCod"    column="in_COD"    />
+        <result property="incodAbs"    column="incod_ABS"    />
+        <result property="inTp"    column="in_TP"    />
+        <result property="intpAbs"    column="intp_ABS"    />
+        <result property="inTn"    column="in_TN"    />
+        <result property="intnAbs"    column="intn_ABS"    />
+        <result property="inNh3"    column="in_NH3"    />
+        <result property="innhAbs"    column="innh_ABS"    />
+        <result property="outCod"    column="out_COD"    />
+        <result property="outcodAbs"    column="outcod_ABS"    />
+        <result property="outTp"    column="out_TP"    />
+        <result property="outtpAbs"    column="outtp_ABS"    />
+        <result property="outTn"    column="out_TN"    />
+        <result property="outtnAbs"    column="outtn_ABS"    />
+        <result property="outNh3"    column="out_NH3"    />
+        <result property="outnhAbs"    column="outnh_ABS"    />
+        <result property="resultNode"    column="result_node"    />
+        <result property="resultBigprocess"    column="result_bigprocess"    />
+        <result property="resultSmallprocess"    column="result_smallprocess"    />
+        <result property="resultStatus"    column="result_status"    />
+        <result property="resultAlert"    column="result_alert"    />
+        <result property="resultFault"    column="result_fault"    />
+        <result property="resultDate"    column="result_date"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="repairBy"    column="repair_by"    />
+        <association property="device"    column="result_device" javaType="BizDevice" resultMap="deviceResult" />
+        <association property="works"    column="result_works" javaType="BizWaterWork" resultMap="worksResult" />
+    </resultMap>
+
+
+    <resultMap id="deviceResult" type="BizDevice">
+        <result property="deviceId"    column="device_id"    />
+        <result property="deviceNo"    column="device_no"    />
+        <result property="deviceName"    column="device_name"    />
+        <result property="deviceStatus"    column="device_status"    />
+    </resultMap>
+
+    <resultMap id="worksResult" type="BizWaterWork">
+        <result property="worksId"    column="works_id"    />
+        <result property="worksNo"    column="works_no"    />
+        <result property="worksName"    column="works_name"    />
+        <result property="worksStatus"    column="works_status"    />
+    </resultMap>
+	
+	<sql id="selectBizAssayResultVo">
+        select r.result_id, r.result_no, r.report_id, r.result_device, r.result_works, r.result_type, r.assay_date, r.begin_time, r.end_time, r.result_method, r.result_parameter, r.result_curve, r.result_scope,
+         r.in_COD, r.incod_ABS, r.in_TP, r.intp_ABS, r.in_TN, r.intn_ABS, r.in_NH3, r.innh_ABS, r.out_COD, r.outcod_ABS, r.out_TP, r.outtp_ABS, r.out_TN, r.outtn_ABS, r.out_NH3, r.outnh_ABS,
+         r.result_node, r.result_bigprocess, r.result_smallprocess, r.result_status, r.result_alert, r.result_fault, r.result_date, r.create_time, r.create_by, r.update_time, r.update_by,r.repair_by,
+                d.device_id,d.device_no,d.device_name,d.device_status,d.device_works,
+                w.works_id,w.works_no,w.works_name,w.works_status
+		from biz_assay_result r
+        LEFT JOIN biz_device d on r.result_device = d.device_id
+		LEFT JOIN biz_water_work w on r.result_works = w.works_id
+    </sql>
+	
+    <select id="selectBizAssayResultList" parameterType="BizAssayResult" resultMap="BizAssayResultResult">
+        <include refid="selectBizAssayResultVo"/>
+        where 1=1
+
+            <if test="resultId != null "> and r.result_id = #{resultId}</if>
+             <if test="resultNo != null  and resultNo != '' ">
+                 AND r.result_no like concat('%', #{resultNo}, '%') </if>
+             <if test="reportId != null  and reportId != '' "> and report_id = #{reportId}</if>
+             <if test="resultDevice != null "> and r.result_device = #{resultDevice}</if>
+             <if test="resultWorks != null "> and r.result_works = #{resultWorks}</if>
+             <if test="resultType != null  and resultType != '' "> and r.result_type = #{resultType}</if>
+             <if test="assayDate != null  and assayDate != '' "> and r.assay_date = #{assayDate}</if>
+             <if test="beginTime != null "> and r.begin_time = #{beginTime}</if>
+             <if test="endTime != null "> and r.end_time = #{endTime}</if>
+             <if test="resultMethod != null "> and r.result_method = #{resultMethod}</if>
+             <if test="resultParameter != null "> and r.result_parameter = #{resultParameter}</if>
+             <if test="resultCurve != null "> and r.result_curve = #{resultCurve}</if>
+             <if test="resultScope != null "> and r.result_scope = #{resultScope}</if>
+             <if test="resultStatus != null  and resultStatus != '' "> and r.result_status = #{resultStatus}</if>
+             <if test="resultAlert != null  and resultAlert != '' "> and r.result_alert = #{resultAlert}</if>
+             <if test="resultFault != null  and resultFault != '' "> and r.result_fault = #{resultFault}</if>
+             <if test="resultDate != null  and resultDate != '' "> and r.result_date = #{resultDate}</if>
+
+            <if test="params.beginTime != null and params.beginTime != ''"><!-- 开始时间检索 -->
+                AND date_format(r.result_date,'%y%m%d') &gt;= date_format(#{params.beginTime},'%y%m%d')
+            </if>
+            <if test="params.endTime != null and params.endTime != ''"><!-- 结束时间检索 -->
+                AND date_format(r.result_date,'%y%m%d') &lt;= date_format(#{params.endTime},'%y%m%d')
+            </if>
+
+        <!-- 数据范围过滤 -->
+        ${params.dataScope}
+
+        order by r.result_date desc
+    </select>
+    
+    <select id="selectBizAssayResultById" parameterType="Long" resultMap="BizAssayResultResult">
+        <include refid="selectBizAssayResultVo"/>
+        where r.result_id = #{resultId}
+    </select>
+
+
+    <select id="selectBizAssayResultByReportId" parameterType="String" resultMap="BizAssayResultResult">
+        <include refid="selectBizAssayResultVo"/>
+        where r.report_id = #{reportId}
+    </select>
+
+    <select id="selectBizAssayResultByNo" parameterType="String" resultMap="BizAssayResultResult">
+        <include refid="selectBizAssayResultVo"/>
+        where r.result_no = #{resultNo}
+    </select>
+
+        
+    <insert id="insertBizAssayResult" parameterType="BizAssayResult" useGeneratedKeys="true" keyProperty="resultId">
+        insert into biz_assay_result
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="resultNo != null  and resultNo != ''  ">result_no,</if>
+			<if test="reportId != null  and reportId != ''  ">report_id,</if>
+			<if test="resultDevice != null  ">result_device,</if>
+			<if test="resultWorks != null  ">result_works,</if>
+			<if test="resultType != null  and resultType != ''  ">result_type,</if>
+			<if test="assayDate != null  and assayDate != ''  ">assay_date,</if>
+			<if test="beginTime != null  ">begin_time,</if>
+			<if test="endTime != null  ">end_time,</if>
+			<if test="resultMethod != null  ">result_method,</if>
+			<if test="resultParameter != null  ">result_parameter,</if>
+			<if test="resultCurve != null  ">result_curve,</if>
+			<if test="resultScope != null  ">result_scope,</if>
+            <if test="inCod != null  ">in_COD,</if>
+            <if test="incodAbs != null  ">incod_ABS,</if>
+            <if test="inTp != null  ">in_TP,</if>
+            <if test="intpAbs != null  ">intp_ABS,</if>
+            <if test="inTn != null  ">in_TN,</if>
+            <if test="intnAbs != null  ">intn_ABS,</if>
+            <if test="inNh3 != null  ">in_NH3,</if>
+            <if test="innhAbs != null  ">innh_ABS,</if>
+            <if test="outCod != null  ">out_COD,</if>
+            <if test="outcodAbs != null  ">outcod_ABS,</if>
+            <if test="outTp != null  ">out_TP,</if>
+            <if test="outtpAbs != null  ">outtp_ABS,</if>
+            <if test="outTn != null  ">out_TN,</if>
+            <if test="outtnAbs != null  ">outtn_ABS,</if>
+            <if test="outNh3 != null  ">out_NH3,</if>
+            <if test="outnhAbs != null  ">outnh_ABS,</if>
+            <if test="resultNode != null  and resultNode != ''  ">result_node,</if>
+            <if test="resultBigprocess != null  and resultBigprocess != ''  ">result_bigprocess,</if>
+            <if test="resultSmallprocess != null  and resultSmallprocess != ''  ">result_smallprocess,</if>
+            <if test="resultStatus != null  and resultStatus != ''  ">result_status,</if>
+            <if test="resultAlert != null  and resultAlert != ''  ">result_alert,</if>
+            <if test="resultFault != null  and resultFault != ''  ">result_fault,</if>
+            <if test="resultDate != null  and resultDate != ''  ">result_date,</if>
+            <if test="repairBy != null  and repairBy != ''  ">repair_by,</if>
+			<if test="createBy != null  and createBy != ''  ">create_by,</if>
+            create_time
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="resultNo != null  and resultNo != ''  ">#{resultNo},</if>
+			<if test="reportId != null  and reportId != ''  ">#{reportId},</if>
+			<if test="resultDevice != null  ">#{resultDevice},</if>
+			<if test="resultWorks != null  ">#{resultWorks},</if>
+			<if test="resultType != null  and resultType != ''  ">#{resultType},</if>
+			<if test="assayDate != null  and assayDate != ''  ">#{assayDate},</if>
+			<if test="beginTime != null  ">#{beginTime},</if>
+			<if test="endTime != null  ">#{endTime},</if>
+			<if test="resultMethod != null  ">#{resultMethod},</if>
+			<if test="resultParameter != null  ">#{resultParameter},</if>
+			<if test="resultCurve != null  ">#{resultCurve},</if>
+			<if test="resultScope != null  ">#{resultScope},</if>
+            <if test="inCod != null  ">#{inCod},</if>
+            <if test="incodAbs != null  ">#{incodAbs},</if>
+            <if test="incodAbs != null  ">#{incodAbs},</if>
+            <if test="inTp != null  ">#{inTp},</if>
+            <if test="intpAbs != null  ">#{intpAbs},</if>
+            <if test="inTn != null  ">#{inTn},</if>
+            <if test="intnAbs != null  ">#{intnAbs},</if>
+            <if test="inNh3 != null  ">#{inNh3},</if>
+            <if test="innhAbs != null  ">#{innhAbs},</if>
+            <if test="outCod != null  ">#{outCod},</if>
+            <if test="outcodAbs != null  ">#{outcodAbs},</if>
+            <if test="outTp != null  ">#{outTp},</if>
+            <if test="outtpAbs != null  ">#{outtpAbs},</if>
+            <if test="outTn != null  ">#{outTn},</if>
+            <if test="outtnAbs != null  ">#{outtnAbs},</if>
+            <if test="outNh3 != null  ">#{outNh3},</if>
+            <if test="outnhAbs != null  ">#{outnhAbs},</if>
+            <if test="resultNode != null  and resultNode != ''  ">#{resultNode},</if>
+            <if test="resultBigprocess != null  and resultBigprocess != ''  ">#{resultBigprocess},</if>
+            <if test="resultSmallprocess != null  and resultSmallprocess != ''  ">#{resultSmallprocess},</if>
+            <if test="resultStatus != null  and resultStatus != ''  ">#{resultStatus},</if>
+            <if test="resultAlert != null  and resultAlert != ''  ">#{resultAlert},</if>
+            <if test="resultFault != null  and resultFault != ''  ">#{resultFault},</if>
+            <if test="resultDate != null  and resultDate != ''  ">#{resultDate},</if>
+            <if test="repairBy != null  and repairBy != ''  ">#{repairBy},</if>
+			<if test="createBy != null  and createBy != ''  ">#{createBy},</if>
+            sysdate()
+         </trim>
+    </insert>
+	 
+    <update id="updateBizAssayResult" parameterType="BizAssayResult">
+        update biz_assay_result
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="resultNo != null  and resultNo != ''  ">result_no = #{resultNo},</if>
+            <if test="reportId != null  and reportId != ''  ">report_id = #{reportId},</if>
+            <if test="resultDevice != null  ">result_device = #{resultDevice},</if>
+            <if test="resultWorks != null  ">result_works = #{resultWorks},</if>
+            <if test="resultType != null  and resultType != ''  ">result_type = #{resultType},</if>
+            <if test="assayDate != null  and assayDate != ''  ">assay_date = #{assayDate},</if>
+            <if test="beginTime != null  ">begin_time = #{beginTime},</if>
+            <if test="endTime != null  ">end_time = #{endTime},</if>
+            <if test="resultMethod != null  ">result_method = #{resultMethod},</if>
+            <if test="resultParameter != null  ">result_parameter = #{resultParameter},</if>
+            <if test="resultCurve != null  ">result_curve = #{resultCurve},</if>
+            <if test="resultScope != null  ">result_scope = #{resultScope},</if>
+            <if test="inCod != null  ">in_COD = #{inCod},</if>
+            <if test="incodAbs != null  ">incod_ABS = #{incodAbs},</if>
+            <if test="inTp != null  ">in_TP = #{inTp},</if>
+            <if test="intpAbs != null  ">intp_ABS = #{intpAbs},</if>
+            <if test="inTn != null  ">in_TN = #{inTn},</if>
+            <if test="intnAbs != null  ">intn_ABS = #{intnAbs},</if>
+            <if test="inNh3 != null  ">in_NH3 = #{inNh3},</if>
+            <if test="innhAbs != null  ">innh_ABS = #{innhAbs},</if>
+            <if test="outCod != null  ">out_COD = #{outCod},</if>
+            <if test="outcodAbs != null  ">outcod_ABS = #{outcodAbs},</if>
+            <if test="outTp != null  ">out_TP = #{outTp},</if>
+            <if test="outtpAbs != null  ">outtp_ABS = #{outtpAbs},</if>
+            <if test="outTn != null  ">out_TN = #{outTn},</if>
+            <if test="outtnAbs != null  ">outtn_ABS = #{outtnAbs},</if>
+            <if test="outNh3 != null  ">out_NH3 = #{outNh3},</if>
+            <if test="outnhAbs != null  ">outnh_ABS = #{outnhAbs},</if>
+            <if test="resultNode != null  and resultNode != ''  ">result_node = #{resultNode},</if>
+            <if test="resultBigprocess != null  and resultBigprocess != ''  ">result_bigprocess = #{resultBigprocess},</if>
+            <if test="resultSmallprocess != null  and resultSmallprocess != ''  ">result_smallprocess = #{resultSmallprocess},</if>
+            <if test="resultStatus != null  and resultStatus != ''  ">result_status = #{resultStatus},</if>
+            <if test="resultAlert != null  and resultAlert != ''  ">result_alert = #{resultAlert},</if>
+            <if test="resultFault != null  and resultFault != ''  ">result_fault = #{resultFault},</if>
+            <if test="resultDate != null  and resultDate != ''  ">result_date = #{resultDate},</if>
+            <if test="repairBy != null  and repairBy != ''  ">repair_by = #{repairBy},</if>
+            <if test="updateBy != null  and updateBy != ''  ">update_by = #{updateBy},</if>
+            update_time = sysdate()
+        </trim>
+        where result_id = #{resultId}
+    </update>
+
+	<delete id="deleteBizAssayResultById" parameterType="Long">
+        delete from biz_assay_result where result_id = #{resultId}
+    </delete>
+	
+    <delete id="deleteBizAssayResultByIds" parameterType="String">
+        delete from biz_assay_result where result_id in 
+        <foreach item="resultId" collection="array" open="(" separator="," close=")">
+            #{resultId}
+        </foreach>
+    </delete>
+
+
+
+    <select id="getAssayTotal" resultType="DataEnity">
+            SELECT '正常化验' as 'key',count(*) as 'value' FROM biz_assay_result t
+            where t.result_status ='0'
+            UNION
+            SELECT '未完成化验' as 'key',count(*) as 'value' FROM biz_assay_result t
+            where t.result_status ='1'
+    </select>
+
+    <select id="getAssayByWorkTime"  resultMap="BizAssayResultResult">
+        <include refid="selectBizAssayResultVo"/>
+        where r.result_works = #{waterValue} and date_format(r.result_date,'%y%m%d') = date_format(#{timeValue},'%y%m%d')
+    </select>
+
+
+    <select id="getOuaData" resultType="OutDataEnity">
+        select
+        sum(if(z.outcod=0,1,0)) as outcod_r,
+        sum(if(z.outcod=1,1,0)) as outcod_w,
+        sum(if(z.outtn=0,1,0)) as outtn_r,
+        sum(if(z.outtn=1,1,0)) as outtn_w,
+        sum(if(z.outtp=0,1,0)) as outtp_r,
+        sum(if(z.outtp=1,1,0)) as outtp_w,
+        sum(if(z.outnh=0,1,0)) as outnh_r,
+        sum(if(z.outnh=1,1,0)) as outnh_w
+        from (
+        select
+        t.report_id,
+        if((IFNULL(a.out_COD_min,0) &lt; t.out_COD ) &amp;&amp; (t.out_COD &lt; IFNULL(a.out_COD_max,10000)),0,1) as outcod,
+        if((IFNULL(a.out_TN_min,0) &lt; t.out_TN ) &amp;&amp; (t.out_TN &lt; IFNULL(a.out_TN_max,10000)),0,1) as outtn,
+        if((IFNULL(a.out_TP_min,0) &lt; t.out_TP ) &amp;&amp; (t.out_TP &lt; IFNULL(a.out_TP_max,10000)),0,1) as outtp,
+        if((IFNULL(a.out_NH3_min,0) &lt; t.out_NH3 ) &amp;&amp; (t.out_NH3 &lt; IFNULL(a.out_NH3_max,10000)),0,1) as outnh
+        from biz_assay_result t
+        LEFT JOIN biz_assay_scope a on t.report_id = a.report_id
+        where t.result_works= #{workId}
+        and t.result_date BETWEEN #{startTime} and #{endTime}
+        ) z
+    </select>
+    
+</mapper>

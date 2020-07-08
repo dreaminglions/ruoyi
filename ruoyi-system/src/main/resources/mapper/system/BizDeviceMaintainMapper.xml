@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.BizDeviceMaintainMapper">
+    
+    <resultMap type="BizDeviceMaintain" id="BizDeviceMaintainResult">
+        <result property="maintainId"    column="maintain_id"    />
+        <result property="maintainDevice"    column="maintain_device"    />
+        <result property="maintainWorks"    column="maintain_works"    />
+        <result property="maintainCity"    column="maintain_city"    />
+        <result property="maintainType"    column="maintain_type"    />
+        <result property="maintainReason"    column="maintain_reason"    />
+        <result property="maintainResult"    column="maintain_result"    />
+        <result property="maintainDate"    column="maintain_date"    />
+        <result property="maintainUser"    column="maintain_user"    />
+        <result property="maintainTel"    column="maintain_tel"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <association property="device"    column="maintain_device" javaType="BizDevice" resultMap="deviceResult" />
+        <association property="works"    column="maintain_works" javaType="BizWaterWork" resultMap="worksResult" />
+    </resultMap>
+
+
+    <resultMap id="deviceResult" type="BizDevice">
+        <result property="deviceId"    column="device_id"    />
+        <result property="deviceNo"    column="device_no"    />
+        <result property="deviceName"    column="device_name"    />
+        <result property="deviceStatus"    column="device_status"    />
+    </resultMap>
+
+    <resultMap id="worksResult" type="BizWaterWork">
+        <result property="worksId"    column="works_id"    />
+        <result property="worksNo"    column="works_no"    />
+        <result property="worksName"    column="works_name"    />
+        <result property="worksStatus"    column="works_status"    />
+    </resultMap>
+	
+	<sql id="selectBizDeviceMaintainVo">
+        select a.maintain_id, a.maintain_device, a.maintain_works, a.maintain_city, a.maintain_type, a.maintain_reason, a.maintain_result, a.maintain_date, a.maintain_user, a.maintain_tel, a.create_time, a.create_by, a.update_time, a.update_by,
+                d.device_id,d.device_no,d.device_name,d.device_status,d.device_works,
+                w.works_id,w.works_no,w.works_name,w.works_status
+		from biz_device_maintain a
+        LEFT JOIN biz_device d on a.maintain_device = d.device_id
+		LEFT JOIN biz_water_work w on a.maintain_works = w.works_id
+
+    </sql>
+	
+    <select id="selectBizDeviceMaintainList" parameterType="BizDeviceMaintain" resultMap="BizDeviceMaintainResult">
+        <include refid="selectBizDeviceMaintainVo"/>
+        where  1=1
+            <if test="maintainId != null "> and a.maintain_id = #{maintainId}</if>
+             <if test="maintainDevice != null "> and a.maintain_device = #{maintainDevice}</if>
+             <if test="maintainWorks != null "> and a.maintain_works = #{maintainWorks}</if>
+             <if test="maintainCity != null  and maintainCity != '' "> and a.maintain_city = #{maintainCity}</if>
+             <if test="maintainReason != null  and maintainReason != '' "> and a.maintain_reason = #{maintainReason}</if>
+             <if test="maintainType != null  and maintainType != '' "> and a.maintain_type = #{maintainType}</if>
+             <if test="maintainResult != null  and maintainResult != '' "> and a.maintain_result = #{maintainResult}</if>
+             <if test="maintainDate != null  and maintainDate != '' "> and a.maintain_date = #{maintainDate}</if>
+             <if test="maintainUser != null  and maintainUser != '' "> and a.maintain_user = #{maintainUser}</if>
+             <if test="maintainTel != null  and maintainTel != '' "> and a.maintain_tel = #{maintainTel}</if>
+        <!-- 数据范围过滤 -->
+        ${params.dataScope}
+    </select>
+    
+    <select id="selectBizDeviceMaintainById" parameterType="Long" resultMap="BizDeviceMaintainResult">
+        <include refid="selectBizDeviceMaintainVo"/>
+        where a.maintain_id = #{maintainId}
+    </select>
+        
+    <insert id="insertBizDeviceMaintain" parameterType="BizDeviceMaintain" useGeneratedKeys="true" keyProperty="maintainId">
+        insert into biz_device_maintain
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="maintainDevice != null  ">maintain_device,</if>
+			<if test="maintainWorks != null  ">maintain_works,</if>
+			<if test="maintainCity != null  and maintainCity != ''  ">maintain_city,</if>
+			<if test="maintainReason != null  and maintainReason != ''  ">maintain_reason,</if>
+            <if test="maintainType != null  and maintainType != ''  ">maintain_type,</if>
+			<if test="maintainResult != null  and maintainResult != ''  ">maintain_result,</if>
+			<if test="maintainDate != null  and maintainDate != ''  ">maintain_date,</if>
+			<if test="maintainUser != null  and maintainUser != ''  ">maintain_user,</if>
+			<if test="maintainTel != null  and maintainTel != ''  ">maintain_tel,</if>
+			<if test="createBy != null  and createBy != ''  ">create_by,</if>
+            create_time
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="maintainDevice != null  ">#{maintainDevice},</if>
+			<if test="maintainWorks != null  ">#{maintainWorks},</if>
+			<if test="maintainCity != null  and maintainCity != ''  ">#{maintainCity},</if>
+			<if test="maintainReason != null  and maintainReason != ''  ">#{maintainReason},</if>
+            <if test="maintainType != null  and maintainType != ''  ">#{maintainType},</if>
+			<if test="maintainResult != null  and maintainResult != ''  ">#{maintainResult},</if>
+			<if test="maintainDate != null  and maintainDate != ''  ">#{maintainDate},</if>
+			<if test="maintainUser != null  and maintainUser != ''  ">#{maintainUser},</if>
+			<if test="maintainTel != null  and maintainTel != ''  ">#{maintainTel},</if>
+			<if test="createBy != null  and createBy != ''  ">#{createBy},</if>
+            sysdate()
+         </trim>
+    </insert>
+	 
+    <update id="updateBizDeviceMaintain" parameterType="BizDeviceMaintain">
+        update biz_device_maintain
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="maintainDevice != null  ">maintain_device = #{maintainDevice},</if>
+            <if test="maintainWorks != null  ">maintain_works = #{maintainWorks},</if>
+            <if test="maintainCity != null  and maintainCity != ''  ">maintain_city = #{maintainCity},</if>
+            <if test="maintainReason != null  and maintainReason != ''  ">maintain_reason = #{maintainReason},</if>
+            <if test="maintainType != null  and maintainType != ''  ">maintain_type = #{maintainType},</if>
+            <if test="maintainResult != null  and maintainResult != ''  ">maintain_result = #{maintainResult},</if>
+            <if test="maintainDate != null  and maintainDate != ''  ">maintain_date = #{maintainDate},</if>
+            <if test="maintainUser != null  and maintainUser != ''  ">maintain_user = #{maintainUser},</if>
+            <if test="maintainTel != null  and maintainTel != ''  ">maintain_tel = #{maintainTel},</if>
+            <if test="updateBy != null  and updateBy != ''  ">update_by = #{updateBy},</if>
+            update_time = sysdate()
+        </trim>
+        where maintain_id = #{maintainId}
+    </update>
+
+	<delete id="deleteBizDeviceMaintainById" parameterType="Long">
+        delete from biz_device_maintain where maintain_id = #{maintainId}
+    </delete>
+	
+    <delete id="deleteBizDeviceMaintainByIds" parameterType="String">
+        delete from biz_device_maintain where maintain_id in 
+        <foreach item="maintainId" collection="array" open="(" separator="," close=")">
+            #{maintainId}
+        </foreach>
+    </delete>
+
+
+    <select id="getMaintainTotal" resultType="DataEnity">
+        SELECT '设备维护' as 'key',count(*) as 'value' FROM biz_device_maintain t
+        where t.maintain_type ='0' and t.maintain_result='1'
+        UNION
+        SELECT '药液维护' as 'key',count(*) as 'value' FROM biz_device_maintain t
+        where t.maintain_type ='1' and t.maintain_result='1'
+        UNION
+       SELECT '试管维护' as 'key',count(*) as 'value' FROM biz_device_maintain t
+        where t.maintain_type ='2' and t.maintain_result='1'
+        UNION
+       SELECT '部件维护' as 'key',count(*) as 'value' FROM biz_device_maintain t
+        where t.maintain_type ='3' and t.maintain_result='1'
+    </select>
+    
+</mapper>

@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.BizResultAlterMapper">
+    
+    <resultMap type="BizResultAlter" id="BizResultAlterResult">
+        <result property="alterId"    column="alter_id"    />
+        <result property="alterNo"    column="alter_no"    />
+        <result property="reportId"    column="report_id"    />
+        <result property="alterDevice"    column="alter_device"    />
+        <result property="alterWorks"    column="alter_works"    />
+        <result property="inCod"    column="in_COD"    />
+        <result property="inTp"    column="in_TP"    />
+        <result property="inTn"    column="in_TN"    />
+        <result property="inNh3"    column="in_NH3"    />
+        <result property="outCod"    column="out_COD"    />
+        <result property="outTp"    column="out_TP"    />
+        <result property="outTn"    column="out_TN"    />
+        <result property="outNh3"    column="out_NH3"    />
+        <result property="alterDate"    column="alter_date"    />
+        <result property="alterTime"    column="alter_time"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <association property="device"    column="alter_device" javaType="BizDevice" resultMap="deviceResult" />
+        <association property="works"    column="alter_works" javaType="BizWaterWork" resultMap="worksResult" />
+    </resultMap>
+
+
+    <resultMap id="deviceResult" type="BizDevice">
+        <result property="deviceId"    column="device_id"    />
+        <result property="deviceNo"    column="device_no"    />
+        <result property="deviceName"    column="device_name"    />
+        <result property="deviceStatus"    column="device_status"    />
+    </resultMap>
+
+    <resultMap id="worksResult" type="BizWaterWork">
+        <result property="worksId"    column="works_id"    />
+        <result property="worksNo"    column="works_no"    />
+        <result property="worksName"    column="works_name"    />
+        <result property="worksStatus"    column="works_status"    />
+    </resultMap>
+	
+	<sql id="selectBizResultAlterVo">
+        select a.alter_id, a.alter_no, a.report_id, a.alter_device, a.alter_works, a.in_COD, a.in_TP, a.in_TN, a.in_NH3, a.out_COD, a.out_TP, a.out_TN, a.out_NH3, a.alter_date, a.alter_time, a.create_time, a.create_by, a.update_time, a.update_by,
+				d.device_id,d.device_no,d.device_name,d.device_status,d.device_works,
+                w.works_id,w.works_no,w.works_name,w.works_status
+		from biz_result_alter a
+        LEFT JOIN biz_device d on a.alter_device = d.device_id
+		LEFT JOIN biz_water_work w on a.alter_works = w.works_id
+    </sql>
+	
+    <select id="selectBizResultAlterList" parameterType="BizResultAlter" resultMap="BizResultAlterResult">
+        <include refid="selectBizResultAlterVo"/>
+        where 1=1
+            <if test="alterId != null "> and a.alter_id = #{alterId}</if>
+             <if test="alterNo != null  and alterNo != '' "> and a.alter_no = #{alterNo}</if>
+             <if test="reportId != null  and reportId != '' "> and a.report_id = #{reportId}</if>
+             <if test="alterDevice != null "> and a.alter_device = #{alterDevice}</if>
+             <if test="alterWorks != null "> and a.alter_works = #{alterWorks}</if>
+             <if test="alterDate != null  and alterDate != '' "> and a.alter_date = #{alterDate}</if>
+             <if test="alterTime != null "> and a.alter_time = #{alterTime}</if>
+        <!-- 数据范围过滤 -->
+        ${params.dataScope}
+    </select>
+    
+    <select id="selectBizResultAlterById" parameterType="Long" resultMap="BizResultAlterResult">
+        <include refid="selectBizResultAlterVo"/>
+        where a.alter_id = #{alterId}
+    </select>
+        
+    <insert id="insertBizResultAlter" parameterType="BizResultAlter" useGeneratedKeys="true" keyProperty="alterId">
+        insert into biz_result_alter
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="alterNo != null  and alterNo != ''  ">alter_no,</if>
+			<if test="reportId != null  and reportId != ''  ">report_id,</if>
+			<if test="alterDevice != null  ">alter_device,</if>
+			<if test="alterWorks != null  ">alter_works,</if>
+			<if test="inCod != null  ">in_COD,</if>
+			<if test="inTp != null  ">in_TP,</if>
+			<if test="inTn != null  ">in_TN,</if>
+			<if test="inNh3 != null  ">in_NH3,</if>
+			<if test="outCod != null  ">out_COD,</if>
+			<if test="outTp != null  ">out_TP,</if>
+			<if test="outTn != null  ">out_TN,</if>
+			<if test="outNh3 != null  ">out_NH3,</if>
+			<if test="alterDate != null  and alterDate != ''  ">alter_date,</if>
+			<if test="alterTime != null  ">alter_time,</if>
+			<if test="createBy != null  and createBy != ''  ">create_by,</if>
+            create_time
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="alterNo != null  and alterNo != ''  ">#{alterNo},</if>
+			<if test="reportId != null  and reportId != ''  ">#{reportId},</if>
+			<if test="alterDevice != null  ">#{alterDevice},</if>
+			<if test="alterWorks != null  ">#{alterWorks},</if>
+			<if test="inCod != null  ">#{inCod},</if>
+			<if test="inTp != null  ">#{inTp},</if>
+			<if test="inTn != null  ">#{inTn},</if>
+			<if test="inNh3 != null  ">#{inNh3},</if>
+			<if test="outCod != null  ">#{outCod},</if>
+			<if test="outTp != null  ">#{outTp},</if>
+			<if test="outTn != null  ">#{outTn},</if>
+			<if test="outNh3 != null  ">#{outNh3},</if>
+			<if test="alterDate != null  and alterDate != ''  ">#{alterDate},</if>
+			<if test="alterTime != null  ">#{alterTime},</if>
+			<if test="createBy != null  and createBy != ''  ">#{createBy},</if>
+            sysdate()
+         </trim>
+    </insert>
+	 
+    <update id="updateBizResultAlter" parameterType="BizResultAlter">
+        update biz_result_alter
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="alterNo != null  and alterNo != ''  ">alter_no = #{alterNo},</if>
+            <if test="reportId != null  and reportId != ''  ">report_id = #{reportId},</if>
+            <if test="alterDevice != null  ">alter_device = #{alterDevice},</if>
+            <if test="alterWorks != null  ">alter_works = #{alterWorks},</if>
+            <if test="inCod != null  ">in_COD = #{inCod},</if>
+            <if test="inTp != null  ">in_TP = #{inTp},</if>
+            <if test="inTn != null  ">in_TN = #{inTn},</if>
+            <if test="inNh3 != null  ">in_NH3 = #{inNh3},</if>
+            <if test="outCod != null  ">out_COD = #{outCod},</if>
+            <if test="outTp != null  ">out_TP = #{outTp},</if>
+            <if test="outTn != null  ">out_TN = #{outTn},</if>
+            <if test="outNh3 != null  ">out_NH3 = #{outNh3},</if>
+            <if test="alterDate != null  and alterDate != ''  ">alter_date = #{alterDate},</if>
+            <if test="alterTime != null  ">alter_time = #{alterTime},</if>
+            <if test="updateBy != null  and updateBy != ''  ">update_by = #{updateBy},</if>
+            update_time = sysdate()
+        </trim>
+        where alter_id = #{alterId}
+    </update>
+
+	<delete id="deleteBizResultAlterById" parameterType="Long">
+        delete from biz_result_alter where alter_id = #{alterId}
+    </delete>
+	
+    <delete id="deleteBizResultAlterByIds" parameterType="String">
+        delete from biz_result_alter where alter_id in 
+        <foreach item="alterId" collection="array" open="(" separator="," close=")">
+            #{alterId}
+        </foreach>
+    </delete>
+    
+</mapper>

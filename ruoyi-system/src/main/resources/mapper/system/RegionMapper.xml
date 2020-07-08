@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.RegionMapper">
+    
+    <resultMap type="Region" id="RegionResult">
+        <result property="regionId"    column="region_id"    />
+        <result property="regionCod"    column="region_cod"    />
+        <result property="regionName"    column="region_name"    />
+        <result property="parentId"    column="parent_id"    />
+        <result property="regionLevel"    column="region_level"    />
+        <result property="regionSort"    column="region_sort"    />
+        <result property="nameEn"    column="name_en"    />
+        <result property="regionNation"    column="region_nation"    />
+    </resultMap>
+	
+	<sql id="selectRegionVo">
+        select region_id, region_cod, region_name, parent_id, region_level, region_sort, name_en, region_nation from sys_region
+    </sql>
+	
+    <select id="selectRegionList" parameterType="Region" resultMap="RegionResult">
+        <include refid="selectRegionVo"/>
+        <where>  
+            <if test="regionId != null "> and region_id = #{regionId}</if>
+             <if test="regionCod != null  and regionCod != '' "> and region_cod = #{regionCod}</if>
+             <if test="regionName != null  and regionName != '' "> and region_name = #{regionName}</if>
+             <if test="parentId != null "> and parent_id = #{parentId}</if>
+             <if test="regionLevel != null "> and region_level = #{regionLevel}</if>
+             <if test="regionSort != null "> and region_sort = #{regionSort}</if>
+             <if test="nameEn != null  and nameEn != '' "> and name_en = #{nameEn}</if>
+             <if test="regionNation != null  and regionNation != '' "> and region_nation = #{regionNation}</if>
+         </where>
+    </select>
+
+    <select id="selectByParentCode" parameterType="String" resultMap="RegionResult">
+        <include refid="selectRegionVo"/>
+        where parent_id = (SELECT t.region_id from sys_region t where t.region_cod= #{parentCode})
+    </select>
+
+    
+    <select id="selectRegionById" parameterType="Long" resultMap="RegionResult">
+        <include refid="selectRegionVo"/>
+        where region_id = #{regionId}
+    </select>
+        
+    <insert id="insertRegion" parameterType="Region" useGeneratedKeys="true" keyProperty="regionId">
+        insert into sys_region
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="regionCod != null  and regionCod != ''  ">region_cod,</if>
+			<if test="regionName != null  and regionName != ''  ">region_name,</if>
+			<if test="parentId != null  ">parent_id,</if>
+			<if test="regionLevel != null  ">region_level,</if>
+			<if test="regionSort != null  ">region_sort,</if>
+			<if test="nameEn != null  and nameEn != ''  ">name_en,</if>
+			<if test="regionNation != null  and regionNation != ''  ">region_nation,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="regionCod != null  and regionCod != ''  ">#{regionCod},</if>
+			<if test="regionName != null  and regionName != ''  ">#{regionName},</if>
+			<if test="parentId != null  ">#{parentId},</if>
+			<if test="regionLevel != null  ">#{regionLevel},</if>
+			<if test="regionSort != null  ">#{regionSort},</if>
+			<if test="nameEn != null  and nameEn != ''  ">#{nameEn},</if>
+			<if test="regionNation != null  and regionNation != ''  ">#{regionNation},</if>
+         </trim>
+    </insert>
+	 
+    <update id="updateRegion" parameterType="Region">
+        update sys_region
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="regionCod != null  and regionCod != ''  ">region_cod = #{regionCod},</if>
+            <if test="regionName != null  and regionName != ''  ">region_name = #{regionName},</if>
+            <if test="parentId != null  ">parent_id = #{parentId},</if>
+            <if test="regionLevel != null  ">region_level = #{regionLevel},</if>
+            <if test="regionSort != null  ">region_sort = #{regionSort},</if>
+            <if test="nameEn != null  and nameEn != ''  ">name_en = #{nameEn},</if>
+            <if test="regionNation != null  and regionNation != ''  ">region_nation = #{regionNation},</if>
+        </trim>
+        where region_id = #{regionId}
+    </update>
+
+	<delete id="deleteRegionById" parameterType="Long">
+        delete from sys_region where region_id = #{regionId}
+    </delete>
+	
+    <delete id="deleteRegionByIds" parameterType="String">
+        delete from sys_region where region_id in 
+        <foreach item="regionId" collection="array" open="(" separator="," close=")">
+            #{regionId}
+        </foreach>
+    </delete>
+    
+</mapper>

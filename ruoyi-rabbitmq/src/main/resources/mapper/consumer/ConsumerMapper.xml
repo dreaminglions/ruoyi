@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.rabbitmq.mapper.ConsumerMapper">
+
+	<resultMap type="Consumer" id="ConsumerResult">
+		<id     property="id"          column="id"          />
+		<result property="name"        column="name"        />
+		<result property="exchangename"       column="exchangename"       />
+		<result property="ip"     column="ip"     />
+		<result property="username"   column="username"   />
+		<result property="pwd" column="pwd" />
+		<result property="routingkey"  column="routingkey"  />
+		<result property="virtualhosts"     column="virtualhosts"      />
+		<result property="port"     column="port"      />
+		<result property="status"         column="status"          />
+		<result property="createBy"       column="create_by"       />
+		<result property="createTime"     column="create_time"     />
+		<result property="updateBy"       column="update_by"       />
+		<result property="updateTime"     column="update_time"     />
+		<result property="remark"         column="remark"          />
+	</resultMap>
+
+	<sql id="selectConsumerVo">
+		select id, name, exchangename, ip, username, pwd, routingkey, virtualhosts, port, status, create_by, create_time, remark
+		from mq_consumer
+	</sql>
+
+	<select id="selectConsumerList" parameterType="Consumer" resultMap="ConsumerResult">
+		<include refid="selectConsumerVo"/>
+		<where>
+			<if test="name != null and name != ''">
+				AND name = #{name}
+			</if>
+			<if test="status != null and status != ''">
+				AND status = #{status}
+			</if>
+		</where>
+	</select>
+
+	<select id="getAll" parameterType="Consumer" resultMap="ConsumerResult">
+		<include refid="selectConsumerVo"/>
+		<where>
+			<if test="status != null and status != ''">
+				AND status = #{status}
+			</if>
+		</where>
+	</select>
+
+	<insert id="insertConsumer" parameterType="Consumer" useGeneratedKeys="true" keyProperty="id">
+		insert into mq_consumer(
+		<if test="id != null and id != 0">id,</if>
+		<if test="name != null and name != ''">name,</if>
+		<if test="exchangename != null and exchangename != ''">exchangename,</if>
+		<if test="ip != null and ip != ''">ip,</if>
+		<if test="username != null and username != ''">username,</if>
+		<if test="pwd != null and pwd != ''">pwd,</if>
+		<if test="routingkey != null and routingkey != ''">routingkey,</if>
+		<if test="virtualhosts != null and virtualhosts != ''">virtualhosts,</if>
+		<if test="port != null and port != ''">port,</if>
+		<if test="status != null and status != ''">status,</if>
+		<if test="createBy != null and createBy != ''">create_by,</if>
+		<if test="remark != null and remark != ''">remark,</if>
+		create_time
+		)values(
+		<if test="id != null and id != 0">#{id},</if>
+		<if test="name != null and name != ''">#{name},</if>
+		<if test="exchangename != null and exchangename != ''">#{exchangename},</if>
+		<if test="ip != null and ip != ''">#{ip},</if>
+		<if test="username != null and username != ''">#{username},</if>
+		<if test="pwd != null and pwd != ''">#{pwd},</if>
+		<if test="routingkey != null and routingkey != ''">#{routingkey},</if>
+		<if test="virtualhosts != null and virtualhosts != ''">#{virtualhosts},</if>
+		<if test="port != null and port != ''">#{port},</if>
+		<if test="status != null and status != ''">#{status},</if>
+		<if test="createBy != null and createBy != ''">#{createBy},</if>
+		<if test="remark != null and remark != ''">#{remark},</if>
+		sysdate()
+		)
+	</insert>
+
+
+	<insert id="insertMessage" parameterType="String">
+		insert into test_message(
+		<if test="message != null and message != ''">message,</if>
+		status,
+		create_time
+		)values(
+		<if test="message != null and message != ''">#{message},</if>
+		'0',
+		sysdate()
+		)
+	</insert>
+
+	<insert id="insertAlert" parameterType="String">
+		insert into test_alert(
+		<if test="message != null and message != ''">message,</if>
+		create_time
+		)values(
+		<if test="message != null and message != ''">#{message},</if>
+		sysdate()
+		)
+	</insert>
+
+	<select id="findMessage" resultType="String">
+
+		SELECT message from test_message ORDER BY create_time desc limit 1
+
+	</select>
+
+	<update id="updateConsumer" parameterType="Consumer">
+		update mq_consumer
+		<trim prefix="SET" suffixOverrides=",">
+			<if test="name != null  and name != ''  ">name = #{name},</if>
+			<if test="exchangename != null  and exchangename != ''  ">exchangename = #{exchangename},</if>
+			<if test="routingkey != null  and routingkey != ''  ">routingkey = #{routingkey},</if>
+			<if test="ip != null  and ip != ''  ">ip = #{ip},</if>
+			<if test="username != null  and username != ''  ">username = #{username},</if>
+			<if test="pwd != null  and pwd != ''  ">pwd = #{pwd},</if>
+			<if test="virtualhosts != null  and virtualhosts != ''  ">virtualhosts = #{virtualhosts},</if>
+			<if test="port != null  ">port = #{port},</if>
+			<if test="status != null  and status != ''  ">status = #{status},</if>
+			<if test="updateBy != null  and updateBy != ''  ">update_by = #{updateBy},</if>
+			<if test="remark != null  and remark != ''  ">remark = #{remark},</if>
+			update_time = sysdate()
+		</trim>
+		where id = #{id}
+	</update>
+
+	<delete id="deleteConsumerById" parameterType="Long">
+		delete from mq_consumer where id = #{id}
+	</delete>
+
+	<delete id="deleteConsumerByIds" parameterType="String">
+		delete from mq_consumer where id in
+		<foreach item="id" collection="array" open="(" separator="," close=")">
+			#{id}
+		</foreach>
+	</delete>
+
+	<select id="selectConsumerById" parameterType="Long" resultMap="ConsumerResult">
+		<include refid="selectConsumerVo"/>
+		where id = #{id}
+	</select>
+
+</mapper> 

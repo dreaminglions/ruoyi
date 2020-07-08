@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.BizAssayParameterMapper">
+    
+    <resultMap type="BizAssayParameter" id="BizAssayParameterResult">
+        <result property="parameterId"    column="parameter_id"    />
+        <result property="reportId"    column="report_id"    />
+        <result property="parameterTime"    column="parameter_time"    />
+        <result property="parameterType"    column="parameter_type"    />
+        <result property="ug1"    column="ug1"    />
+        <result property="od1"    column="od1"    />
+        <result property="ug2"    column="ug2"    />
+        <result property="od2"    column="od2"    />
+        <result property="ug3"    column="ug3"    />
+        <result property="od3"    column="od3"    />
+        <result property="ug4"    column="ug4"    />
+        <result property="od4"    column="od4"    />
+        <result property="ug5"    column="ug5"    />
+        <result property="od5"    column="od5"    />
+        <result property="ug6"    column="ug6"    />
+        <result property="od6"    column="od6"    />
+        <result property="ug7"    column="ug7"    />
+        <result property="od7"    column="od7"    />
+        <result property="curveB"    column="curve_b"    />
+        <result property="curveA"    column="curve_a"    />
+        <result property="curveR"    column="curve_r"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="updateBy"    column="update_by"    />
+    </resultMap>
+	
+	<sql id="selectBizAssayParameterVo">
+        select parameter_id, report_id, parameter_time, parameter_type, ug1, od1, ug2, od2, ug3, od3, ug4, od4, ug5, od5, ug6, od6, ug7, od7, curve_b, curve_a, curve_r, create_time, create_by, update_time, update_by from biz_assay_parameter
+    </sql>
+	
+    <select id="selectBizAssayParameterList" parameterType="BizAssayParameter" resultMap="BizAssayParameterResult">
+        <include refid="selectBizAssayParameterVo"/>
+        <where>  
+            <if test="parameterId != null "> and parameter_id = #{parameterId}</if>
+             <if test="reportId != null  and reportId != '' "> and report_id = #{reportId}</if>
+             <if test="parameterTime != null "> and parameter_time = #{parameterTime}</if>
+             <if test="parameterType != null  and parameterType != '' "> and parameter_type = #{parameterType}</if>
+             <if test="ug1 != null "> and ug1 = #{ug1}</if>
+             <if test="od1 != null "> and od1 = #{od1}</if>
+             <if test="ug2 != null "> and ug2 = #{ug2}</if>
+             <if test="od2 != null "> and od2 = #{od2}</if>
+             <if test="ug3 != null "> and ug3 = #{ug3}</if>
+             <if test="od3 != null "> and od3 = #{od3}</if>
+             <if test="ug4 != null "> and ug4 = #{ug4}</if>
+             <if test="od4 != null "> and od4 = #{od4}</if>
+             <if test="ug5 != null "> and ug5 = #{ug5}</if>
+             <if test="od5 != null "> and od5 = #{od5}</if>
+             <if test="ug6 != null "> and ug6 = #{ug6}</if>
+             <if test="od6 != null "> and od6 = #{od6}</if>
+             <if test="ug7 != null "> and ug7 = #{ug7}</if>
+             <if test="od7 != null "> and od7 = #{od7}</if>
+             <if test="curveB != null "> and curve_b = #{curveB}</if>
+             <if test="curveA != null "> and curve_a = #{curveA}</if>
+             <if test="curveR != null "> and curve_r = #{curveR}</if>
+             <if test="createTime != null "> and create_time = #{createTime}</if>
+             <if test="createBy != null  and createBy != '' "> and create_by = #{createBy}</if>
+             <if test="updateTime != null "> and update_time = #{updateTime}</if>
+             <if test="updateBy != null  and updateBy != '' "> and update_by = #{updateBy}</if>
+         </where>
+    </select>
+    
+    <select id="selectBizAssayParameterById" parameterType="Long" resultMap="BizAssayParameterResult">
+        <include refid="selectBizAssayParameterVo"/>
+        where parameter_id = #{parameterId}
+    </select>
+        
+    <insert id="insertBizAssayParameter" parameterType="BizAssayParameter" useGeneratedKeys="true" keyProperty="parameterId">
+        insert into biz_assay_parameter
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="reportId != null  and reportId != ''  ">report_id,</if>
+			<if test="parameterTime != null  ">parameter_time,</if>
+			<if test="parameterType != null  and parameterType != ''  ">parameter_type,</if>
+			<if test="ug1 != null  ">ug1,</if>
+			<if test="od1 != null  ">od1,</if>
+			<if test="ug2 != null  ">ug2,</if>
+			<if test="od2 != null  ">od2,</if>
+			<if test="ug3 != null  ">ug3,</if>
+			<if test="od3 != null  ">od3,</if>
+			<if test="ug4 != null  ">ug4,</if>
+			<if test="od4 != null  ">od4,</if>
+			<if test="ug5 != null  ">ug5,</if>
+			<if test="od5 != null  ">od5,</if>
+			<if test="ug6 != null  ">ug6,</if>
+			<if test="od6 != null  ">od6,</if>
+			<if test="ug7 != null  ">ug7,</if>
+			<if test="od7 != null  ">od7,</if>
+			<if test="curveB != null  ">curve_b,</if>
+			<if test="curveA != null  ">curve_a,</if>
+			<if test="curveR != null  ">curve_r,</if>
+			<if test="createTime != null  ">create_time,</if>
+			<if test="createBy != null  and createBy != ''  ">create_by,</if>
+			<if test="updateTime != null  ">update_time,</if>
+			<if test="updateBy != null  and updateBy != ''  ">update_by,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="reportId != null  and reportId != ''  ">#{reportId},</if>
+			<if test="parameterTime != null  ">#{parameterTime},</if>
+			<if test="parameterType != null  and parameterType != ''  ">#{parameterType},</if>
+			<if test="ug1 != null  ">#{ug1},</if>
+			<if test="od1 != null  ">#{od1},</if>
+			<if test="ug2 != null  ">#{ug2},</if>
+			<if test="od2 != null  ">#{od2},</if>
+			<if test="ug3 != null  ">#{ug3},</if>
+			<if test="od3 != null  ">#{od3},</if>
+			<if test="ug4 != null  ">#{ug4},</if>
+			<if test="od4 != null  ">#{od4},</if>
+			<if test="ug5 != null  ">#{ug5},</if>
+			<if test="od5 != null  ">#{od5},</if>
+			<if test="ug6 != null  ">#{ug6},</if>
+			<if test="od6 != null  ">#{od6},</if>
+			<if test="ug7 != null  ">#{ug7},</if>
+			<if test="od7 != null  ">#{od7},</if>
+			<if test="curveB != null  ">#{curveB},</if>
+			<if test="curveA != null  ">#{curveA},</if>
+			<if test="curveR != null  ">#{curveR},</if>
+			<if test="createTime != null  ">#{createTime},</if>
+			<if test="createBy != null  and createBy != ''  ">#{createBy},</if>
+			<if test="updateTime != null  ">#{updateTime},</if>
+			<if test="updateBy != null  and updateBy != ''  ">#{updateBy},</if>
+         </trim>
+    </insert>
+	 
+    <update id="updateBizAssayParameter" parameterType="BizAssayParameter">
+        update biz_assay_parameter
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="reportId != null  and reportId != ''  ">report_id = #{reportId},</if>
+            <if test="parameterTime != null  ">parameter_time = #{parameterTime},</if>
+            <if test="parameterType != null  and parameterType != ''  ">parameter_type = #{parameterType},</if>
+            <if test="ug1 != null  ">ug1 = #{ug1},</if>
+            <if test="od1 != null  ">od1 = #{od1},</if>
+            <if test="ug2 != null  ">ug2 = #{ug2},</if>
+            <if test="od2 != null  ">od2 = #{od2},</if>
+            <if test="ug3 != null  ">ug3 = #{ug3},</if>
+            <if test="od3 != null  ">od3 = #{od3},</if>
+            <if test="ug4 != null  ">ug4 = #{ug4},</if>
+            <if test="od4 != null  ">od4 = #{od4},</if>
+            <if test="ug5 != null  ">ug5 = #{ug5},</if>
+            <if test="od5 != null  ">od5 = #{od5},</if>
+            <if test="ug6 != null  ">ug6 = #{ug6},</if>
+            <if test="od6 != null  ">od6 = #{od6},</if>
+            <if test="ug7 != null  ">ug7 = #{ug7},</if>
+            <if test="od7 != null  ">od7 = #{od7},</if>
+            <if test="curveB != null  ">curve_b = #{curveB},</if>
+            <if test="curveA != null  ">curve_a = #{curveA},</if>
+            <if test="curveR != null  ">curve_r = #{curveR},</if>
+            <if test="createTime != null  ">create_time = #{createTime},</if>
+            <if test="createBy != null  and createBy != ''  ">create_by = #{createBy},</if>
+            <if test="updateTime != null  ">update_time = #{updateTime},</if>
+            <if test="updateBy != null  and updateBy != ''  ">update_by = #{updateBy},</if>
+        </trim>
+        where parameter_id = #{parameterId}
+    </update>
+
+	<delete id="deleteBizAssayParameterById" parameterType="Long">
+        delete from biz_assay_parameter where parameter_id = #{parameterId}
+    </delete>
+	
+    <delete id="deleteBizAssayParameterByIds" parameterType="String">
+        delete from biz_assay_parameter where parameter_id in 
+        <foreach item="parameterId" collection="array" open="(" separator="," close=")">
+            #{parameterId}
+        </foreach>
+    </delete>
+    
+</mapper>
