@@ -226,7 +226,7 @@ public class SysRoleController extends BaseController
     @ResponseBody
     public TableDataInfo allocatedList(SysUser user)
     {
-        startPage();
+//        startPage();
         List<SysUser> list = userService.selectAllocatedList(user);
         return getDataTable(list);
     }
@@ -271,7 +271,7 @@ public class SysRoleController extends BaseController
     @ResponseBody
     public TableDataInfo unallocatedList(SysUser user)
     {
-        startPage();
+//        startPage();
         List<SysUser> list = userService.selectUnallocatedList(user);
         return getDataTable(list);
     }
