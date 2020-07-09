@@ -176,13 +176,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
     <select id="getDeviceTotal" resultType="DataEnity">
             SELECT '在线设备' as 'key',count(*) as 'value' FROM biz_device t
-            where t.device_status ='0' and t.assay_status='0' and t.assay_time &gt; date_sub(now(),interval 300 second)
+            where t.device_status ='0' and t.assay_status='0' and t.assay_time &gt; DATEADD(ss, -300, SYSDATETIME())
             UNION
             SELECT '离线设备' as 'key',count(*) as 'value' FROM biz_device t
-            where t.device_status ='0'  and ( t.assay_time &lt; date_sub(now(),interval 300 second) or t.assay_time is null)
+            where t.device_status ='0'  and ( t.assay_time &lt; DATEADD(ss, -300, SYSDATETIME())  or t.assay_time is null)
             UNION
             SELECT '化验中设备' as 'key',count(*) as 'value' FROM biz_device t
-            where t.device_status ='0' and t.assay_status='2'and t.assay_time &gt; date_sub(now(),interval 300 second)
+            where t.device_status ='0' and t.assay_status='2'and t.assay_time &gt; DATEADD(ss, -300, SYSDATETIME())
     </select>
     
 </mapper>
