@@ -26,7 +26,7 @@
 
     <sql id="selectBizWorksVo">
         select t.works_id, t.works_no, t.works_name,
-        a.`region_name` works_province, b.`region_name` works_city, c.`region_name` works_area,
+        a.region_name works_province, b.region_name works_city, c.region_name works_area,
         t.works_address, t.works_count, t.works_type, t.works_belong, t.works_status, t.works_maintainer, t.works_tel, t.create_time, t.create_by, t.update_time, t.update_by
         from biz_works t
         LEFT JOIN sys_region a on t.works_province =a.region_cod

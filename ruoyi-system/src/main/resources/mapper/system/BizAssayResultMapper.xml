@@ -282,7 +282,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
     <select id="getAssayByWorkTime"  resultMap="BizAssayResultResult">
         <include refid="selectBizAssayResultVo"/>
-        where r.result_works = #{waterValue} and date_format(r.result_date,'%y%m%d') = date_format(#{timeValue},'%y%m%d')
+        where r.result_works = #{waterValue} and datediff(d,r.result_date,#{timeValue} ) = 0
     </select>
 
 

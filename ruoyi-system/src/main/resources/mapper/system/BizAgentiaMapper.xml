@@ -82,7 +82,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
              <if test="repairBy != null  and repairBy != '' "> and a.repair_by = #{repairBy}</if>
 
             <if test="useTime != null and useTime != ''"><!-- 开始时间检索 -->
-                AND date_format(a.use_time,'%y%m%d') = date_format(#{useTime},'%y%m%d')
+                AND datediff(d,a.use_time,#{useTime} ) = 0
             </if>
 
             <if test="params.beginTime != null and params.beginTime != ''"><!-- 开始时间检索 -->
@@ -114,7 +114,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="repairBy != null  and repairBy != '' "> and a.repair_by = #{repairBy}</if>
 
             <if test="useTime != null and useTime != ''"><!-- 开始时间检索 -->
-                AND date_format(a.use_time,'%y%m%d') = date_format(#{useTime},'%y%m%d')
+                AND datediff(d,a.use_time,#{useTime} ) = 0
             </if>
 
             <if test="params.beginTime != null and params.beginTime != ''"><!-- 开始时间检索 -->

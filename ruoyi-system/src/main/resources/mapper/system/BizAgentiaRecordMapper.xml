@@ -143,22 +143,22 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </delete>
 
     <select id="getAgentiaTotal" resultType="DataEnity">
-    SELECT a.agentia_name as 'key',t.agentia_change as 'value' FROM `biz_agentia_record` t
+    SELECT a.agentia_name as 'key',t.agentia_change as 'value' FROM biz_agentia_record t
     left join biz_agentia a on t.agentia_id = a.agentia_id
     where t.record_type = '2'
     and t.assay_id = #{assayId}
     and t.record_works = #{worksId}
-    GROUP BY t.agentia_id,t.agentia_change
+    GROUP BY t.agentia_id,t.agentia_change,a.agentia_name
 
     </select>
 
     <select id="getAgentiaMonthAvg" resultType="DataEnity">
-        SELECT a.agentia_name as 'key',AVG(t.agentia_change ) as 'value' FROM `biz_agentia_record` t
+        SELECT a.agentia_name as 'key',AVG(t.agentia_change ) as 'value' FROM biz_agentia_record t
         left join biz_agentia a on t.agentia_id = a.agentia_id
         where  t.record_type='2'
         and t.record_works=#{worksId}
-        and date_format(t.record_date,'%Y-%m') = #{month}
-        GROUP BY t.agentia_id
+        and datediff(m,t.record_date,#{month} ) = 0
+        GROUP BY t.agentia_id,a.agentia_name
     </select>
     
 </mapper>

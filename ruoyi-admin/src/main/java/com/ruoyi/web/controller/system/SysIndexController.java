@@ -280,7 +280,7 @@ public class SysIndexController extends BaseController
             if(assay.getDevice()!=null){
                 nodemap.put("devicename",assay.getDevice().getDeviceName());
             }else{
-                nodemap.put("devicename",assay.getDevice().getDeviceName());
+                nodemap.put("devicename","");
 
             }
 
@@ -678,11 +678,6 @@ public class SysIndexController extends BaseController
         String  NoValue = params.getString("NoValue");
         Long  waterValue = params.getLong("waterValue");
         String timeValue = params.getString("timeValue");
-        if(timeValue.length()>9){
-            timeValue =timeValue.substring(0,7);
-        }else{
-            timeValue = "";
-        };
 
         List<DataEnity> totalList = bizWasteService.getWasteBar(NoValue,waterValue,timeValue);
 
