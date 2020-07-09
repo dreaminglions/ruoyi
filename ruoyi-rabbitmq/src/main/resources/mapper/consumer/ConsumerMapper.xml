@@ -76,7 +76,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		<if test="status != null and status != ''">#{status},</if>
 		<if test="createBy != null and createBy != ''">#{createBy},</if>
 		<if test="remark != null and remark != ''">#{remark},</if>
-		sysdate()
+		getdate()
 		)
 	</insert>
 
@@ -89,7 +89,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		)values(
 		<if test="message != null and message != ''">#{message},</if>
 		'0',
-		sysdate()
+		getdate()
 		)
 	</insert>
 
@@ -99,7 +99,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		create_time
 		)values(
 		<if test="message != null and message != ''">#{message},</if>
-		sysdate()
+		getdate()
 		)
 	</insert>
 
@@ -123,7 +123,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 			<if test="status != null  and status != ''  ">status = #{status},</if>
 			<if test="updateBy != null  and updateBy != ''  ">update_by = #{updateBy},</if>
 			<if test="remark != null  and remark != ''  ">remark = #{remark},</if>
-			update_time = sysdate()
+			update_time = getdate()
 		</trim>
 		where id = #{id}
 	</update>

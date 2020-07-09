@@ -94,7 +94,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="alertDate != null  and alertDate != ''  ">#{alertDate},</if>
             <if test="alertTime != null  and alertTime != ''  ">#{alertTime},</if>
 			<if test="createBy != null  and createBy != ''  ">#{createBy},</if>
-            sysdate()
+            getdate()
          </trim>
     </insert>
 	 
@@ -109,7 +109,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="alertDate != null  and alertDate != ''  ">alert_date = #{alertDate},</if>
             <if test="alertTime != null  and alertTime != ''  ">alert_time = #{alertTime},</if>
             <if test="updateBy != null  and updateBy != ''  ">update_by = #{updateBy},</if>
-            update_time = sysdate()
+            update_time = getdate()
         </trim>
         where alert_id = #{alertId}
     </update>
@@ -129,7 +129,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <insert id="batchAlert">
         insert into biz_alert(report_id, alert_device,alert_works,alert_content,alert_type,alert_date,alert_time,create_time) values
         <foreach item="item" index="index" collection="list" separator=",">
-            (#{item.reportId},#{item.alertDevice},#{item.alertWorks},#{item.alertContent},#{item.alertType},#{item.alertDate},#{item.alertTime},sysdate())
+            (#{item.reportId},#{item.alertDevice},#{item.alertWorks},#{item.alertContent},#{item.alertType},#{item.alertDate},#{item.alertTime},getdate())
         </foreach>
     </insert>
     

@@ -6,12 +6,12 @@
 <body class="white-bg">
     <div class="wrapper wrapper-content animated fadeInRight ibox-content">
         <form class="form-horizontal m" id="form-bizWaterWork-add">
-			<input id="treeId" name="parentId" type="hidden" th:value="${WaterWork.worksId}"   />
+			<input id="treeId" name="parentId" type="hidden" th:value="${WaterWork?.worksId}"   />
 			<div class="form-group">
 				<label class="col-sm-3 control-label ">上级部门：</label>
 				<div class="col-sm-8">
 					<div class="input-group">
-						<input class="form-control required" type="text" onclick="selectWorksTree()" id="treeName" readonly="true" th:value="${WaterWork.worksName}">
+						<input class="form-control required" type="text" onclick="selectWorksTree()" id="treeName" readonly="true" th:value="${WaterWork?.worksName}">
 						<span class="input-group-addon"><i class="fa fa-search"></i></span>
 					</div>
 				</div>

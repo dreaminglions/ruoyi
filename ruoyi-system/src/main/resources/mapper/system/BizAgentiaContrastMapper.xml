@@ -81,7 +81,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 			<if test="contrastAgentia != null  ">#{contrastAgentia},</if>
 			<if test="contrastName != null  and contrastName != ''  ">#{contrastName},</if>
 			<if test="createBy != null  and createBy != ''  ">#{createBy},</if>
-            sysdate()
+            getdate()
          </trim>
     </insert>
 	 
@@ -92,7 +92,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="contrastAgentia != null  ">contrast_agentia = #{contrastAgentia},</if>
             <if test="contrastName != null  and contrastName != ''  ">contrast_name = #{contrastName},</if>
             <if test="updateBy != null  and updateBy != ''  ">update_by = #{updateBy},</if>
-            update_time = sysdate()
+            update_time = getdate()
         </trim>
         where contrast_id = #{contrastId}
     </update>

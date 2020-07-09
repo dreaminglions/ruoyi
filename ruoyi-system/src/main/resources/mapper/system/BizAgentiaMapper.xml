@@ -189,7 +189,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 			<if test="repairTime != null  and repairTime != ''   ">#{repairTime},</if>
 			<if test="repairBy != null  and repairBy != ''  ">#{repairBy},</if>
 			<if test="createBy != null  and createBy != ''  ">#{createBy},</if>
-            sysdate()
+            getdate()
          </trim>
     </insert>
 	 
@@ -211,7 +211,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="repairTime != null  and repairTime != ''  ">repair_time = #{repairTime},</if>
             <if test="repairBy != null  and repairBy != ''  ">repair_by = #{repairBy},</if>
             <if test="updateBy != null  and updateBy != ''  ">update_by = #{updateBy},</if>
-            update_time = sysdate()
+            update_time = getdate()
         </trim>
         where agentia_id = #{agentiaId}
     </update>

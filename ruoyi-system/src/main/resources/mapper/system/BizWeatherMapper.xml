@@ -72,7 +72,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="weatherDaypower != null "> #{weatherDaypower},</if>
             <if test="weatherNightpower != null "> #{weatherNightpower},</if>
 			<if test="createBy != null  and createBy != ''  ">#{createBy},</if>
-            sysdate()
+            getdate()
          </trim>
     </insert>
 	 
@@ -88,7 +88,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="weatherDaypower != null ">weather_daypower = #{weatherDaypower},</if>
             <if test="weatherNightpower != null ">weather_nightpower = #{weatherNightpower},</if>
             <if test="updateBy != null  and updateBy != ''  ">update_by = #{updateBy},</if>
-            update_time = sysdate()
+            update_time = getdate()
         </trim>
         where weather_id = #{weatherId}
     </update>

@@ -108,7 +108,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="outcodCurveK != null  ">#{outcodCurveK},</if>
             <if test="outcodCurveB != null  ">#{outcodCurveB},</if>
             <if test="createBy != null  and createBy != ''  ">#{createBy},</if>
-            sysdate()
+            getdate()
         </trim>
     </insert>
 	 
@@ -138,7 +138,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="outcodCurveK != null  ">outcod_curve_k = #{outcodCurveK},</if>
             <if test="outcodCurveB != null  ">outcod_curve_b = #{outcodCurveB},</if>
             <if test="updateBy != null  and updateBy != ''  ">update_by = #{updateBy},</if>
-            update_time = sysdate()
+            update_time = getdate()
         </trim>
         where curve_id = #{curveId}
     </update>

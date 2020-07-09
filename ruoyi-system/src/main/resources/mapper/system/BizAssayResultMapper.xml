@@ -210,7 +210,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="resultDate != null  and resultDate != ''  ">#{resultDate},</if>
             <if test="repairBy != null  and repairBy != ''  ">#{repairBy},</if>
 			<if test="createBy != null  and createBy != ''  ">#{createBy},</if>
-            sysdate()
+            getdate()
          </trim>
     </insert>
 	 
@@ -254,7 +254,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="resultDate != null  and resultDate != ''  ">result_date = #{resultDate},</if>
             <if test="repairBy != null  and repairBy != ''  ">repair_by = #{repairBy},</if>
             <if test="updateBy != null  and updateBy != ''  ">update_by = #{updateBy},</if>
-            update_time = sysdate()
+            update_time = getdate()
         </trim>
         where result_id = #{resultId}
     </update>

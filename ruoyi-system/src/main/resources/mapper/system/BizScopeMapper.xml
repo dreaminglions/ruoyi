@@ -96,7 +96,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 			<if test="outNh3Max != null  ">#{outNh3Max},</if>
 			<if test="outTnMax != null  ">#{outTnMax},</if>
 			<if test="createBy != null  and createBy != ''  ">#{createBy},</if>
-            sysdate()
+            getdate()
          </trim>
     </insert>
 	 
@@ -122,7 +122,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="outNh3Max != null  ">out_NH3_max = #{outNh3Max},</if>
             <if test="outTnMax != null  ">out_TN_max = #{outTnMax},</if>
             <if test="updateBy != null  and updateBy != ''  ">update_by = #{updateBy},</if>
-            update_time = sysdate()
+            update_time = getdate()
         </trim>
         where scope_id = #{scopeId}
     </update>

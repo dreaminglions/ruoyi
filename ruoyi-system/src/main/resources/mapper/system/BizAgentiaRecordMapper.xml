@@ -103,7 +103,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 			<if test="agentiaChange != null  ">#{agentiaChange},</if>
 			<if test="recordDate != null  and recordDate != ''  ">#{recordDate},</if>
 			<if test="createBy != null  and createBy != ''  ">#{createBy},</if>
-            sysdate()
+            getdate()
          </trim>
     </insert>
 	 
@@ -126,7 +126,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="recordDate != null  and recordDate != ''  ">record_date = #{recordDate},</if>
             <if test="updateTime != null  ">update_time = #{updateTime},</if>
             <if test="updateBy != null  and updateBy != ''  ">update_by = #{updateBy},</if>
-            update_time = sysdate()
+            update_time = getdate()
         </trim>
         where record_id = #{recordId}
     </update>

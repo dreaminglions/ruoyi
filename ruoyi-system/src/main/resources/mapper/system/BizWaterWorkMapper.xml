@@ -140,7 +140,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 			<if test="worksMaintainer != null  and worksMaintainer != ''  ">#{worksMaintainer},</if>
 			<if test="worksTel != null  and worksTel != ''  ">#{worksTel},</if>
 			<if test="createBy != null  and createBy != ''  ">#{createBy},</if>
-            sysdate()
+            getdate()
          </trim>
     </insert>
 	 
@@ -166,7 +166,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="worksMaintainer != null  and worksMaintainer != ''  ">works_maintainer = #{worksMaintainer},</if>
             <if test="worksTel != null  and worksTel != ''  ">works_tel = #{worksTel},</if>
             <if test="updateBy != null  and updateBy != ''  ">update_by = #{updateBy},</if>
-            update_time = sysdate()
+            update_time = getdate()
         </trim>
         where works_id = #{worksId}
     </update>

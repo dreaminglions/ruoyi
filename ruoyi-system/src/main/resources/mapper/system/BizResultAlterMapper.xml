@@ -107,7 +107,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 			<if test="alterDate != null  and alterDate != ''  ">#{alterDate},</if>
 			<if test="alterTime != null  ">#{alterTime},</if>
 			<if test="createBy != null  and createBy != ''  ">#{createBy},</if>
-            sysdate()
+            getdate()
          </trim>
     </insert>
 	 
@@ -129,7 +129,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="alterDate != null  and alterDate != ''  ">alter_date = #{alterDate},</if>
             <if test="alterTime != null  ">alter_time = #{alterTime},</if>
             <if test="updateBy != null  and updateBy != ''  ">update_by = #{updateBy},</if>
-            update_time = sysdate()
+            update_time = getdate()
         </trim>
         where alter_id = #{alterId}
     </update>

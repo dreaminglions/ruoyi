@@ -28,7 +28,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     
 	<insert id="insertOperlog" parameterType="SysOperLog">
 		insert into sys_oper_log(title, business_type, method, operator_type, oper_name, works_name, oper_url, oper_ip, oper_location, oper_param, status, error_msg, oper_time)
-        values (#{title}, #{businessType}, #{method}, #{operatorType}, #{operName}, #{worksName}, #{operUrl}, #{operIp}, #{operLocation}, #{operParam}, #{status}, #{errorMsg}, sysdate())
+        values (#{title}, #{businessType}, #{method}, #{operatorType}, #{operName}, #{worksName}, #{operUrl}, #{operIp}, #{operLocation}, #{operParam}, #{status}, #{errorMsg}, getdate())
 	</insert>
 	
 	<select id="selectOperLogList" parameterType="SysOperLog" resultMap="SysOperLogResult">
