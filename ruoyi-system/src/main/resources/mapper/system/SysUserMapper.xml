@@ -61,7 +61,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	
 	<sql id="selectUserVo">
         select  u.user_id, u.works_id, u.login_name, u.user_name, u.email, u.phonenumber, u.sex, u.birthday, u.avatar, u.password, u.salt, u.status, u.del_flag, u.login_ip, u.login_date, u.create_time, u.remark,
-       		    d.works_id, d.parent_id, d.works_name, d.order_num, d.works_status as works_status,
+       		    d.parent_id, d.works_name, d.order_num, d.works_status as works_status,
        		    r.role_id, r.role_name, r.role_key, r.role_sort, r.data_scope,r.role_type, r.status as role_status
 		from sys_user u
 			 left join biz_water_work d on u.works_id = d.works_id

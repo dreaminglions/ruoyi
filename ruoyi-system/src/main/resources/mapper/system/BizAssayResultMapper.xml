@@ -299,10 +299,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         from (
         select
         t.report_id,
-        if((IFNULL(a.out_COD_min,0) &lt; t.out_COD ) &amp;&amp; (t.out_COD &lt; IFNULL(a.out_COD_max,10000)),0,1) as outcod,
-        if((IFNULL(a.out_TN_min,0) &lt; t.out_TN ) &amp;&amp; (t.out_TN &lt; IFNULL(a.out_TN_max,10000)),0,1) as outtn,
-        if((IFNULL(a.out_TP_min,0) &lt; t.out_TP ) &amp;&amp; (t.out_TP &lt; IFNULL(a.out_TP_max,10000)),0,1) as outtp,
-        if((IFNULL(a.out_NH3_min,0) &lt; t.out_NH3 ) &amp;&amp; (t.out_NH3 &lt; IFNULL(a.out_NH3_max,10000)),0,1) as outnh
+        if((isnull(a.out_COD_min,0) &lt; t.out_COD ) &amp;&amp; (t.out_COD &lt; isnull(a.out_COD_max,10000)),0,1) as outcod,
+        if((isnull(a.out_TN_min,0) &lt; t.out_TN ) &amp;&amp; (t.out_TN &lt; isnull(a.out_TN_max,10000)),0,1) as outtn,
+        if((isnull(a.out_TP_min,0) &lt; t.out_TP ) &amp;&amp; (t.out_TP &lt; isnull(a.out_TP_max,10000)),0,1) as outtp,
+        if((isnull(a.out_NH3_min,0) &lt; t.out_NH3 ) &amp;&amp; (t.out_NH3 &lt; isnull(a.out_NH3_max,10000)),0,1) as outnh
         from biz_assay_result t
         LEFT JOIN biz_assay_scope a on t.report_id = a.report_id
         where t.result_works= #{workId}
