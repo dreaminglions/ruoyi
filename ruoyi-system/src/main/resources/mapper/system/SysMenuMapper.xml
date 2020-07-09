@@ -70,7 +70,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <include refid="selectMenuVo"/>
         <where>
 			<if test="menuName != null and menuName != ''">
-				AND menu_name like concat('%', #{menuName}, '%')
+				AND menu_name like '%'+#{menuName}+ '%'
 			</if>
 			<if test="visible != null and visible != ''">
 				AND visible = #{visible}

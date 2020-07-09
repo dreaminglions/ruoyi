@@ -28,7 +28,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </sql>
     
 	<select id="selectRoleDeptTree" parameterType="Long" resultType="String">
-		select concat(d.dept_id, d.dept_name) as dept_name
+		select  d.dept_name as dept_name
 		from sys_dept d
 			left join sys_role_dept rd on d.dept_id = rd.dept_id
 		where d.del_flag = '0' and rd.role_id = #{roleId}
@@ -42,7 +42,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 			AND parent_id = #{parentId}
 		</if>
 		<if test="deptName != null and deptName != ''">
-			AND dept_name like concat('%', #{deptName}, '%')
+			AND dept_name like '%'+#{deptName}+ '%'
 		</if>
 		<if test="status != null and status != ''">
 			AND status = #{status}

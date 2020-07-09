@@ -45,7 +45,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             AND parent_id = #{parentId}
         </if>
         <if test="worksName != null and worksName != ''">
-            AND works_name like concat('%', #{worksName}, '%')
+            AND works_name like  '%'+#{worksName}+ '%'
         </if>
         <if test="worksStatus != null and worksStatus != ''">
             AND works_status = #{worksStatus}
@@ -69,7 +69,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             AND parent_id = #{parentId}
         </if>
         <if test="worksName != null and worksName != ''">
-            AND works_name like concat('%', #{worksName}, '%')
+            AND works_name like  '%'+#{worksName}+ '%'
         </if>
         <if test="worksStatus != null and worksStatus != ''">
             AND works_status = #{worksStatus}

@@ -60,17 +60,20 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
              <if test="wasteWorks != null "> and a.waste_works = #{wasteWorks}</if>
              <if test="wasteStatus != null  and wasteStatus != '' "> and a.waste_status = #{wasteStatus}</if>
              <if test="wasteTotal != null "> and a.waste_total = #{wasteTotal}</if>
-             <if test="repairTime != null and repairTime != ''">
-                 and date_format(a.repair_time,'%y%m%d') &gt;= date_format(#{repairTime},'%y%m%d')
-             </if>
+
+            <if test="repairTime != null and repairTime != ''"><!-- 开始时间检索 -->
+                AND datediff(dd,#{repairTime},a.repair_time) &gt;=0
+            </if>
+
              <if test="repairBy != null  and repairBy != '' "> and a.repair_by = #{repairBy}</if>
 
             <if test="params.beginTime != null and params.beginTime != ''"><!-- 开始时间检索 -->
-                AND date_format(a.repair_time,'%y%m%d') &gt;= date_format(#{params.beginTime},'%y%m%d')
+                AND datediff(dd,#{params.beginTime},a.repair_time) &gt;=0
             </if>
             <if test="params.endTime != null and params.endTime != ''"><!-- 结束时间检索 -->
-                AND date_format(a.repair_time,'%y%m%d') &lt;= date_format(#{params.endTime},'%y%m%d')
+                AND datediff(dd,a.repair_time,#{params.endTime}) &gt;=0
             </if>
+
         <!-- 数据范围过滤 -->
         ${params.dataScope}
     </select>

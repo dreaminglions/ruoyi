@@ -47,7 +47,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         where  1=1
             <if test="deviceId != null "> and d.device_id = #{deviceId}</if>
              <if test="deviceNo != null  and deviceNo != '' "> and d.device_no = #{deviceNo}</if>
-             <if test="deviceName != null  and deviceName != '' "> and d.device_name like concat('%', #{deviceName}, '%') </if>
+             <if test="deviceName != null  and deviceName != '' "> and d.device_name like '%'+#{deviceName}+ '%' </if>
              <if test="deviceSn != null  and deviceSn != '' "> and d.device_sn = #{deviceSn}</if>
              <if test="deviceModel != null  and deviceModel != '' "> and d.device_model = #{deviceModel}</if>
              <if test="deviceMaker != null  and deviceMaker != '' "> and d.device_maker = #{deviceMaker}</if>
@@ -91,7 +91,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <select id="selectOnlydeviceList" parameterType="BizDevice" resultMap="BizDeviceResult">
         <include refid="selectBizDeviceVo"/>
         where 1=1
-        <if test="deviceName != null  and deviceName != '' "> and d.device_name like concat('%', #{deviceName}, '%') </if>
+        <if test="deviceName != null  and deviceName != '' "> and d.device_name like '%'+#{deviceName}+ '%' </if>
         <if test="deviceStatus != null  and deviceStatus != '' "> and d.device_status = #{deviceStatus}</if>
         <!-- 数据范围过滤 -->
         ${params.dataScope}

@@ -82,7 +82,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
             <if test="resultId != null "> and r.result_id = #{resultId}</if>
              <if test="resultNo != null  and resultNo != '' ">
-                 AND r.result_no like concat('%', #{resultNo}, '%') </if>
+                 AND r.result_no like '%'+#{resultNo}+ '%'  </if>
              <if test="reportId != null  and reportId != '' "> and report_id = #{reportId}</if>
              <if test="resultDevice != null "> and r.result_device = #{resultDevice}</if>
              <if test="resultWorks != null "> and r.result_works = #{resultWorks}</if>
@@ -100,10 +100,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
              <if test="resultDate != null  and resultDate != '' "> and r.result_date = #{resultDate}</if>
 
             <if test="params.beginTime != null and params.beginTime != ''"><!-- 开始时间检索 -->
-                AND date_format(r.result_date,'%y%m%d') &gt;= date_format(#{params.beginTime},'%y%m%d')
+                AND datediff(dd,#{params.beginTime},r.result_date) &gt;=0
             </if>
             <if test="params.endTime != null and params.endTime != ''"><!-- 结束时间检索 -->
-                AND date_format(r.result_date,'%y%m%d') &lt;= date_format(#{params.endTime},'%y%m%d')
+                AND datediff(dd,r.result_date,#{params.endTime}) &gt;=0
             </if>
 
         <!-- 数据范围过滤 -->
