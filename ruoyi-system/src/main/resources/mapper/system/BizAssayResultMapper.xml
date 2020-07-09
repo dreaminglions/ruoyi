@@ -288,21 +288,21 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
     <select id="getOuaData" resultType="OutDataEnity">
         select
-        sum(if(z.outcod=0,1,0)) as outcod_r,
-        sum(if(z.outcod=1,1,0)) as outcod_w,
-        sum(if(z.outtn=0,1,0)) as outtn_r,
-        sum(if(z.outtn=1,1,0)) as outtn_w,
-        sum(if(z.outtp=0,1,0)) as outtp_r,
-        sum(if(z.outtp=1,1,0)) as outtp_w,
-        sum(if(z.outnh=0,1,0)) as outnh_r,
-        sum(if(z.outnh=1,1,0)) as outnh_w
+        sum(case when z.outcod = 0 then 1 else 0 end) as outcod_r,
+        sum(case when z.outcod = 1 then 1 else 0 end) as outcod_w,
+        sum(case when z.outtn = 0 then 1 else 0 end) as outtn_r,
+        sum(case when z.outtn = 1 then 1 else 0 end) as outtn_w,
+        sum(case when z.outtp = 0 then 1 else 0 end) as outtp_r,
+        sum(case when z.outtp = 1 then 1 else 0 end) as outtp_w,
+        sum(case when z.outnh = 0 then 1 else 0 end) as outnh_r,
+        sum(case when z.outnh = 1 then 1 else 0 end) as outnh_w
         from (
         select
         t.report_id,
-        if((isnull(a.out_COD_min,0) &lt; t.out_COD ) &amp;&amp; (t.out_COD &lt; isnull(a.out_COD_max,10000)),0,1) as outcod,
-        if((isnull(a.out_TN_min,0) &lt; t.out_TN ) &amp;&amp; (t.out_TN &lt; isnull(a.out_TN_max,10000)),0,1) as outtn,
-        if((isnull(a.out_TP_min,0) &lt; t.out_TP ) &amp;&amp; (t.out_TP &lt; isnull(a.out_TP_max,10000)),0,1) as outtp,
-        if((isnull(a.out_NH3_min,0) &lt; t.out_NH3 ) &amp;&amp; (t.out_NH3 &lt; isnull(a.out_NH3_max,10000)),0,1) as outnh
+        (case when (isnull(a.out_COD_min,0) &lt; t.out_COD ) and (t.out_COD &lt; isnull(a.out_COD_max,10000)) then 1 else 0 end) as outcod,
+        (case when (isnull(a.out_TN_min,0) &lt; t.out_TN ) and (t.out_TN &lt; isnull(a.out_TN_max,10000)) then 1 else 0 end) as outtn,
+        (case when (isnull(a.out_TP_min,0) &lt; t.out_TP ) and (t.out_TP  isnull(a.out_TP_max,10000)) then 1 else 0 end) as outtp,
+        (case when (isnull(a.out_NH3_min,0) &lt; t.out_NH3 ) and (t.out_NH3 &lt; isnull(a.out_NH3_max,10000)) then 1 else 0 end) as outnh
         from biz_assay_result t
         LEFT JOIN biz_assay_scope a on t.report_id = a.report_id
         where t.result_works= #{workId}
