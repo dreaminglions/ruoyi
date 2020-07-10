@@ -59,7 +59,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	</select>
 	
 	<select id="selectMenuTree" parameterType="Long" resultType="String">
-		select isnull(m.perms,'') as perms
+		select (convert(varchar(10), m.menu_id) + isnull(m.perms,''))  as perms
 		from sys_menu m
 			left join sys_role_menu rm on m.menu_id = rm.menu_id
 		where rm.role_id = #{roleId}

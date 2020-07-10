@@ -183,7 +183,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </delete>
 
     <select id="selectRoleWorkTree" parameterType="Long" resultType="String">
-        select d.works_name as works_name
+        select (convert(varchar(10), d.works_id)+ d.works_name) as works_name
         from biz_water_work d
         left join sys_role_work rd on d.works_id = rd.works_id
         where d.works_status = '0' and rd.role_id = #{roleId}
