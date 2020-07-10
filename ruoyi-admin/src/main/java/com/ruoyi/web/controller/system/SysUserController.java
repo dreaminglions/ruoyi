@@ -1,6 +1,8 @@
 package com.ruoyi.web.controller.system;
 
 import java.util.List;
+
+import com.ruoyi.system.service.IBizWaterWorkService;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -40,6 +42,9 @@ public class SysUserController extends BaseController
 
     @Autowired
     private ISysRoleService roleService;
+
+    @Autowired
+    private IBizWaterWorkService bizWaterWorkService;
 
 
     @Autowired
@@ -228,5 +233,15 @@ public class SysUserController extends BaseController
     public AjaxResult changeStatus(SysUser user)
     {
         return toAjax(userService.changeStatus(user));
+    }
+
+    /**
+     * 选择水厂树
+     */
+    @GetMapping("/selectWorksTree/{worksId}")
+    public String selectDeptTree(@PathVariable("worksId") Long worksId, ModelMap mmap)
+    {
+        mmap.put("WaterWork", bizWaterWorkService.selectBizWaterWorkById(worksId));
+        return prefix + "/tree";
     }
 }

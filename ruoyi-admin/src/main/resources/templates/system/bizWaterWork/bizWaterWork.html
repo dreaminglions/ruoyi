@@ -160,17 +160,6 @@
 					title : '联系电话',
 					sortable: true
 				},
-				{
-					field : 'worksScope',
-					title : '化验范围',
-                    formatter: function(value, row, index) {
-                        if (row.parentId != 0) {
-                            var actions = [];
-							actions.push('<a class="btn btn-warning btn-xs ' + editFlag + '" href="#" onclick="addScope(\'' + row.worksId + '\')"><i class="fa fa-edit"></i>设置化验范围</a> ');
-                            return actions.join('');
-						}
-					}
-				},
 		        {
 		            title: '操作',
 		            align: 'center',

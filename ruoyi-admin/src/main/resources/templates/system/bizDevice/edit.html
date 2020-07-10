@@ -102,7 +102,7 @@
     /*设备管理-修改-选择水厂树*/
     function selectWorkTree() {
         var worksId = $.common.isEmpty($("#treeId").val()) ? "100" : $("#treeId").val();
-        var url = ctx + "system/bizWaterWork/selectWorksTree/" + worksId;
+        var url = ctx + "system/user/selectWorksTree/" + worksId;
         var options = {
             title: '选择机构',
             width: "380",

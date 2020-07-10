@@ -120,11 +120,11 @@
         function selectWorkTree() {
             var treeId = $("#treeId").val();
             var worksId = $.common.isEmpty(treeId) ? "100" : $("#treeId").val();
-            var url = ctx + "system/bizWaterWork/selectWorksTree/" + worksId;
+            var url = ctx + "system/user/selectWorksTree/" + worksId;
             var options = {
                 title: '选择水厂',
                 width: "380",
-                url: ctx + "system/bizWaterWork/selectWorksTree/" + worksId,
+                url: url,
                 callBack: doSubmit
             };
             $.modal.openOptions(options);

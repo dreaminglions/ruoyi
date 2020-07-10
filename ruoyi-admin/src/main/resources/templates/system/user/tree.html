@@ -41,15 +41,8 @@
 		function zOnClick(event, treeId, treeNode) {
 		    var treeId = treeNode.id;
 		    var treeName = treeNode.name;
-		    var level= treeNode.level
-		    if(level==2){
-                $.modal.msgError("不能添加3级下属分支");
-                return false;
-			}else{
-                $("#treeId").val(treeId);
-                $("#treeName").val(treeName);
-
-			}
+		    $("#treeId").val(treeId);
+		    $("#treeName").val(treeName);
 		}
 	</script>
 </body>

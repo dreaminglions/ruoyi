@@ -28,11 +28,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		<result property="remark"       column="remark"       />
 		<association property="waterWork"    column="works_id" javaType="BizWaterWork" resultMap="waterWorkResult" />
 		<association property="role"    column="role_id" javaType="SysRole" resultMap="RoleResult" />
-		<!--<collection  property="roles"   javaType="java.util.List"        resultMap="RoleResult" />-->
 	</resultMap>
 	
 	<resultMap id="waterWorkResult" type="BizWaterWork">
-		<!--<id     property="worksId"   column="works_id"     />-->
 		<result property="worksId" column="works_id"   />
 		<result property="parentId" column="parent_id"   />
 		<result property="worksName" column="works_name"   />
@@ -49,15 +47,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		<result property="roleType"   column="role_type" />
 		<result property="status"       column="role_status"    />
 	</resultMap>
-	
-	<!--<resultMap id="RoleResult" type="SysRole">-->
-		<!--<id     property="roleId"       column="role_id"        />-->
-		<!--<result property="roleName"     column="role_name"      />-->
-		<!--<result property="roleKey"      column="role_key"       />-->
-		<!--<result property="roleSort"     column="role_sort"      />-->
-		<!--<result property="dataScope"     column="data_scope"    />-->
-		<!--<result property="status"       column="role_status"    />-->
-	<!--</resultMap>-->
+
 	
 	<sql id="selectUserVo">
         select  u.user_id, u.works_id, u.login_name, u.user_name, u.email, u.phonenumber, u.sex, u.birthday, u.avatar, u.password, u.salt, u.status, u.del_flag, u.login_ip, u.login_date, u.create_time, u.remark,
@@ -65,16 +55,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
        		    r.role_id, r.role_name, r.role_key, r.role_sort, r.data_scope,r.role_type, r.status as role_status
 		from sys_user u
 			 left join biz_water_work d on u.works_id = d.works_id
--- 			 left join sys_user_role ur on u.user_id = ur.user_id
--- 			 left join sys_role r on r.role_id = ur.role_id
 			 left join sys_role r on r.role_id = u.role_id
     </sql>
 	
 	<select id="selectUserList" parameterType="SysUser" resultMap="SysUserResult">
--- 		select u.user_id, u.works_id, u.login_name, u.user_name, u.email, u.phonenumber, u.password, u.sex, u.avatar, u.salt, u.status, u.del_flag, u.login_ip, u.login_date, u.create_by, u.create_time, u.remark,
--- 		d.works_id, d.parent_id, d.works_name, d.order_num, d.works_status as works_status
--- 		from sys_user u
--- 		left join biz_water_work d on u.works_id = d.works_id
 		<include refid="selectUserVo"/>
 		where u.del_flag = '0'
 		<if test="loginName != null and loginName != ''">
@@ -106,8 +90,6 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	    select distinct u.user_id, u.works_id, u.login_name, u.user_name, u.email, u.phonenumber, u.status, u.create_time
 	    from sys_user u
 			 left join biz_water_work d on u.works_id = d.works_id
--- 			 left join sys_user_role ur on u.user_id = ur.user_id
--- 			 left join sys_role r on r.role_id = ur.role_id
 		left join sys_role r on r.role_id = u.role_id
 	    where u.del_flag = '0' and r.role_id = #{roleId}
 	    <if test="loginName != null and loginName != ''">
