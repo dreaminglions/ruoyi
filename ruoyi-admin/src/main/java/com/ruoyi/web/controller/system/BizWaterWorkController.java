@@ -6,6 +6,7 @@ import com.ruoyi.common.core.domain.Ztree;
 import com.ruoyi.framework.util.ShiroUtils;
 import com.ruoyi.system.domain.*;
 import com.ruoyi.system.service.IBizScopeService;
+import com.ruoyi.system.service.ISysRoleService;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -39,11 +40,14 @@ public class BizWaterWorkController extends BaseController
 	private IBizWaterWorkService bizWaterWorkService;
 	@Autowired
 	private IBizScopeService bizScopeService;
-	
 	@RequiresPermissions("system:bizWaterWork:view")
 	@GetMapping()
-	public String bizWaterWork()
+	public String bizWaterWork(ModelMap mmap)
 	{
+		long worksId = ShiroUtils.getSysUser().getWorksId();
+		BizWaterWork work = bizWaterWorkService.selectBizWaterWorkById(worksId);
+		long parentId = work.getParentId();
+		mmap.put("rootIdValue",parentId);
 	    return prefix + "/bizWaterWork";
 	}
 	
