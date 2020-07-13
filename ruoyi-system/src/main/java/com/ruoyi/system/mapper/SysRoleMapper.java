@@ -20,6 +20,8 @@ public interface SysRoleMapper
      */
     public List<SysRole> selectRoleList(SysRole role);
 
+    public List<SysRole> selectRoleByScope(String dataScope);
+
     /**
      * 根据用户ID查询角色
      * 

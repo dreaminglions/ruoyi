@@ -88,12 +88,6 @@ public class SysRoleController extends BaseController
     {
         role.setCreateBy(ShiroUtils.getLoginName());
         ShiroUtils.clearCachedAuthorizationInfo();
-        String roleType = role.getRoleType();
-        if("0".equals(roleType)){
-            role.setDataScope("1");
-        }else{
-            role.setDataScope("2");
-        }
         return toAjax(roleService.insertRole(role));
 
     }
@@ -119,12 +113,6 @@ public class SysRoleController extends BaseController
     {
         role.setUpdateBy(ShiroUtils.getLoginName());
         ShiroUtils.clearCachedAuthorizationInfo();
-        String roleType = role.getRoleType();
-        if("0".equals(roleType)){
-            role.setDataScope("1");
-        }else{
-            role.setDataScope("2");
-        }
         return toAjax(roleService.updateRole(role));
     }
 

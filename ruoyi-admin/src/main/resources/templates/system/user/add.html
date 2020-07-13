@@ -112,7 +112,7 @@
                         <label class="col-xs-2 control-label">角色：</label>
                         <div class="col-xs-10">
                             <label th:each="role:${roles}" class="radio-box">
-								<input name="roleId" type="radio" th:value="${role.roleId}" th:text="${role.roleName}" th:disabled="${role.status == '1'}">
+								<input id="roleId" name="roleId" type="radio" th:value="${role.roleId}" th:text="${role.roleName}" th:disabled="${role.status == '1'}">
 							</label>
                         </div>
                     </div>
@@ -215,12 +215,31 @@
         
         function submitHandler() {
 	        if ($.validate.form()) {
-	        	var data = $("#form-user-add").serializeArray();
-	        	var status = $("input[id='status']").is(':checked') == true ? 0 : 1;
-//	        	var roleIds = $.form.selectCheckeds("role");
-	        	data.push({"name": "status", "value": status});
-//	        	data.push({"name": "roleIds", "value": roleIds});
-	        	$.operate.saveTab(prefix + "/add", data);
+
+	            var treeId = $("#treeId").val();
+                var roleId = $("#roleId").val();
+
+                var d = {};
+                d.roleId = roleId;
+                d.worksId = treeId;
+                $.ajax({
+                    url: prefix + "/checkRoleWork",
+                    data: JSON.stringify(d),
+                    type: "POST",
+                    cache: false,
+                    contentType: "application/json;charset=utf-8",
+                    processData: false,
+                    success: function(result) {
+                            var data = $("#form-user-add").serializeArray();
+                            var status = $("input[id='status']").is(':checked') == true ? 0 : 1;
+                            data.push({"name": "status", "value": status});
+                            $.operate.saveTab(prefix + "/add", data);
+                    },
+                    error: function(error) {
+                        return false;
+                    }
+                })
+
 	        }
 	    }
          

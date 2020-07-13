@@ -2,16 +2,16 @@ package com.ruoyi.web.controller.system;
 
 import java.util.List;
 
+import com.ruoyi.system.domain.BizWaterWork;
+import com.ruoyi.system.domain.Region;
+import com.ruoyi.system.domain.SysRole;
 import com.ruoyi.system.service.IBizWaterWorkService;
+import net.sf.json.JSONObject;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import com.ruoyi.common.annotation.Log;
 import com.ruoyi.common.core.controller.BaseController;
@@ -106,7 +106,10 @@ public class SysUserController extends BaseController
     @GetMapping("/add")
     public String add(ModelMap mmap)
     {
-        mmap.put("roles", roleService.selectRoleAll());
+        long roleId = ShiroUtils.getSysUser().getRoleId();
+        SysRole role = roleService.selectRoleById(roleId);
+        String dataScope = role.getDataScope();
+        mmap.put("roles", roleService.selectRoleByScope(dataScope));
         return prefix + "/add";
     }
 
@@ -135,8 +138,12 @@ public class SysUserController extends BaseController
     @GetMapping("/edit/{userId}")
     public String edit(@PathVariable("userId") Long userId, ModelMap mmap)
     {
+        long roleId = ShiroUtils.getSysUser().getRoleId();
+        SysRole role = roleService.selectRoleById(roleId);
+        String dataScope = role.getDataScope();
+
         mmap.put("user", userService.selectUserById(userId));
-        mmap.put("roles", roleService.selectRolesByUserId(userId));
+        mmap.put("roles", roleService.selectRolesByUserId(userId,dataScope));
         return prefix + "/edit";
     }
 
@@ -243,5 +250,25 @@ public class SysUserController extends BaseController
     {
         mmap.put("WaterWork", bizWaterWorkService.selectBizWaterWorkById(worksId));
         return prefix + "/tree";
+    }
+
+
+    @PostMapping("/checkRoleWork")
+    @ResponseBody
+    public AjaxResult checkRoleWork(@RequestBody JSONObject params) {
+
+        AjaxResult ajax = AjaxResult.success();
+
+        long  worksId = params.getLong("worksId");
+        long  roleId = params.getLong("roleId");
+        BizWaterWork works = bizWaterWorkService.selectBizWaterWorkById(worksId);
+        SysRole role = roleService.selectRoleById(roleId);
+        String WorksType = works.getWorksType();
+        String roleScope = role.getDataScope();
+        if(WorksType.equals(roleScope)){
+        }else{
+            ajax = AjaxResult.error();
+        }
+        return ajax;
     }
 }

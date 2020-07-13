@@ -22,18 +22,18 @@
 			</div>
 
 			<div class="form-group">
-				<label class="col-sm-3 control-label">角色类型：</label>
+				<label class="col-sm-3 control-label">角色数据类型（范围）：</label>
 				<div class="col-sm-8">
-					<div class="input-group" style="width: 100%">
-						<select name="roleType" id="roleType" class="form-control m-b" th:field="*{roleType}" required>
-							<option value="">请选择</option>
-							<option value="0">集团管理员</option>
-							<option value="1">水厂管理员</option>
-							<option value="2">区域管理员</option>
-						</select>
-					</div>
+					<select id="dataScope" name="dataScope" class="form-control m-b"  required>
+						<option value="">请选择</option>
+						<option value="1" th:field="*{dataScope}">平台数据权限</option>
+						<option value="2" th:field="*{dataScope}">集团数据权限</option>
+						<option value="3" th:field="*{dataScope}">水厂数据权限</option>
+						<option value="4" th:field="*{dataScope}">区域数据权限</option>
+					</select>
 				</div>
 			</div>
+
 			<div class="form-group">
 				<label class="col-sm-3 control-label">显示顺序：</label>
 				<div class="col-sm-8">
@@ -139,7 +139,7 @@
 			var roleName = $("input[name='roleName']").val();
 			var roleKey = $("input[name='roleKey']").val();
 			var roleSort = $("input[name='roleSort']").val();
-            var roleType = $("select[name='roleType']").val();
+            var dataScope = $("select[name='dataScope']").val();
 			var status = $("input[name='status']").is(':checked') == true ? 0 : 1;
 			var remark = $("input[name='remark']").val();
 			var menuIds = $.tree.getCheckedNodes();
@@ -152,7 +152,7 @@
 					"roleName": roleName,
 					"roleKey": roleKey,
 					"roleSort": roleSort,
-                    "roleType": roleType,
+                    "dataScope": dataScope,
 					"status": status,
 					"remark": remark,
 					"menuIds": menuIds

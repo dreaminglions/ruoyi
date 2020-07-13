@@ -27,12 +27,14 @@ public class DataScopeAspect
     /**
      * 全部数据权限
      */
-    public static final String DATA_SCOPE_ALL = "1";
+    public static final String DATA_SCOPE_ALL = "1";//平台
 
     /**
      * 自定数据权限
      */
-    public static final String DATA_SCOPE_CUSTOM = "2";
+    public static final String DATA_SCOPE_GROUP = "2";//集团
+    public static final String DATA_SCOPE_WORKS = "3";//水厂
+    public static final String DATA_SCOPE_AREA = "4";//区域中心
 
     /**
      * 数据权限过滤关键字
@@ -84,6 +86,7 @@ public class DataScopeAspect
 //        for (SysRole role : user.getRoles())
 //        {
             SysRole role = user.getRole();
+            long userId = user.getUserId();
             if(role!=null){
                 String dataScope = role.getDataScope();
                 if (DATA_SCOPE_ALL.equals(dataScope))
@@ -91,11 +94,33 @@ public class DataScopeAspect
                     sqlString = new StringBuilder();
 //                break;
                 }
-                else if (DATA_SCOPE_CUSTOM.equals(dataScope))
+                else if (DATA_SCOPE_GROUP.equals(dataScope))
                 {
+//                    sqlString.append(StringUtils.format(
+//                            " OR {}.works_id IN ( SELECT works_id FROM sys_role_work WHERE role_id = {} ) ", alias,
+//                            role.getRoleId()));
                     sqlString.append(StringUtils.format(
-                            " OR {}.works_id IN ( SELECT works_id FROM sys_role_work WHERE role_id = {} ) ", alias,
-                            role.getRoleId()));
+                            " OR ({}.works_id = (SELECT rd.works_id from sys_user rd where rd.user_id = {} ) ", alias,
+                            userId));
+                    sqlString.append(StringUtils.format(
+                            " OR {}.parent_id = (SELECT rd.works_id from sys_user rd where rd.user_id = {} )) ", alias,
+                            userId));
+                }else if (DATA_SCOPE_WORKS.equals(dataScope))
+                {
+//                    sqlString.append(StringUtils.format(
+//                            " OR {}.works_id IN ( SELECT works_id FROM sys_role_work WHERE role_id = {} ) ", alias,
+//                            role.getRoleId()));
+                    sqlString.append(StringUtils.format(
+                            " OR ({}.works_id = (SELECT rd.works_id from sys_user rd where rd.user_id = {} )) ", alias,
+                            userId));
+                }else if (DATA_SCOPE_AREA.equals(dataScope))
+                {
+//                    sqlString.append(StringUtils.format(
+//                            " OR {}.works_id IN ( SELECT works_id FROM sys_role_work WHERE role_id = {} ) ", alias,
+//                            role.getRoleId()));
+                    sqlString.append(StringUtils.format(
+                            " OR ({}.works_id = (SELECT rd.works_id from sys_user rd where rd.user_id = {} )) ", alias,
+                            userId));
                 }
 //        }
             }

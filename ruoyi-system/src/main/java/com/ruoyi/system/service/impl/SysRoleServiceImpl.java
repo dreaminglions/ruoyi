@@ -45,7 +45,7 @@ public class SysRoleServiceImpl implements ISysRoleService
      * @return 角色数据集合信息
      */
     @Override
-    @DataScope(tableAlias = "u")
+    @DataScope(tableAlias = "d")
     public List<SysRole> selectRoleList(SysRole role)
     {
         return roleMapper.selectRoleList(role);
@@ -79,10 +79,11 @@ public class SysRoleServiceImpl implements ISysRoleService
      * @return 角色列表
      */
     @Override
-    public List<SysRole> selectRolesByUserId(Long userId)
+    public List<SysRole> selectRolesByUserId(Long userId,String dataScope)
     {
         List<SysRole> userRoles = roleMapper.selectRolesByUserId(userId);
-        List<SysRole> roles = selectRoleAll();
+//        List<SysRole> roles = selectRoleAll();
+        List<SysRole> roles = selectRoleByScope(dataScope);
         for (SysRole role : roles)
         {
             for (SysRole userRole : userRoles)
@@ -107,6 +108,18 @@ public class SysRoleServiceImpl implements ISysRoleService
     {
         return selectRoleList(new SysRole());
     }
+
+    /**
+     * 查询所有角色
+     *
+     * @return 角色列表
+     */
+    @Override
+    public List<SysRole> selectRoleByScope(String dataScope)
+    {
+        return roleMapper.selectRoleByScope(dataScope);
+    }
+
 
     /**
      * 通过角色ID查询角色

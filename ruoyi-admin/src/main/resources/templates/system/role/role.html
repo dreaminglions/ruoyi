@@ -105,16 +105,18 @@
 		        	}
 		        },
 				{
-					field : 'roleType',
-					title : '角色类型',
+					field : 'dataScope',
+					title : '角色数据类型',
 					sortable: true,
 					formatter: function (value, row, index) {
-						if (row.roleType == 0) {
-							return '<i class=\"btn btn-success btn-xs\" >集团管理员</i> ';
-						} else if (row.roleType == 1) {
-							return '<i class=\"btn btn-primary btn-xs\" >水厂管理员</i> ';
-						} else if (row.roleType == 2) {
-                            return '<i class=\"btn btn-warning btn-xs\" >区域管理员</i> ';
+						if (row.dataScope == 1) {
+							return '<i class=\"btn btn-success btn-xs\" >平台数据权限</i> ';
+						} else if (row.dataScope == 2) {
+							return '<i class=\"btn btn-primary btn-xs\" >集团数据权限</i> ';
+						} else if (row.dataScope == 3) {
+                            return '<i class=\"btn btn-warning btn-xs\" >水厂数据权限</i> ';
+                        } else if (row.dataScope == 4) {
+                            return '<i class=\"btn btn-danger btn-xs\" >区域数据权限</i> ';
                         }
 					}
 				},
@@ -129,7 +131,7 @@
 		            formatter: function(value, row, index) {
 		                var actions = [];
 		                actions.push('<a class="btn btn-success btn-xs ' + editFlag + '" href="#" onclick="$.operate.edit(\'' + row.roleId + '\')"><i class="fa fa-edit"></i>编辑</a> ');
-		                actions.push('<a class="btn btn-primary btn-xs ' + editFlag + '" href="#" onclick="authDataScope(\'' + row.roleId + '\')"><i class="fa fa-check-square-o"></i>数据权限</a> ');
+//		                actions.push('<a class="btn btn-primary btn-xs ' + editFlag + '" href="#" onclick="authDataScope(\'' + row.roleId + '\')"><i class="fa fa-check-square-o"></i>数据权限</a> ');
 		                actions.push('<a class="btn btn-info btn-xs ' + editFlag + '" href="#" onclick="authUser(\'' + row.roleId + '\')"><i class="fa fa-user"></i>分配用户</a> ');
 		                actions.push('<a class="btn btn-danger btn-xs ' + removeFlag + '" href="#" onclick="$.operate.remove(\'' + row.roleId + '\')"><i class="fa fa-remove"></i>删除</a> ');
 		                return actions.join('');
