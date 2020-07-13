@@ -117,11 +117,16 @@ public class SysMenuServiceImpl implements ISysMenuService
      * @return 菜单列表
      */
     @Override
-    public List<Ztree> roleMenuTreeData(SysRole role)
+    public List<Ztree> roleMenuTreeData(SysRole role,SysUser user)
     {
         Long roleId = role.getRoleId();
         List<Ztree> ztrees = new ArrayList<Ztree>();
-        List<SysMenu> menuList = menuMapper.selectMenuAll();
+        List<SysMenu> menuList = new ArrayList<SysMenu>();
+        if(user.isAdmin()){
+            menuList = menuMapper.selectMenuAll();
+        }else{
+            menuList = menuMapper.selectUserMenu(user.getUserId());
+        }
         if (StringUtils.isNotNull(roleId))
         {
             List<String> roleMenuList = menuMapper.selectMenuTree(roleId);

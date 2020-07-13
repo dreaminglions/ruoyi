@@ -190,6 +190,15 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         order by d.parent_id, d.order_num
     </select>
 
+    <select id="selectRoleWork" parameterType="Long" resultMap="BizWaterWorkResult">
+        <include refid="selectBizWaterWorkVo"/>
+        left join sys_role_work rd on d.works_id = rd.works_id
+        where d.works_status = '0' and rd.role_id = #{roleId}
+        order by d.parent_id, d.order_num
+    </select>
+
+
+
 
     <select id="selectWorksCode" resultType="WeatherEnity">
         SELECT DISTINCT  works_province as 'provinceCode', works_city as 'cityCode', works_area as 'areaCode'

@@ -17,6 +17,9 @@ public interface SysMenuMapper
      * @return 菜单列表
      */
     public List<SysMenu> selectMenuAll();
+
+
+    public List<SysMenu> selectUserMenu(Long userId);
     
     /**
      * 查询系统正常显示菜单（不含按钮）

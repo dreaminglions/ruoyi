@@ -79,5 +79,7 @@ public interface BizWaterWorkMapper
 	 */
 	public List<String> selectRoleWorkTree(Long roleId);
 
+	public List<BizWaterWork> selectRoleWork(Long roleId);
+
 	public List<WeatherEnity> selectWorksCode();
 }

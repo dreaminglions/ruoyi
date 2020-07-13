@@ -7,13 +7,10 @@ import com.ruoyi.common.annotation.DataScope;
 import com.ruoyi.common.constant.UserConstants;
 import com.ruoyi.common.core.domain.Ztree;
 import com.ruoyi.common.utils.StringUtils;
-import com.ruoyi.system.domain.SysDept;
-import com.ruoyi.system.domain.SysRole;
-import com.ruoyi.system.domain.WeatherEnity;
+import com.ruoyi.system.domain.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.ruoyi.system.mapper.BizWaterWorkMapper;
-import com.ruoyi.system.domain.BizWaterWork;
 import com.ruoyi.system.service.IBizWaterWorkService;
 import com.ruoyi.common.core.text.Convert;
 
@@ -165,11 +162,17 @@ public class BizWaterWorkServiceImpl implements IBizWaterWorkService
 	 * @param role 角色对象
 	 * @return 菜单列表
 	 */
-	public List<Ztree> roleWorkTreeData(SysRole role)
+	public List<Ztree> roleWorkTreeData(SysRole role, SysUser user)
 	{
 		Long roleId = role.getRoleId();
 		List<Ztree> ztrees = new ArrayList<Ztree>();
-		List<BizWaterWork> workList = selectBizWaterWorkList(new BizWaterWork());
+		List<BizWaterWork> workList = new ArrayList<BizWaterWork>();;
+
+		if(user.isAdmin()){
+			workList = selectBizWaterWorkList(new BizWaterWork());
+		}else{
+			workList = bizWaterWorkMapper.selectRoleWork(roleId);
+		}
 		if (StringUtils.isNotNull(roleId))
 		{
 			List<String> roleWorkList = bizWaterWorkMapper.selectRoleWorkTree(roleId);

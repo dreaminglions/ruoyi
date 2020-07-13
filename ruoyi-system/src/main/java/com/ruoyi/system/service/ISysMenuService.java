@@ -54,7 +54,7 @@ public interface ISysMenuService
      * @param role 角色对象
      * @return 菜单列表
      */
-    public List<Ztree> roleMenuTreeData(SysRole role);
+    public List<Ztree> roleMenuTreeData(SysRole role,SysUser user);
 
     /**
      * 查询所有菜单信息

@@ -4,9 +4,7 @@ import java.util.List;
 
 import com.ruoyi.common.core.domain.Ztree;
 import com.ruoyi.framework.util.ShiroUtils;
-import com.ruoyi.system.domain.BizScope;
-import com.ruoyi.system.domain.SysDept;
-import com.ruoyi.system.domain.SysRole;
+import com.ruoyi.system.domain.*;
 import com.ruoyi.system.service.IBizScopeService;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +17,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import com.ruoyi.common.annotation.Log;
 import com.ruoyi.common.enums.BusinessType;
-import com.ruoyi.system.domain.BizWaterWork;
 import com.ruoyi.system.service.IBizWaterWorkService;
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.page.TableDataInfo;
@@ -164,7 +161,8 @@ public class BizWaterWorkController extends BaseController
 	@ResponseBody
 	public List<Ztree> workTreeData(SysRole role)
 	{
-		List<Ztree> ztrees = bizWaterWorkService.roleWorkTreeData(role);
+		SysUser user = ShiroUtils.getSysUser();
+		List<Ztree> ztrees = bizWaterWorkService.roleWorkTreeData(role,user);
 		return ztrees;
 	}
 
