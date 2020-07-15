@@ -74,6 +74,14 @@ public interface IBizWaterWorkService
 	public List<Ztree> selectWorksTree(BizWaterWork bizWaterWork);
 
 	/**
+	 * 查询区域水厂管理树
+	 *
+	 * @param areaId 区域ID
+	 * @return 所有机构树信息
+	 */
+	public List<Ztree> selectAreaWaterTree(Long areaId);
+
+	/**
 	 * 根据角色ID查询菜单
 	 *
 	 * @param role 角色对象

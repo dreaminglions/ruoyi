@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.BizAreaWaterMapper">
+    
+    <resultMap type="BizAreaWater" id="BizAreaWaterResult">
+        <result property="areaId"    column="area_id"    />
+        <result property="waterId"    column="water_id"    />
+    </resultMap>
+
+
+	
+	<sql id="selectBizAreaWaterVo">
+        select d.area_id,d.water_id
+        from biz_area_water d
+    </sql>
+	
+    <select id="selectBizAreaWaterList" parameterType="BizAreaWater" resultMap="BizAreaWaterResult">
+        <include refid="selectBizAreaWaterVo"/>
+        where 1=1
+        <if test="areaId != null and areaId != 0">
+            AND area_id = #{areaId}
+        </if>
+    </select>
+
+    <select id="selectAreaWaterByArea" parameterType="Long" resultType="Long">
+        select d.water_id
+        from biz_area_water d
+        where area_id = #{areaId}
+    </select>
+
+
+    <delete id="deleteByAreaId" parameterType="Long">
+		delete from biz_area_water where area_id=#{areaId}
+	</delete>
+
+    <delete id="deleteByWaterId" parameterType="Long">
+		delete from biz_area_water where water_id=#{waterId}
+	</delete>
+
+
+    <insert id="batchInsertBizAreaWater">
+        insert into biz_area_water(area_id, water_id) values
+        <foreach item="item" index="index" collection="list" separator=",">
+            (#{item.areaId},#{item.waterId})
+        </foreach>
+    </insert>
+    
+</mapper>

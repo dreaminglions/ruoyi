@@ -6,9 +6,10 @@
 <body class="gray-bg">
     
      <div class="container-div">
-		<div class="row">
+		 <div class="row">
 			<div class="col-sm-12 search-collapse">
 				<form id="formId">
+					<input id="areaId" name="areaId" type="hidden"/>
 					<div class="select-list">
 						<ul>
 							<li>
@@ -22,7 +23,7 @@
 								<option value="1">平台机构</option>
 								<option value="2">集团机构</option>
 								<option value="3">一般水厂</option>
-								<option value="4">区域水厂</option>
+								<option value="4">区域中心</option>
 								</select>
 							</li>
 
@@ -63,14 +64,15 @@
         var rootId = [[${rootIdValue}]];
 
         $(function() {
-            var options = {
+			$("#areaId").val("");
+        	var options = {
                 code: "worksId",
                 parentCode: "parentId",
                 uniqueId: "worksId",
                 url: prefix + "/list",
                 createUrl: prefix + "/add/{id}",
                 updateUrl: prefix + "/edit/{id}",
-                removeUrl: prefix + "/remove",
+                removeUrl: prefix + "/remove/{id}",
 				exportUrl: prefix + "/export",
                 modalName: "机构",
 		        showExport: true,
@@ -125,25 +127,9 @@
                         }
                     }
 				},
-                    {
-                        field : 'worksCenter',
-                        title : '区域类型',
-                        sortable: true,
-                        formatter: function (value, row, index) {
-                            if (row.worksType == '0') {
-                                return '';
-                            }else{
-                                if (row.worksCenter == 0) {
-                                    return '<span class="label label-success">区域中心</span>'
-                                } else {
-                                    return '<span class="label label-danger">一般水厂</span>'
-                                }
-							}
-                        }
-                    },
 				{
 					field : 'worksMaintainer', 
-					title : '水厂联系人',
+					title : '机构联系人',
 					sortable: true
 				},
 				{
@@ -153,22 +139,28 @@
 				},
 		        {
 		            title: '操作',
-		            align: 'center',
+		            align: 'right',
 		            formatter: function(value, row, index) {
                         var actions = [];
                         if (row.parentId != 0) {
-
 
                             var actions = [];
 //                            actions.push('<a class="' + editFlag + '" href="#" onclick="$.operate.edit(\'' + row.worksId + '\')"><i class="fa fa-edit"></i>编辑</a>');
 //                            actions.push('<a class="' + removeFlag + '" href="#" onclick="$.operate.remove(\'' + row.worksId + '\')"><i class="fa fa-trash"></i>删除</a>');
 //                            return $.table.dropdownToggle(actions.join(''));
-
+							if (row.worksType == '2') {
+								actions.push('<a class="btn btn-success btn-xs ' + addFlag +
+										'" href="#" onclick="$.operate.add(\'' + row.worksId +
+										'\')"><i class="fa fa-plus"></i>添加水厂</a> ');
+							}else if (row.worksType == '4') {
+								actions.push('<a class="btn btn-success btn-xs ' + addFlag +
+										'" href="#" onclick="showWater(\'' + row.worksId +
+										'\')"><i class="fa fa-edit"></i>分配水厂</a> ');
+							}
                             actions.push('<a class="btn btn-primary btn-xs ' + editFlag + '" href="#" onclick="$.operate.edit(\'' + row.worksId + '\')"><i class="fa fa-edit"></i>编辑</a> ');
                             actions.push('<a class="btn btn-danger btn-xs ' + removeFlag + '" href="#" onclick="$.operate.remove(\'' + row.worksId + '\')"><i class="fa fa-trash"></i>删除</a> ');
                             return actions.join('');
                         } else {
-
                             actions.push('<a class="btn btn-success btn-xs ' + addFlag + '" href="#" onclick="$.operate.add(\'' + row.worksId + '\')"><i class="fa fa-plus"></i>添加下级</a> ');
                             return actions.join('');
                         }
@@ -181,6 +173,42 @@
 		function addScope(worksId){
             var url = prefix + '/addScope/' + worksId;
             $.modal.open("设置化验范围", url);
+		}
+
+		function showWater(worksId) {
+			$("#areaId").val(worksId);
+			var options = {
+				title: '区域中心水厂分配',
+				width: "380",
+				height: "500",
+				url: prefix + "/assignWorksTree/"+worksId,
+				callBack: doSubmit
+			};
+			$.modal.openOptions(options);
+		}
+
+		function doSubmit(index, layero){
+			var areaId = $("#areaId").val();
+			var body = layer.getChildFrame('body', index);
+			var waterIds = body.find('#treeId').val();
+			$.ajax({
+				cache : true,
+				type : "POST",
+				url : prefix + "/batchAreaWater",
+				data : {
+					"areaId": areaId,
+					"waterIds": waterIds
+				},
+				async : false,
+				error : function(request) {
+					$.modal.alertError("系统错误");
+				},
+				success : function(data) {
+					$.modal.alertSuccess("分配成功");
+					layer.close(index);
+				}
+			});
+
 		}
     </script>
 </body>

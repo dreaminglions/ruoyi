@@ -10,53 +10,39 @@
 			<input id="treeId" name="parentId" type="hidden" th:field="*{parentId}" />
 			<div class="form-group">	
 				<label class="col-sm-3 control-label">水厂编号：</label>
-				<div class="col-sm-8">
+				<div class="col-sm-3">
 					<input id="worksNo" name="worksNo" th:field="*{worksNo}" class="form-control required" type="text">
+				</div>
+				<label class="col-sm-2 control-label">水厂名称：</label>
+				<div class="col-sm-4">
+					<input id="worksName" name="worksName" th:field="*{worksName}" class="form-control required" type="text">
 				</div>
 			</div>
 			<div class="form-group">
 				<label class="col-sm-3 control-label ">上级部门：</label>
-				<div class="col-sm-8">
+				<div class="col-sm-9">
 					<div class="input-group">
 						<input class="form-control required" type="text" id="treeName" onclick="selectWorksTree()" readonly="true" th:field="*{parentName}">
 						<span class="input-group-addon"><i class="fa fa-search"></i></span>
 					</div>
 				</div>
 			</div>
-			<div class="form-group">	
-				<label class="col-sm-3 control-label">水厂名称：</label>
-				<div class="col-sm-8">
-					<input id="worksName" name="worksName" th:field="*{worksName}" class="form-control required" type="text">
-				</div>
-			</div>
-			<div class="form-group">	
-				<label class="col-sm-3 control-label">显示顺序：</label>
-				<div class="col-sm-8">
-					<input id="orderNum" name="orderNum" th:field="*{orderNum}" class="form-control required" type="text">
-				</div>
-			</div>
-			<div class="form-group">	
+			<div class="form-group">
 				<label class="col-sm-3 control-label">省：</label>
-				<div class="col-sm-8">
+				<div class="col-sm-3">
 					<!--<input id="worksProvince" name="worksProvince" th:field="*{worksProvince}" class="form-control" type="text">-->
 					<select id="worksProvince" name="worksProvince" class="form-control required"  th:with="type=${@sysRegion.selectByParentCode(100000)}" onchange="changeProvince(0)" th:field="*{worksProvince}">
 						<option value="">请选择</option>
 						<option th:each="sysRegion : ${type}" th:text="${sysRegion.regionName}" th:value="${sysRegion.regionCod}"></option>
 					</select>
 				</div>
-			</div>
-			<div class="form-group">	
-				<label class="col-sm-3 control-label">市：</label>
-				<div class="col-sm-8">
+				<div class="col-sm-3">
 					<!--<input id="worksCity" name="worksCity" th:field="*{worksCity}" class="form-control" type="text">-->
 					<select id="worksCity" name="worksCity" class="form-control required"  onchange="changeCity(0)" >
 						<option value="">请选择</option>
 					</select>
 				</div>
-			</div>
-			<div class="form-group">	
-				<label class="col-sm-3 control-label">区：</label>
-				<div class="col-sm-8">
+				<div class="col-sm-3">
 					<!--<input id="worksArea" name="worksArea" th:field="*{worksArea}" class="form-control" type="text">-->
 					<select id="worksArea" name="worksArea" class="form-control required" >
 						<option value="">请选择</option>
@@ -64,27 +50,19 @@
 				</div>
 			</div>
 			<div class="form-group">
-				<label class="col-sm-3 control-label">经度：</label>
-				<div class="col-sm-8">
-					<input id="worksLongitude" name="worksLongitude" th:field="*{worksLongitude}" class="form-control" type="text">
-				</div>
-			</div>
-			<div class="form-group">
-				<label class="col-sm-3 control-label">纬度：</label>
-				<div class="col-sm-8">
-					<input id="worksLatitude" name="worksLatitude" th:field="*{worksLatitude}" class="form-control" type="text">
-				</div>
-			</div>
-			<div class="form-group">	
 				<label class="col-sm-3 control-label">详细地址：</label>
-				<div class="col-sm-8">
+				<div class="col-sm-9">
 					<input id="worksAddress" name="worksAddress" th:field="*{worksAddress}" class="form-control" type="text">
 				</div>
 			</div>
-			<div class="form-group">	
-				<label class="col-sm-3 control-label">设备数量：</label>
-				<div class="col-sm-8">
-					<input id="worksCount" name="worksCount" th:field="*{worksCount}" class="form-control required" type="text">
+			<div class="form-group">
+				<label class="col-sm-3 control-label">经度：</label>
+				<div class="col-sm-3">
+					<input id="worksLongitude" name="worksLongitude" th:field="*{worksLongitude}" class="form-control" type="text">
+				</div>
+				<label class="col-sm-2 control-label">纬度：</label>
+				<div class="col-sm-4">
+					<input id="worksLatitude" name="worksLatitude" th:field="*{worksLatitude}" class="form-control" type="text">
 				</div>
 			</div>
 			<div class="form-group">
@@ -93,7 +71,7 @@
 					<label class="radio-box"> <input type="radio" name="worksType" th:field="*{worksType}" value="1" /> 平台机构 </label>
 					<label class="radio-box"> <input type="radio" name="worksType" th:field="*{worksType}" value="2" /> 集团机构 </label>
 					<label class="radio-box"> <input type="radio" name="worksType" th:field="*{worksType}" value="3" /> 一般水厂 </label>
-					<label class="radio-box"> <input type="radio" name="worksType" th:field="*{worksType}" value="4" /> 区域水厂 </label>
+					<label class="radio-box"> <input type="radio" name="worksType" th:field="*{worksType}" value="4" /> 区域中心 </label>
 				</div>
 			</div>
 
@@ -108,14 +86,22 @@
 			</div>
 			<div class="form-group">	
 				<label class="col-sm-3 control-label">水厂联系人：</label>
-				<div class="col-sm-8">
+				<div class="col-sm-3">
 					<input id="worksMaintainer" name="worksMaintainer" th:field="*{worksMaintainer}" class="form-control" type="text">
 				</div>
-			</div>
-			<div class="form-group">	
-				<label class="col-sm-3 control-label">联系电话：</label>
-				<div class="col-sm-8">
+				<label class="col-sm-2 control-label">联系电话：</label>
+				<div class="col-sm-4">
 					<input id="worksTel" name="worksTel" th:field="*{worksTel}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label">设备数量：</label>
+				<div class="col-sm-3">
+					<input id="worksCount" name="worksCount" th:field="*{worksCount}" class="form-control required" type="text">
+				</div>
+				<label class="col-sm-2 control-label">显示顺序：</label>
+				<div class="col-sm-4">
+					<input id="orderNum" name="orderNum" th:field="*{orderNum}" class="form-control required" type="text">
 				</div>
 			</div>
 

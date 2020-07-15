@@ -1,12 +1,14 @@
 package com.ruoyi.web.controller.system;
 
+import java.util.Arrays;
 import java.util.List;
 
 import com.ruoyi.common.core.domain.Ztree;
+import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.framework.util.ShiroUtils;
 import com.ruoyi.system.domain.*;
+import com.ruoyi.system.service.IBizAreaWaterService;
 import com.ruoyi.system.service.IBizScopeService;
-import com.ruoyi.system.service.ISysRoleService;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -20,7 +22,6 @@ import com.ruoyi.common.annotation.Log;
 import com.ruoyi.common.enums.BusinessType;
 import com.ruoyi.system.service.IBizWaterWorkService;
 import com.ruoyi.common.core.controller.BaseController;
-import com.ruoyi.common.core.page.TableDataInfo;
 import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.utils.poi.ExcelUtil;
 
@@ -40,6 +41,9 @@ public class BizWaterWorkController extends BaseController
 	private IBizWaterWorkService bizWaterWorkService;
 	@Autowired
 	private IBizScopeService bizScopeService;
+	@Autowired
+	private IBizAreaWaterService bizAreaWaterService;
+
 	@RequiresPermissions("system:bizWaterWork:view")
 	@GetMapping()
 	public String bizWaterWork(ModelMap mmap)
@@ -128,11 +132,11 @@ public class BizWaterWorkController extends BaseController
 	 */
 	@RequiresPermissions("system:bizWaterWork:remove")
 	@Log(title = "删除水厂", businessType = BusinessType.DELETE)
-	@PostMapping( "/remove")
+	@GetMapping( "/remove/{worksId}")
 	@ResponseBody
-	public AjaxResult remove(String ids)
-	{		
-		return toAjax(bizWaterWorkService.deleteBizWaterWorkByIds(ids));
+	public AjaxResult remove(@PathVariable("worksId") Long worksId)
+	{
+		return toAjax(bizWaterWorkService.deleteBizWaterWorkByIds(worksId+""));
 	}
 
 
@@ -148,6 +152,17 @@ public class BizWaterWorkController extends BaseController
 	}
 
 	/**
+	 * 加载区域水厂列表树
+	 */
+	@GetMapping("/areaTreeData/{areaId}")
+	@ResponseBody
+	public List<Ztree> areaTreeData(@PathVariable("areaId") Long areaId)
+	{
+		List<Ztree> ztrees = bizWaterWorkService.selectAreaWaterTree(areaId);
+		return ztrees;
+	}
+
+	/**
 	 * 选择水厂树
 	 */
 	@GetMapping("/selectWorksTree/{worksId}")
@@ -155,6 +170,29 @@ public class BizWaterWorkController extends BaseController
 	{
 		mmap.put("WaterWork", bizWaterWorkService.selectBizWaterWorkById(worksId));
 		return prefix + "/tree";
+	}
+
+	/**
+	 * 分配水厂树
+	 */
+	@GetMapping("/assignWorksTree/{worksId}")
+	public String assignWorksTree(@PathVariable("worksId") Long worksId, ModelMap mmap)
+	{
+		mmap.put("WaterWork", bizWaterWorkService.selectBizWaterWorkById(worksId));
+		List<Long> areaWater = bizAreaWaterService.selectAreaWaterByArea(worksId);
+		String waterIds = StringUtils.join(areaWater.toArray(), ",");
+		mmap.put("waterIds",waterIds);
+		return prefix + "/workTree";
+	}
+
+	/**
+	 * 插入区域水厂数
+	 */
+	@PostMapping("/batchAreaWater")
+	@ResponseBody
+	public AjaxResult batchAreaWater(Long areaId, String waterIds, ModelMap mmap)
+	{
+		return toAjax(bizAreaWaterService.batchInsertBizAreaWater(areaId,waterIds));
 	}
 
 

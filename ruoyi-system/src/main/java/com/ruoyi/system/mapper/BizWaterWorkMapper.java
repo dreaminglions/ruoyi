@@ -82,4 +82,12 @@ public interface BizWaterWorkMapper
 	public List<BizWaterWork> selectRoleWork(Long roleId);
 
 	public List<WeatherEnity> selectWorksCode();
+
+	/**
+	 * 查询区域水厂树
+	 *
+	 * @param worksId 区域中心id
+	 * @return 水厂集合
+	 */
+	public List<BizWaterWork> selectAreaWaterTree(Long worksId);
 }

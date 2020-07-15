@@ -8,6 +8,7 @@ import com.ruoyi.common.constant.UserConstants;
 import com.ruoyi.common.core.domain.Ztree;
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.system.domain.*;
+import com.ruoyi.system.mapper.BizAreaWaterMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.ruoyi.system.mapper.BizWaterWorkMapper;
@@ -25,6 +26,8 @@ public class BizWaterWorkServiceImpl implements IBizWaterWorkService
 {
 	@Autowired
 	private BizWaterWorkMapper bizWaterWorkMapper;
+	@Autowired
+	private BizAreaWaterMapper bizAreaWaterMapper;
 
 	/**
      * 查询水厂信息
@@ -97,6 +100,7 @@ public class BizWaterWorkServiceImpl implements IBizWaterWorkService
 	@Override
 	public int deleteBizWaterWorkByIds(String ids)
 	{
+		bizAreaWaterMapper.deleteByWaterId(Long.valueOf(ids));
 		return bizWaterWorkMapper.deleteBizWaterWorkByIds(Convert.toStrArray(ids));
 	}
 
@@ -111,6 +115,14 @@ public class BizWaterWorkServiceImpl implements IBizWaterWorkService
 	public List<Ztree> selectWorksTree(BizWaterWork bizWaterWork){
 		List<BizWaterWork> deptList = bizWaterWorkMapper.selectBizWaterWorkList(bizWaterWork);
 		List<Ztree> ztrees = initZtree(deptList);
+		return ztrees;
+	}
+
+	@Override
+	public List<Ztree> selectAreaWaterTree(Long areaId) {
+		List<BizWaterWork> waterWorks = bizWaterWorkMapper.selectAreaWaterTree(areaId);
+		List<Long> areaWaters = bizAreaWaterMapper.selectAreaWaterByArea(areaId);
+		List<Ztree> ztrees = initZtree(waterWorks,areaWaters,false);
 		return ztrees;
 	}
 
@@ -149,6 +161,42 @@ public class BizWaterWorkServiceImpl implements IBizWaterWorkService
 				if (isCheck)
 				{
 					ztree.setChecked(roleWorkList.contains(work.getWorksId() + work.getWorksName()));
+				}
+				ztrees.add(ztree);
+			}
+		}
+		return ztrees;
+	}
+
+	/**
+	 * 对象转区域水厂复选框树
+	 *
+	 * @param workList 水厂列表
+	 * @param checkList 是否选中
+	 * @param parentCheck 父级是否显示复选框
+	 * @return 树结构列表
+	 */
+	public List<Ztree> initZtree(List<BizWaterWork> workList, List<Long> checkList,boolean parentCheck)
+	{
+
+		List<Ztree> ztrees = new ArrayList<Ztree>();
+		boolean isCheck = StringUtils.isNotNull(checkList);
+		for (BizWaterWork work : workList)
+		{
+			if (UserConstants.WORK_NORMAL.equals(work.getWorksStatus()))
+			{
+				Ztree ztree = new Ztree();
+				ztree.setId(work.getWorksId());
+				ztree.setpId(work.getParentId());
+				ztree.setName(work.getWorksName());
+				ztree.setTitle(work.getWorksName());
+				if(!parentCheck){
+					if("1".equals(work.getWorksType()) || "2".equals(work.getWorksType())){
+						ztree.setNocheck(true);
+					}
+				}
+				if (isCheck) {
+					ztree.setChecked(checkList.contains(work.getWorksId()));
 				}
 				ztrees.add(ztree);
 			}

@@ -94,7 +94,14 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         where d.works_no = #{worksNo}
     </select>
 
-
+    <select id="selectAreaWaterTree" parameterType="Long" resultMap="BizWaterWorkResult">
+        select d.works_id, d.parent_id, d.works_name,d.works_status,d.works_type
+        from biz_water_work d
+        where d.parent_id=0
+        or d.works_id=(select parent_id from biz_water_work where works_id=#{worksId})
+        or d.parent_id=(select parent_id from biz_water_work where works_id=#{worksId})
+        and d.works_id != #{worksId}
+    </select>
         
     <insert id="insertBizWaterWork" parameterType="BizWaterWork" useGeneratedKeys="true" keyProperty="worksId">
         insert into biz_water_work
@@ -168,6 +175,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="updateBy != null  and updateBy != ''  ">update_by = #{updateBy},</if>
             update_time = getdate()
         </trim>
+        where works_id = #{worksId}
+    </update>
+
+    <update id="updateDelFlag" parameterType="BizWaterWork">
+        update biz_water_work del_flag = 1
         where works_id = #{worksId}
     </update>
 
