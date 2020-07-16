@@ -87,6 +87,7 @@ public class DataScopeAspect
 //        {
             SysRole role = user.getRole();
             long userId = user.getUserId();
+            long workId = user.getWorksId();
             if(role!=null){
                 String dataScope = role.getDataScope();
                 if (DATA_SCOPE_ALL.equals(dataScope))
@@ -100,27 +101,24 @@ public class DataScopeAspect
 //                            " OR {}.works_id IN ( SELECT works_id FROM sys_role_work WHERE role_id = {} ) ", alias,
 //                            role.getRoleId()));
                     sqlString.append(StringUtils.format(
-                            " OR ({}.works_id = (SELECT rd.works_id from sys_user rd where rd.user_id = {} ) ", alias,
-                            userId));
+                            " OR {}.works_id = {}  ", alias,
+                            workId));
                     sqlString.append(StringUtils.format(
-                            " OR {}.parent_id = (SELECT rd.works_id from sys_user rd where rd.user_id = {} )) ", alias,
-                            userId));
+                            " OR {}.parent_id = {} ", alias,
+                            workId));
                 }else if (DATA_SCOPE_WORKS.equals(dataScope))
                 {
-//                    sqlString.append(StringUtils.format(
-//                            " OR {}.works_id IN ( SELECT works_id FROM sys_role_work WHERE role_id = {} ) ", alias,
-//                            role.getRoleId()));
                     sqlString.append(StringUtils.format(
-                            " OR ({}.works_id = (SELECT rd.works_id from sys_user rd where rd.user_id = {} )) ", alias,
-                            userId));
+                            " OR {}.works_id = {} ", alias,
+                            workId));
                 }else if (DATA_SCOPE_AREA.equals(dataScope))
                 {
-//                    sqlString.append(StringUtils.format(
-//                            " OR {}.works_id IN ( SELECT works_id FROM sys_role_work WHERE role_id = {} ) ", alias,
-//                            role.getRoleId()));
                     sqlString.append(StringUtils.format(
-                            " OR ({}.works_id = (SELECT rd.works_id from sys_user rd where rd.user_id = {} )) ", alias,
-                            userId));
+                            " OR {}.works_id = {} ", alias,
+                            workId));
+                    sqlString.append(StringUtils.format(
+                            " OR {}.works_id in (SELECT rd.water_id from biz_area_water rd where rd.area_id = {} ) ", alias,
+                            workId));
                 }
 //        }
             }
