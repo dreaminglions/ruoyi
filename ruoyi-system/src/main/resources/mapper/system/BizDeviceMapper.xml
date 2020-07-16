@@ -36,7 +36,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
 	
 	<sql id="selectBizDeviceVo">
-        select d.device_id, d.device_no, d.device_name, d.device_sn, d.device_model, d.device_maker, d.device_works, d.device_maintainer, d.device_tel, d.device_type, d.device_status, assay_status, d.repair_time, d.assay_time, d.repair_by, d.create_time, d.create_by, d.update_time, d.update_by,
+        select d.device_id, d.device_no, d.device_name, d.device_sn, d.device_model, d.device_maker, d.device_works,
+        d.device_maintainer, d.device_tel, d.device_type, d.device_status, assay_status, CONVERT(varchar(100), d.repair_time, 20) repair_time, d.assay_time,
+        d.repair_by, d.create_time, d.create_by, d.update_time, d.update_by,
         w.works_id,w.works_no,w.works_name,w.works_status
         from biz_device d
         LEFT JOIN biz_water_work w on d.device_works = w.works_id

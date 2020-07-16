@@ -44,7 +44,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
 	
 	<sql id="selectBizDeviceUnitVo">
-        select u.unit_id, u.unit_no, u.unit_name, u.unit_sn, u.unit_model, u.unit_device, u.unit_type, u.unit_count, u.unit_num, u.unit_maker, u.unit_status, u.use_time, u.last_repair_time, u.repair_time, u.repair_by, u.create_time, u.create_by, u.update_time, u.update_by,
+        select u.unit_id, u.unit_no, u.unit_name, u.unit_sn, u.unit_model, u.unit_device, u.unit_type, u.unit_count, u.unit_num, u.unit_maker, u.unit_status,
+        CONVERT(varchar(100), u.use_time, 20) use_time, CONVERT(varchar(100), u.last_repair_time, 20) last_repair_time,
+        CONVERT(varchar(100), u.repair_time, 20) repair_time, u.repair_by,
+        u.create_time, u.create_by, u.update_time,
+        u.update_by,
                 u.device_id,u.device_no,u.device_name,u.device_status,u.device_works,
                 w.works_id,w.works_no,w.works_name,w.works_status
                 from
