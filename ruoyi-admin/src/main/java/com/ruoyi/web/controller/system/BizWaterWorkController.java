@@ -136,7 +136,22 @@ public class BizWaterWorkController extends BaseController
 	@ResponseBody
 	public AjaxResult remove(@PathVariable("worksId") Long worksId)
 	{
-		return toAjax(bizWaterWorkService.deleteBizWaterWorkByIds(worksId+""));
+		int result = bizWaterWorkService.deleteBizWaterWorkByIds(worksId);
+		System.out.println("删除结果："+result);
+		AjaxResult ajax = new AjaxResult();
+		if(result>0){
+			ajax = AjaxResult.success();
+		}else{
+			if(result == -1) {
+				ajax = AjaxResult.error("机构存在下级，不允许删除！");
+			}else if(result == -2){
+				ajax = AjaxResult.error("机构存在化验数据，不允许删除！");
+			}else{
+				ajax = AjaxResult.error();
+			}
+		}
+		System.out.println(ajax.toString());
+		return ajax;
 	}
 
 

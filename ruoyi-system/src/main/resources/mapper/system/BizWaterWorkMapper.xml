@@ -40,7 +40,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	
     <select id="selectBizWaterWorkList" parameterType="BizWaterWork" resultMap="BizWaterWorkResult">
         <include refid="selectBizWaterWorkVo"/>
-        where 1=1
+        where del_flag=0
         <if test="parentId != null and parentId != 0">
             AND parent_id = #{parentId}
         </if>
@@ -64,7 +64,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
     <select id="selectOnlyWorkList" parameterType="BizWaterWork" resultMap="BizWaterWorkResult">
         <include refid="selectBizWaterWorkVo"/>
-        where 1=1
+        where del_flag=0
         <if test="parentId != null and parentId != 0">
             AND parent_id = #{parentId}
         </if>
@@ -84,14 +84,14 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		select d.works_id, d.works_no, d.parent_id, d.ancestors, d.works_name, d.order_num, d.works_province, d.works_city, d.works_area, d.works_longitude, d.works_latitude, d.works_address, d.works_count, d.works_type, d.works_belong, d.works_status, d.works_center, d.works_maintainer, d.works_tel, d.create_time, d.create_by, d.update_time, d.update_by,
 			(select works_name from biz_water_work where works_id = d.parent_id) parent_name
 		from biz_water_work d
-		where d.works_id = #{worksId}
+		where d.works_id = #{worksId}  and del_flag=0
     </select>
 
     <select id="selectBizWaterWorkByNo" parameterType="String" resultMap="BizWaterWorkResult">
         select d.works_id, d.works_no, d.parent_id, d.ancestors, d.works_name, d.order_num, d.works_province, d.works_city, d.works_area, d.works_longitude, d.works_latitude, d.works_address, d.works_count, d.works_type, d.works_belong, d.works_status, d.works_center, d.works_maintainer, d.works_tel, d.create_time, d.create_by, d.update_time, d.update_by,
         (select works_name from biz_water_work where works_id = d.parent_id) parent_name
         from biz_water_work d
-        where d.works_no = #{worksNo}
+        where d.works_no = #{worksNo} and del_flag=0
     </select>
 
     <select id="selectAreaWaterTree" parameterType="Long" resultMap="BizWaterWorkResult">
@@ -100,7 +100,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         where d.parent_id=0
         or d.works_id=(select parent_id from biz_water_work where works_id=#{worksId})
         or d.parent_id=(select parent_id from biz_water_work where works_id=#{worksId})
-        and d.works_id != #{worksId}
+        and d.works_id != #{worksId} and del_flag=0
     </select>
         
     <insert id="insertBizWaterWork" parameterType="BizWaterWork" useGeneratedKeys="true" keyProperty="worksId">
@@ -179,7 +179,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </update>
 
     <update id="updateDelFlag" parameterType="BizWaterWork">
-        update biz_water_work del_flag = 1
+        update biz_water_work set del_flag = 1
         where works_id = #{worksId}
     </update>
 
@@ -198,23 +198,26 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         select (convert(varchar(10), d.works_id)+ d.works_name) as works_name
         from biz_water_work d
         left join sys_role_work rd on d.works_id = rd.works_id
-        where d.works_status = '0' and rd.role_id = #{roleId}
+        where d.works_status = '0'  and del_flag=0 and rd.role_id = #{roleId}
         order by d.parent_id, d.order_num
     </select>
 
     <select id="selectRoleWork" parameterType="Long" resultMap="BizWaterWorkResult">
         <include refid="selectBizWaterWorkVo"/>
         left join sys_role_work rd on d.works_id = rd.works_id
-        where d.works_status = '0' and rd.role_id = #{roleId}
+        where d.works_status = '0'   and del_flag=0  and rd.role_id = #{roleId}
         order by d.parent_id, d.order_num
     </select>
 
-
-
-
     <select id="selectWorksCode" resultType="WeatherEnity">
         SELECT DISTINCT  works_province as 'provinceCode', works_city as 'cityCode', works_area as 'areaCode'
-         from biz_water_work
+         from biz_water_work  where del_flag=0
+    </select>
+
+    <select id="selectChildWork" parameterType="Long" resultType="Integer">
+         select count(1) counts
+        from biz_water_work d
+        where d.del_flag=0 and d.parent_id=#{worksId}
     </select>
     
 </mapper>

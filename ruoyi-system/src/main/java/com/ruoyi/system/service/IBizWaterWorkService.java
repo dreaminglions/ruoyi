@@ -63,7 +63,7 @@ public interface IBizWaterWorkService
      * @param ids 需要删除的数据ID
      * @return 结果
      */
-	public int deleteBizWaterWorkByIds(String ids);
+	public int deleteBizWaterWorkByIds(Long ids);
 
 	/**
 	 * 查询水厂管理树

@@ -98,10 +98,30 @@ public class BizWaterWorkServiceImpl implements IBizWaterWorkService
      * @return 结果
      */
 	@Override
-	public int deleteBizWaterWorkByIds(String ids)
+	public int deleteBizWaterWorkByIds(Long ids)
 	{
-		bizAreaWaterMapper.deleteByWaterId(Long.valueOf(ids));
-		return bizWaterWorkMapper.deleteBizWaterWorkByIds(Convert.toStrArray(ids));
+		/**
+		 * 1.判断是否有下级，有下级机构不允许删除
+		 * 2.判断是否有化验数据，有化验数据不允许删除
+		 * 3.删除机构为逻辑删除 del_flag=1
+		 */
+		int result = 0;
+		int childCount = bizWaterWorkMapper.selectChildWork(ids);
+		if(childCount > 0){
+			result = -1;
+			return result;
+		}
+		int assayCount = -2;//待补充
+		if(assayCount > 0){
+			result = -2;
+			return result;
+		}
+		//删除区域水厂关联信息
+		bizAreaWaterMapper.deleteByWaterId(ids);
+		//暂时去掉物理删除
+		//bizWaterWorkMapper.deleteBizWaterWorkByIds(Convert.toStrArray(ids));
+		result = bizWaterWorkMapper.updateDelFlag(ids);
+		return result;
 	}
 
 	/**
