@@ -79,7 +79,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		<if test="params.endTime != null and params.endTime != ''"><!-- 结束时间检索 -->
 			AND datediff(dd,u.create_time,#{params.endTime}) &gt;=0
 		</if>
-		<if test="worksId != null and worksId != 0">
+		<if test="worksId != null and worksId != 212">
 			AND (u.works_id = #{worksId} OR u.works_id IN ( SELECT t.works_id FROM biz_water_work t WHERE t.parent_id= #{worksId}))
 		</if>
 		<!-- 数据范围过滤 -->
