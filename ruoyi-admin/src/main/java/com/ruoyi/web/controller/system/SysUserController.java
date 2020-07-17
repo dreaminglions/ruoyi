@@ -256,19 +256,16 @@ public class SysUserController extends BaseController
     @PostMapping("/checkRoleWork")
     @ResponseBody
     public AjaxResult checkRoleWork(@RequestBody JSONObject params) {
-
-        AjaxResult ajax = AjaxResult.success();
-
         long  worksId = params.getLong("worksId");
         long  roleId = params.getLong("roleId");
         BizWaterWork works = bizWaterWorkService.selectBizWaterWorkById(worksId);
         SysRole role = roleService.selectRoleById(roleId);
         String WorksType = works.getWorksType();
         String roleScope = role.getDataScope();
-        if(WorksType.equals(roleScope)){
-        }else{
-            ajax = AjaxResult.error();
-        }
+
+        AjaxResult ajax = AjaxResult.success();
+        ajax.put("WorksType", WorksType);
+        ajax.put("roleScope", roleScope);
         return ajax;
     }
 }

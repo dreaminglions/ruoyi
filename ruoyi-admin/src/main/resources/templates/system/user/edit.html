@@ -187,13 +187,36 @@
         
         function submitHandler() {
 	        if ($.validate.form()) {
-	        	var data = $("#form-user-edit").serializeArray();
-	        	var status = $("input[id='status']").is(':checked') == true ? 0 : 1;
-	        	var roleIds = $.form.selectCheckeds("role");
-	        	var postIds = $.form.selectSelects("post");
-	        	data.push({"name": "status", "value": status});
-	        	data.push({"name": "roleIds", "value": roleIds});
-	        	$.operate.saveTab(prefix + "/edit", data);
+                var treeId = $("#treeId").val();
+                var roleId = $("input[name='roleId']:checked").val();
+
+                var d = {};
+                d.roleId = roleId;
+                d.worksId = treeId;
+                $.ajax({
+                    url: prefix + "/checkRoleWork",
+                    data: JSON.stringify(d),
+                    type: "POST",
+                    cache: false,
+                    contentType: "application/json;charset=utf-8",
+                    processData: false,
+                    success: function(result) {
+                        var WorksType = result.WorksType;
+                        var roleScope = result.roleScope;
+                        if(WorksType == roleScope){
+                            var data = $("#form-user-edit").serializeArray();
+                            var status = $("input[id='status']").is(':checked') == true ? 0 : 1;
+                            data.push({"name": "status", "value": status});
+                            $.operate.saveTab(prefix + "/edit", data);
+                        }else{
+                            alert("角色与机构不符合!");
+                            return false;
+                        }
+                    },
+                    error: function(error) {
+                        return false;
+                    }
+                })
 	        }
 	    }
 

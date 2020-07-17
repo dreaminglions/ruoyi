@@ -217,7 +217,7 @@
 	        if ($.validate.form()) {
 
 	            var treeId = $("#treeId").val();
-                var roleId = $("#roleId").val();
+                var roleId = $("input[name='roleId']:checked").val();
 
                 var d = {};
                 d.roleId = roleId;
@@ -230,10 +230,17 @@
                     contentType: "application/json;charset=utf-8",
                     processData: false,
                     success: function(result) {
+                        var WorksType = result.WorksType;
+                        var roleScope = result.roleScope;
+                        if(WorksType == roleScope){
                             var data = $("#form-user-add").serializeArray();
                             var status = $("input[id='status']").is(':checked') == true ? 0 : 1;
                             data.push({"name": "status", "value": status});
                             $.operate.saveTab(prefix + "/add", data);
+                        }else{
+                            alert("角色与机构不符合!");
+                            return false;
+                        }
                     },
                     error: function(error) {
                         return false;
