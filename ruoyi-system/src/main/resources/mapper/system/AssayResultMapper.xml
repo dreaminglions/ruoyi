@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.AssayResultMapper">
+    
+    <resultMap type="AssayResult" id="AssayResultResult">
+        <result property="resultId"    column="result_id"    />
+        <result property="assayNo"    column="assay_no"    />
+        <result property="resultNo"    column="result_no"    />
+        <result property="sampleNo"    column="sample_no"    />
+        <result property="sampleVolume"    column="sample_volume"    />
+        <result property="deviceNo"    column="device_no"    />
+        <result property="assayItem"    column="assay_item"    />
+        <result property="itemName"    column="item_name"    />
+        <result property="resultConcentration"    column="result_concentration"    />
+        <result property="resultAbs"    column="result_abs"    />
+        <result property="resultDate"    column="result_date"    />
+        <result property="resultTime"    column="result_time"    />
+        <result property="curveK0"    column="curve_k0"    />
+        <result property="curveK1"    column="curve_k1"    />
+        <result property="curveId"    column="curve_id"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="assayBy"    column="assay_by"    />
+    </resultMap>
+
+
+    <sql id="selectAssayResultVo">
+        select r.result_id, r.assay_no, r.result_no, r.sample_no, r.sample_volume, r.device_no, r.assay_item, r.result_concentration, r.result_abs, r.result_date, r.result_time, r.curve_k0, r.curve_k1, r.curve_id, r.create_by, r.create_time, r.update_by, r.update_time,
+        t.item_name
+		from z_assay_result r
+		left join sys_assay_item t on t.assay_item = r.assay_item
+    </sql>
+	
+    <select id="selectAssayResultList" parameterType="AssayResult" resultMap="AssayResultResult">
+        <include refid="selectAssayResultVo"/>
+        where 1=1
+            <if test="resultId != null "> and r.result_id = #{resultId}</if>
+             <if test="assayNo != null  and assayNo != '' ">
+                 AND r.assay_no = #{assayNo}</if>
+             <if test="deviceNo != null and deviceNo != ''"> and r.device_no = #{deviceNo}</if>
+             <if test="resultDate != null  and resultDate != '' "> and r.result_date = #{resultDate}</if>
+            <if test="params.beginTime != null and params.beginTime != ''"><!-- 开始时间检索 -->
+                AND datediff(dd,#{params.beginTime},r.result_time) &gt;=0
+            </if>
+            <if test="params.endTime != null and params.endTime != ''"><!-- 结束时间检索 -->
+                AND datediff(dd,r.result_time,#{params.endTime}) &gt;=0
+            </if>
+        <!-- 数据范围过滤 -->
+        ${params.dataScope}
+        order by r.result_date desc
+    </select>
+    
+    <select id="selectAssayResultById" parameterType="Long" resultMap="AssayResultResult">
+        <include refid="selectAssayResultVo"/>
+        where r.result_id = #{resultId}
+    </select>
+
+
+    <select id="selectAssayResultByAssayNo" parameterType="String" resultMap="AssayResultResult">
+        <include refid="selectAssayResultVo"/>
+        where r.assay_no = #{assayNo}
+    </select>
+
+        
+    <insert id="insertAssayResult" parameterType="AssayResult" useGeneratedKeys="true" keyProperty="assayId">
+        insert into z_assay_result
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="assayNo != null  and assayNo != ''  ">assay_no,</if>
+            <if test="resultNo != null  and resultNo != ''  ">result_no,</if>
+            <if test="sampleNo != null  and sampleNo != ''  ">sample_no,</if>
+            <if test="sampleVolume != null  and sampleVolume != ''  ">sample_volume,</if>
+			<if test="deviceNo != null  and deviceNo != ''">device_no,</if>
+			<if test="assayItem != null  and assayItem != ''  ">assay_item,</if>
+			<if test="resultConcentration != null  and resultConcentration != ''  ">result_concentration,</if>
+			<if test="resultAbs != null  and resultAbs != ''  ">result_abs,</if>
+            <if test="resultDate != null  and resultDate != ''  ">result_date,</if>
+            <if test="resultTime != null  and resultTime != ''  ">result_time,</if>
+            <if test="curveK0 != null  and curveK0 != ''  ">curve_k0,</if>
+            <if test="curveK1 != null  and curveK1 != ''  ">curve_k1,</if>
+            <if test="curveId != null  and curveId != ''  ">curve_id,</if>
+			<if test="createBy != null  and createBy != ''  ">create_by,</if>
+            create_time
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="assayNo != null  and assayNo != ''  ">#{assayNo},</if>
+            <if test="resultNo != null  and resultNo != ''  ">#{sampleNo},</if>
+            <if test="sampleNo != null  and sampleNo != ''  ">#{sampleNo},</if>
+            <if test="sampleVolume != null  and sampleVolume != ''  ">#{sampleVolume},</if>
+            <if test="deviceNo != null  and deviceNo != ''">#{deviceNo},</if>
+            <if test="assayItem != null  and assayItem != ''  ">#{assayItem},</if>
+            <if test="resultConcentration != null  and resultConcentration != ''  ">#{resultConcentration},</if>
+            <if test="resultAbs != null  and resultAbs != ''  ">#{resultAbs},</if>
+            <if test="resultDate != null  and resultDate != ''  ">#{resultDate},</if>
+            <if test="resultTime != null  and resultTime != ''  ">#{resultTime},</if>
+            <if test="curveK0 != null  and curveK0 != ''  ">#{curveK0},</if>
+            <if test="curveK1 != null  and curveK1 != ''  ">#{curveK1},</if>
+            <if test="curveId != null  and curveId != ''  ">#{curveId},</if>
+			<if test="createBy != null  and createBy != ''  ">#{createBy},</if>
+            getdate()
+         </trim>
+    </insert>
+	 
+    <update id="updateAssayResult" parameterType="AssayResult">
+        update z_assay_result
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="assayNo != null  and assayNo != ''  ">assay_no = #{assayNo},</if>
+            <if test="resultNo != null  and resultNo != ''  ">result_no = #{resultNo},</if>
+            <if test="sampleNo != null  and sampleNo != ''  ">sample_no = #{sampleNo},</if>
+            <if test="sampleVolume != null  and sampleVolume != ''  ">sample_volume = #{sampleVolume},</if>
+            <if test="deviceNo != null  and deviceNo != ''">device_no = #{deviceNo},</if>
+            <if test="assayItem != null  and assayItem != ''  ">assay_item = #{assayItem},</if>
+            <if test="resultConcentration != null  and resultConcentration != ''  ">result_concentration = #{resultConcentration},</if>
+            <if test="resultAbs != null  and resultAbs != ''  ">result_abs = #{resultAbs},</if>
+            <if test="resultDate != null  and resultDate != ''  ">result_date = #{resultDate},</if>
+            <if test="resultTime != null  and resultTime != ''  ">result_time = #{resultTime},</if>
+            <if test="curveK0 != null  and curveK0 != ''  ">curve_k0 = #{curveK0},</if>
+            <if test="curveK1 != null  and curveK1 != ''  ">curve_k1 = #{curveK1},</if>
+            <if test="curveId != null  and curveId != ''  ">curve_id = #{curveId},</if>
+            <if test="updateBy != null  and updateBy != ''  ">update_by = #{updateBy},</if>
+            update_time = getdate()
+        </trim>
+        where assay_id = #{assayId}
+    </update>
+
+	<delete id="deleteAssayResultById" parameterType="Long">
+        delete from z_assay_result where result_id = #{resultId}
+    </delete>
+	
+    <delete id="deleteAssayResultByIds" parameterType="String">
+        delete from z_assay_result where result_id in
+        <foreach item="resultIds" collection="array" open="(" separator="," close=")">
+            #{resultIds}
+        </foreach>
+    </delete>
+
+
+    
+</mapper>

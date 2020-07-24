@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.BizAssayMapper">
+    
+    <resultMap type="BizAssay" id="BizAssayResult">
+        <result property="assayId"    column="assay_id"    />
+        <result property="assayNo"    column="assay_no"    />
+        <result property="deviceNo"    column="device_no"    />
+        <result property="assayType"    column="assay_type"    />
+        <result property="assayDate"    column="assay_date"    />
+        <result property="beginTime"    column="begin_time"    />
+        <result property="endTime"    column="end_time"    />
+        <result property="assayBigprocess"    column="assay_bigprocess"    />
+        <result property="assaySmallprocess"    column="assay_smallprocess"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="assayBy"    column="assay_by"    />
+        <association property="device"    column="device_no" javaType="BizDevice" resultMap="deviceResult" />
+    </resultMap>
+
+
+    <resultMap id="deviceResult" type="BizDevice">
+        <result property="deviceId"    column="device_id"    />
+        <result property="deviceNo"    column="device_no"    />
+        <result property="deviceName"    column="device_name"    />
+        <result property="deviceStatus"    column="device_status"    />
+    </resultMap>
+
+    <sql id="selectBizAssayVo">
+        select r.assay_id,r.assay_no,r.device_no,r.assay_type,r.assay_bigprocess,r.assay_smallprocess,
+        r.begin_time,r.end_time,r.assay_date,r.assay_by,
+        r.create_time, r.create_by, r.update_time, r.update_by,
+                d.device_id,d.device_name,d.device_status,d.device_works
+		from z_assay r
+        LEFT JOIN biz_device d on r.device_no = d.device_no
+    </sql>
+	
+    <select id="selectBizAssayList" parameterType="BizAssay" resultMap="BizAssayResult">
+        <include refid="selectBizAssayVo"/>
+        where 1=1
+
+            <if test="assayId != null "> and r.assay_id = #{assayId}</if>
+             <if test="assayNo != null  and assayNo != '' ">
+                 AND r.assay_no like '%'+#{assayNo}+ '%'  </if>
+             <if test="deviceNo != null and deviceNo != ''"> and r.device_no = #{deviceNo}</if>
+             <if test="assayType != null  and assayType != '' "> and r.assay_type = #{assayType}</if>
+             <if test="assayDate != null  and assayDate != '' "> and r.assay_date = #{assayDate}</if>
+             <if test="beginTime != null "> and r.begin_time = #{beginTime}</if>
+             <if test="endTime != null "> and r.end_time = #{endTime}</if>
+
+            <if test="params.beginTime != null and params.beginTime != ''"><!-- 开始时间检索 -->
+                AND datediff(dd,#{params.beginTime},r.begin_time) &gt;=0
+            </if>
+            <if test="params.endTime != null and params.endTime != ''"><!-- 结束时间检索 -->
+                AND datediff(dd,r.end_time,#{params.endTime}) &gt;=0
+            </if>
+
+        <!-- 数据范围过滤 -->
+        ${params.dataScope}
+
+        order by r.assay_date desc
+    </select>
+    
+    <select id="selectBizAssayById" parameterType="Long" resultMap="BizAssayResult">
+        <include refid="selectBizAssayVo"/>
+        where r.assay_id = #{assayId}
+    </select>
+
+
+    <select id="selectBizAssayByAssayNo" parameterType="String" resultMap="BizAssayResult">
+        <include refid="selectBizAssayVo"/>
+        where r.assay_no = #{assayNo}
+    </select>
+
+        
+    <insert id="insertBizAssay" parameterType="BizAssay" useGeneratedKeys="true" keyProperty="assayId">
+        insert into z_assay
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="assayNo != null  and assayNo != ''  ">assay_no,</if>
+			<if test="deviceNo != null  and deviceNo != ''">device_no,</if>
+			<if test="assayType != null  and assayType != ''  ">assay_type,</if>
+			<if test="assayDate != null  and assayDate != ''  ">assay_date,</if>
+			<if test="beginTime != null  ">begin_time,</if>
+			<if test="endTime != null  ">end_time,</if>
+            <if test="assayBigprocess != null  and assayBigprocess != ''  ">assay_bigprocess,</if>
+            <if test="assaySmallprocess != null  and assaySmallprocess != ''  ">assay_smallprocess,</if>
+            <if test="assayBy != null  and assayBy != ''  ">assay_by,</if>
+			<if test="createBy != null  and createBy != ''  ">create_by,</if>
+            create_time
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="assayNo != null  and assayNo != ''  ">#{assayNo},</if>
+			<if test="deviceNo != null  and deviceNo != ''">#{deviceNo},</if>
+			<if test="assayType != null  and assayType != ''  ">#{assayType},</if>
+			<if test="assayDate != null  and assayDate != ''  ">#{assayDate},</if>
+			<if test="beginTime != null  ">#{beginTime},</if>
+			<if test="endTime != null  ">#{endTime},</if>
+            <if test="assayBigprocess != null  and assayBigprocess != ''  ">#{assayBigprocess},</if>
+            <if test="assaySmallprocess != null  and assaySmallprocess != ''  ">#{assaySmallprocess},</if>
+            <if test="assayBy != null  and assayBy != ''  ">#{repairBy},</if>
+			<if test="createBy != null  and createBy != ''  ">#{createBy},</if>
+            getdate()
+         </trim>
+    </insert>
+	 
+    <update id="updateBizAssay" parameterType="BizAssay">
+        update biz_assay_result
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="assayNo != null  and assayNo != ''  ">assay_no = #{assayNo},</if>
+            <if test="deviceNo != null  and deviceNo != ''">device_no = #{deviceNo},</if>
+            <if test="assayType != null  and assayType != ''  ">assay_type = #{assayType},</if>
+            <if test="assayDate != null  and assayDate != ''  ">assay_date = #{assayDate},</if>
+            <if test="beginTime != null  ">begin_time = #{beginTime},</if>
+            <if test="endTime != null  ">end_time = #{endTime},</if>
+            <if test="assayBigprocess != null  and assayBigprocess != ''  ">assay_bigprocess = #{assayBigprocess},</if>
+            <if test="assaySmallprocess != null  and assaySmallprocess != ''  ">assay_smallprocess = #{assaySmallprocess},</if>
+            <if test="assayBy != null  and assayBy != ''  ">assay_by = #{assayBy},</if>
+            <if test="updateBy != null  and updateBy != ''  ">update_by = #{updateBy},</if>
+            update_time = getdate()
+        </trim>
+        where assay_id = #{assayId}
+    </update>
+
+	<delete id="deleteBizAssayById" parameterType="Long">
+        delete from z_assay where assay_id = #{assayId}
+    </delete>
+	
+    <delete id="deleteBizAssayByIds" parameterType="String">
+        delete from z_assay where assay_id in
+        <foreach item="assayIds" collection="array" open="(" separator="," close=")">
+            #{assayIds}
+        </foreach>
+    </delete>
+
+
+    
+</mapper>

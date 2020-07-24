@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<head>
+	<th:block th:include="include :: header('化验结果列表')" />
+</head>
+<body class="gray-bg" id="aaa">
+    
+     <div class="container-div">
+		<div class="row">
+			<div class="col-sm-12 search-collapse">
+				<form id="formId">
+					<div class="select-list">
+						<li>
+							化验编号：<input type="text" name="assayNo"/>
+						</li>
+
+						<li>
+							化验设备：<select name="deviceNo" th:with="type=${@bizDevice.selectOnlydeviceList()}">
+							<option value="">所有</option>
+							<option th:each="bizDevice : ${type}" th:text="${bizDevice.deviceName}" th:value="${bizDevice.deviceNo}"></option>
+						</select>
+						</li>
+
+
+						<li class="select-time">
+							<label>化验日期： </label>
+							<input type="text" class="time-input" id="assayDate" placeholder="化验日期" name="assayDate"/>
+						</li>
+
+						<ul>
+							<li>
+								<a class="btn btn-primary btn-rounded btn-sm" onclick="$.table.search()"><i class="fa fa-search"></i>&nbsp;搜索</a>
+								<a class="btn btn-warning btn-rounded btn-sm" onclick="$.form.reset()"><i class="fa fa-refresh"></i>&nbsp;重置</a>
+							</li>
+						</ul>
+					</div>
+				</form>
+			</div>
+			
+	        <div class="btn-group-sm" id="toolbar" role="group">
+				<!--<a class="btn btn-success" onclick="AssayReport()" shiro:hasPermission="system:bizAssayResult:list">-->
+					<!--<i class="fa fa-search"></i> 化验报表-->
+				<!--</a>-->
+
+			</div>
+			<div class="col-sm-12 select-table table-striped">
+				<table id="bootstrap-table" data-mobile-responsive="true"></table>
+			</div>
+		</div>
+	</div>
+    <div th:include="include :: footer"></div>
+
+	 <!--<script language="javascript" th:src="@{/water/view02/jqprint/jquery-1.4.4.min.js}"></script>-->
+	 <script language="javascript" th:src="@{/water/view02/jqprint/jquery.jqprint-0.3.js}"></script>
+	 <script src="http://www.jq22.com/jquery/jquery-migrate-1.2.1.min.js";></script>
+
+    <script th:inline="javascript">
+
+        var editFlag = [[${@permission.hasPermi('system:bizAssay:edit')}]];
+        var removeFlag = [[${@permission.hasPermi('system:bizAssay:remove')}]];
+        var prefix = ctx + "system/bizAssay";
+
+        $(function() {
+            var options = {
+                url: prefix + "/list",
+                createUrl: prefix + "/add",
+                detailUrl: prefix + "/check/{id}",
+                updateUrl: prefix + "/edit/{id}",
+                removeUrl: prefix + "/remove",
+				exportUrl: prefix + "/export",
+                modalName: "化验结果",
+		        showExport: true,
+                columns: [{
+		            checkbox: true
+		        },
+				{
+					field : 'assayId',
+					title : '化验结果ID',
+					visible: false
+				},
+				{
+					field : 'assayNo',
+					title : '化验编号',
+					sortable: true
+				},
+				{
+					field : 'device.deviceName',
+					title : '化验设备',
+					sortable: true,
+                    formatter: function(value, item, index) {
+                        var devicename="";
+                        if(item.device!=null){
+                            devicename = item.device.deviceName
+                        }
+                        return '<span class="label label-success">'+devicename+'</span>';
+                    }
+				},
+				{
+					field : 'assayDate',
+					title : '化验日期',
+					sortable: true
+				},
+				{
+					field : 'assayBigprocess',
+					title : '化验大流程',
+					sortable: true
+				},
+				{
+					field : 'assaySmallprocess',
+					title : '化验小流程',
+					sortable: true
+				},
+		        {
+		            title: '操作',
+		            align: 'center',
+		            formatter: function(value, row, index) {
+		            	var actions = [];
+                        actions.push('<a class="btn btn-primary btn-xs ' + editFlag + '" href="#" onclick="detail(\'' + row.assayNo + '\')"><i class="fa fa-search"></i>查看</a> ');
+                        actions.push('<a class="btn btn-warning btn-xs ' + editFlag + '" href="#" onclick="assayDetails(\'' + row.assayId + '\')"><i class="fa fa-search"></i>化验报告</a> ');
+						return actions.join('');
+		            }
+		        }]
+            };
+            $.table.init(options);
+        });
+
+        function detail(assayNo){
+			var url = prefix + '/result/' + assayNo;
+            createMenuItem(url, "化验结果");
+		}
+
+
+
+    </script>
+
+</body>
+</html>

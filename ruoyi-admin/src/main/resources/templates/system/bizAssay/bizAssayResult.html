@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<head>
+	<th:block th:include="include :: header('化验结果列表')" />
+</head>
+<body class="gray-bg" id="aaa">
+    
+     <div class="container-div">
+		<div class="row">
+			<div class="col-sm-12 search-collapse">
+				<form id="formId">
+					<div class="select-list">
+						<ul>
+							<input name="assayNo" type="hidden" id="assayNo"  th:value="${assayNo}"/>
+
+							<li>
+								<a class="btn btn-primary btn-rounded btn-sm" onclick="$.table.search()"><i class="fa fa-search"></i>&nbsp;搜索</a>
+								<a class="btn btn-warning btn-rounded btn-sm" onclick="$.form.reset()"><i class="fa fa-refresh"></i>&nbsp;重置</a>
+							</li>
+						</ul>
+					</div>
+				</form>
+			</div>
+			
+	        <div class="btn-group-sm" id="toolbar" role="group">
+
+			</div>
+			<div class="col-sm-12 select-table table-striped">
+				<table id="bootstrap-table" data-mobile-responsive="true"></table>
+			</div>
+		</div>
+	</div>
+    <div th:include="include :: footer"></div>
+
+	 <!--<script language="javascript" th:src="@{/water/view02/jqprint/jquery-1.4.4.min.js}"></script>-->
+	 <script language="javascript" th:src="@{/water/view02/jqprint/jquery.jqprint-0.3.js}"></script>
+	 <script src="http://www.jq22.com/jquery/jquery-migrate-1.2.1.min.js";></script>
+
+    <script th:inline="javascript">
+
+        var editFlag = [[${@permission.hasPermi('system:bizAssay:edit')}]];
+        var removeFlag = [[${@permission.hasPermi('system:bizAssay:remove')}]];
+        var prefix = ctx + "system/bizAssay";
+
+        $(function() {
+            var options = {
+                url: prefix + "/listResult",
+                detailUrl: prefix + "/checkResult/{id}",
+                updateUrl: prefix + "/editResult/{id}",
+                removeUrl: prefix + "/removeResult",
+				exportUrl: prefix + "/exportResult",
+                queryParams: queryParams,
+                modalName: "化验结果",
+		        showExport: true,
+                columns: [{
+		            checkbox: true
+		        },
+				{
+					field : 'resultId', 
+					title : '化验结果ID',
+					visible: false
+				},
+				{
+					field : 'assayNo',
+					title : '化验唯一编号',
+					sortable: true
+				},
+				{
+					field : 'resultNo', 
+					title : '结果编号',
+					sortable: true
+				},
+				{
+					field : 'itemName',
+					title : '化验项目',
+					sortable: true
+				},
+				{
+					field : 'resultConcentration',
+					title : '浓度值',
+					sortable: true
+				},
+				{
+					field : 'resultAbs',
+					title : 'abs值',
+					sortable: true
+				},
+				{
+					field : 'curveK0',
+					title : '曲线k0',
+					sortable: true
+				},
+				{
+					field : 'curveK1',
+					title : '曲线k1',
+					sortable: true
+				},
+		        {
+		            title: '操作',
+		            align: 'center',
+		            formatter: function(value, row, index) {
+		            	var actions = [];
+						return actions.join('');
+		            }
+		        }]
+            };
+            $.table.init(options);
+        });
+        function queryParams(params) {
+            var search = $.table.queryParams(params);
+            search.assayNo = $("#assayNo").val();
+            return search;
+        }
+
+    </script>
+
+</body>
+</html>
