@@ -24,14 +24,34 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="updateTime"    column="update_time"    />
         <result property="updateBy"    column="update_by"    />
         <result property="assayBy"    column="assay_by"    />
+        <association property="assaySample"    column="sample_no" javaType="AssaySample" resultMap="sampleResult" />
+    </resultMap>
+
+
+    <resultMap id="sampleResult" type="AssaySample">
+        <result property="sampleId"    column="sample_id"    />
+        <result property="sampleNo"    column="sample_no"    />
+        <result property="sampleName"    column="sample_name"    />
+        <association property="work"    column="sample_no" javaType="BizWaterWork" resultMap="worksResult" />
+    </resultMap>
+
+
+    <resultMap id="worksResult" type="BizWaterWork">
+        <result property="worksId"    column="works_id"    />
+        <result property="worksNo"    column="works_no"    />
+        <result property="worksName"    column="works_name"    />
     </resultMap>
 
 
     <sql id="selectAssayResultVo">
         select r.result_id, r.assay_no, r.result_no, r.sample_no, r.sample_volume, r.device_no, r.assay_item, r.result_concentration, r.result_abs, r.result_date, r.result_time, r.curve_k0, r.curve_k1, r.curve_id, r.create_by, r.create_time, r.update_by, r.update_time,
-        t.item_name
+        t.item_name,
+        s.sample_id,s.sample_name,
+        w.works_id,w.works_name,w.works_no
 		from z_assay_result r
 		left join sys_assay_item t on t.assay_item = r.assay_item
+		left join z_assay_sample s on s.sample_no = r.sample_no and s.assay_no = r.assay_no
+		left join biz_water_work w on s.work_no = w.works_no
     </sql>
 	
     <select id="selectAssayResultList" parameterType="AssayResult" resultMap="AssayResultResult">

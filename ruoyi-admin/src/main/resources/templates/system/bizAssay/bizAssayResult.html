@@ -71,6 +71,36 @@
 					sortable: true
 				},
 				{
+					field : 'assaySample.sampleName',
+					title : '化验样品',
+					sortable: true,
+                    formatter: function(value, item, index) {
+                        var sampleName="";
+                        if(item.assaySample!=null){
+                            if(item.assaySample.sampleName!=null){
+                                sampleName = item.assaySample.sampleName
+							}
+                        }
+                        return '<span class="label label-success">'+sampleName+'</span>';
+                    }
+				},
+				{
+					field : 'assaySample.work.worksName',
+					title : '样品水厂',
+					sortable: true,
+					formatter: function(value, item, index) {
+						var worksName="";
+						if(item.assaySample!=null){
+							if(item.assaySample.work!=null){
+                                if(item.assaySample.work.worksName!=null){
+                                    worksName = item.assaySample.work.worksName
+								}
+							}
+						}
+						return '<span class="label label-success">'+worksName+'</span>';
+					}
+				},
+				{
 					field : 'itemName',
 					title : '化验项目',
 					sortable: true

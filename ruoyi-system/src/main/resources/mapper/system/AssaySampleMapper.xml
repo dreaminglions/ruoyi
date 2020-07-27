@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.AssaySampleMapper">
+    
+    <resultMap type="AssaySample" id="AssaySampleResult">
+        <result property="sampleId"    column="sample_id"    />
+        <result property="assayNo"    column="assay_no"    />
+        <result property="workNo"    column="work_no"    />
+        <result property="sampleNo"    column="sample_no"    />
+        <result property="sampleName"    column="sample_name"    />
+        <result property="sampleVolume"    column="sample_volume"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="assayBy"    column="assay_by"    />
+        <association property="work"    column="work_no" javaType="BizWaterWork" resultMap="worksResult" />
+    </resultMap>
+
+
+    <resultMap id="worksResult" type="BizWaterWork">
+        <result property="worksId"    column="works_id"    />
+        <result property="worksNo"    column="works_no"    />
+        <result property="worksName"    column="works_name"    />
+        <result property="worksStatus"    column="works_status"    />
+    </resultMap>
+
+
+    <sql id="selectAssaySampleVo">
+        select r.sample_id, r.assay_no, r.work_no, r.sample_no, r.sample_volume, r.sample_name, r.create_by, r.create_time, r.update_by, r.update_time,
+        w.works_id,w.works_name,w.works_status
+		from z_assay_sample r
+		LEFT JOIN biz_water_work w on r.work_no = w.works_no
+    </sql>
+	
+    <select id="selectAssaySampleList" parameterType="AssaySample" resultMap="AssaySampleResult">
+        <include refid="selectAssaySampleVo"/>
+        where 1=1
+            <if test="sampleId != null "> and r.sample_id = #{sampleId}</if>
+             <if test="assayNo != null  and assayNo != '' ">
+                 AND r.assay_no = #{assayNo}</if>
+             <if test="sampleNo != null and sampleNo != ''"> and r.sample_no = #{sampleNo}</if>
+             <if test="workNo != null and workNo != ''"> and r.work_no = #{workNo}</if>
+        <!-- 数据范围过滤 -->
+        ${params.dataScope}
+        order by r.create_time desc
+    </select>
+    
+    <select id="selectAssaySampleById" parameterType="Long" resultMap="AssaySampleResult">
+        <include refid="selectAssaySampleVo"/>
+        where r.sample_id = #{sampleId}
+    </select>
+
+
+    <select id="selectAssaySampleByAssayNo" parameterType="String" resultMap="AssaySampleResult">
+        <include refid="selectAssaySampleVo"/>
+        where r.assay_no = #{assayNo}
+    </select>
+
+        
+    <insert id="insertAssaySample" parameterType="AssaySample" useGeneratedKeys="true" keyProperty="sampleId">
+        insert into z_assay_result
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="assayNo != null  and assayNo != ''  ">assay_no,</if>
+            <if test="workNo != null  and workNo != ''  ">work_no,</if>
+            <if test="sampleNo != null  and sampleNo != ''  ">sample_no,</if>
+            <if test="sampleVolume != null  and sampleVolume != ''  ">sample_volume,</if>
+			<if test="sampleName != null  and sampleName != ''">sample_name,</if>
+			<if test="createBy != null  and createBy != ''  ">create_by,</if>
+            create_time
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="assayNo != null  and assayNo != ''  ">#{assayNo},</if>
+            <if test="workNo != null  and workNo != ''  ">#{workNo},</if>
+            <if test="sampleNo != null  and sampleNo != ''  ">#{sampleNo},</if>
+            <if test="sampleVolume != null  and sampleVolume != ''  ">#{sampleVolume},</if>
+            <if test="sampleName != null  and sampleName != ''">#{sampleName},</if>
+			<if test="createBy != null  and createBy != ''  ">#{createBy},</if>
+            getdate()
+         </trim>
+    </insert>
+	 
+    <update id="updateAssaySample" parameterType="AssaySample">
+        update z_assay_result
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="assayNo != null  and assayNo != ''  ">assay_no = #{assayNo},</if>
+            <if test="workNo != null  and workNo != ''  ">work_no = #{workNo},</if>
+            <if test="sampleNo != null  and sampleNo != ''  ">sample_no = #{sampleNo},</if>
+            <if test="sampleVolume != null  and sampleVolume != ''  ">sample_volume = #{sampleVolume},</if>
+            <if test="sampleName != null  and sampleName != ''">sample_name = #{sampleName},</if>
+            <if test="updateBy != null  and updateBy != ''  ">update_by = #{updateBy},</if>
+            update_time = getdate()
+        </trim>
+        where sample_id = #{sampleId}
+    </update>
+
+	<delete id="deleteAssaySampleById" parameterType="Long">
+        delete from z_assay_sample where sample_id = #{sampleId}
+    </delete>
+	
+    <delete id="deleteAssaySampleByIds" parameterType="String">
+        delete from z_assay_sample where sample_id in
+        <foreach item="sampleIds" collection="array" open="(" separator="," close=")">
+            #{sampleIds}
+        </foreach>
+    </delete>
+
+
+    
+</mapper>

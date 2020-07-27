@@ -48,6 +48,8 @@ public class AssayResult extends BaseEntity
 	/** j_1901_s0_1 */
 	private Float j_1901_s0_1;
 
+	public AssaySample assaySample;
+
 
 	public Long getResultId() {
 		return resultId;
@@ -167,6 +169,14 @@ public class AssayResult extends BaseEntity
 
 	public void setItemName(String itemName) {
 		this.itemName = itemName;
+	}
+
+	public AssaySample getAssaySample() {
+		return assaySample;
+	}
+
+	public void setAssaySample(AssaySample assaySample) {
+		this.assaySample = assaySample;
 	}
 
 	public String toString() {
