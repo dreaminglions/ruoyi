@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" >
+<head>
+	<th:block th:include="include :: header('设置化验药品')" />
+</head>
+<body class="white-bg">
+    <div class="wrapper wrapper-content animated fadeInRight ibox-content">
+        <form class="form-horizontal m" id="form-bizAssay-add">
+
+			<div th:each="sample:${sampleList}" name="sampleList">
+
+				<input type="hidden" th:value="${sample?.assayNo}"  name="assayNo" >
+
+				<div class="form-group">
+					<label class="col-sm-1 control-label">样品编号：</label>
+					<div class="col-sm-2">
+						<input type="text" th:value="${sample?.sampleNo}"  name="sampleNo" readonly>
+					</div>
+					<label class="col-sm-1 control-label">样品名称：</label>
+					<div class="col-sm-2">
+						<input type="text" th:value="${sample?.sampleName}"  name="sampleName">
+					</div>
+
+					<label class="col-sm-1 control-label">样品水厂：</label>
+					<div class="col-sm-2">
+						<input type="text" th:value="${sample?.workNo}"  name="workNo">
+					</div>
+					<label class="col-sm-1 control-label">样品体积：</label>
+					<div class="col-sm-2">
+						<input type="text" th:value="${sample?.sampleVolume}"  name="sampleVolume">
+					</div>
+				</div>
+			</div>
+
+		</form>
+	</div>
+
+	<div class="row">
+		<div class="col-sm-offset-5 col-sm-10">
+			<button type="button" class="btn btn-sm btn-primary" onclick="submitHandler()"><i class="fa fa-check"></i>保 存</button>&nbsp;
+			<button type="button" class="btn btn-sm btn-danger" onclick="closeItem()"><i class="fa fa-reply-all"></i>关 闭 </button>
+		</div>
+	</div>
+
+    <div th:include="include::footer"></div>
+    <script type="text/javascript">
+		var prefix = ctx + "system/bizAssay"
+		$("#form-bizAssayResult-add").validate({
+			rules:{
+				xxxx:{
+					required:true,
+				},
+			},
+			focusCleanup: true
+		});
+		
+		function submitHandler() {
+	        if ($.validate.form()) {
+
+                var AssayNoArray = new Array();
+                var NoArray  = new Array();
+                var NameArray = new Array();
+                var workNoArray = new Array();
+                var VolumeArray = new Array();
+
+                $('input[name^="assayNo"]').each(function () {
+                    AssayNoArray.push(this.value);
+                });
+                $('input[name^="sampleNo"]').each(function () {
+                    NoArray.push(this.value);
+                });
+                $('input[name^="sampleName"]').each(function () {
+                    NameArray.push(this.value);
+                });
+                $('input[name^="workNo"]').each(function () {
+                    workNoArray.push(this.value);
+                });
+                $('input[name^="sampleVolume"]').each(function () {
+                    VolumeArray.push(this.value);
+                });
+                var str="[";
+                for(var i=0;i<NoArray.length;i++){
+                    str+="{\"assayNo\": \""+AssayNoArray[i]+"\", \"sampleNo\": \""+NoArray[i]+"\", \"sampleName\": \""+NameArray[i]+"\", \"workNo\": \""+workNoArray[i]+"\", \"sampleVolume\": \""+VolumeArray[i]+"\"},"
+				}
+				if(str.length>1){
+                    str = str.substr(0,str.length-1);
+				}
+                str+="]";
+                var arr 	=  JSON.parse(str);
+
+                $.ajax({
+                    cache : true,
+                    type : "POST",
+                    datatype: "json",
+                    contentType: "application/json; charset=utf-8",
+                    url : prefix + "/assaySample",
+                    data : JSON.stringify(arr),
+                    async : false,
+                    error : function(request) {
+                        $.modal.alertError("系统错误");
+                    },
+                    success : function(data) {
+                        $.operate.successTabCallback(data);
+                    }
+                });
+//	            $.operate.save(prefix + "/assaySample", $('#form-bizAssay-add').serialize());
+	        }
+	    }
+	</script>
+</body>
+</html>

@@ -86,4 +86,16 @@ public class AssaySampleServiceImpl implements IAssaySampleService
 	{
 		return assaySampleMapper.deleteAssaySampleByIds(Convert.toStrArray(sampleIds));
 	}
+
+	@Override
+	public int deleteByAssaySample(String assayNo,String sampleNo)
+	{
+		return assaySampleMapper.deleteByAssaySample(assayNo,sampleNo);
+	}
+
+	@Override
+	public List<AssaySample> getSampleByAssayno(String assayNo)
+	{
+		return assaySampleMapper.getSampleByAssayno(assayNo);
+	}
 }

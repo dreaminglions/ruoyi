@@ -60,7 +60,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
         
     <insert id="insertAssaySample" parameterType="AssaySample" useGeneratedKeys="true" keyProperty="sampleId">
-        insert into z_assay_result
+        insert into z_assay_sample
 		<trim prefix="(" suffix=")" suffixOverrides=",">
 			<if test="assayNo != null  and assayNo != ''  ">assay_no,</if>
             <if test="workNo != null  and workNo != ''  ">work_no,</if>
@@ -82,7 +82,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </insert>
 	 
     <update id="updateAssaySample" parameterType="AssaySample">
-        update z_assay_result
+        update z_assay_sample
         <trim prefix="SET" suffixOverrides=",">
             <if test="assayNo != null  and assayNo != ''  ">assay_no = #{assayNo},</if>
             <if test="workNo != null  and workNo != ''  ">work_no = #{workNo},</if>
@@ -106,6 +106,18 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         </foreach>
     </delete>
 
+
+    <delete id="deleteByAssaySample" parameterType="String">
+        delete from z_assay_sample where assay_no = #{assayNo} and sample_no = #{sampleNo}
+    </delete>
+
+
+    <select id="getSampleByAssayno" parameterType="String" resultMap="AssaySampleResult">
+        select DISTINCT t.assay_no,t.sample_no,s.sample_volume,s.sample_name,s.work_no
+        from z_assay_result t
+        LEFT JOIN z_assay_sample s on t.sample_no =s.sample_no and t.assay_no=s.assay_no
+        where t.assay_no= #{assayNo}
+    </select>
 
     
 </mapper>

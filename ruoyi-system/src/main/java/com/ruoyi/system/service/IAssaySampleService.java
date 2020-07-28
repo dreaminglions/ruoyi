@@ -54,4 +54,7 @@ public interface IAssaySampleService
      */
 	public int deleteAssaySampleByIds(String sampleIds);
 
+	public int deleteByAssaySample(String assayNo,String sampleNo);
+
+	public List<AssaySample> getSampleByAssayno(String assayNo);
 }

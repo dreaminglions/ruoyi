@@ -41,6 +41,8 @@ public class BizAssayController extends BaseController
 	private IBizAssayService bizAssayService;
 	@Autowired
 	private IAssayResultService assayResultService;
+	@Autowired
+	private IAssaySampleService assaySampleService;
 
 
 	
@@ -207,6 +209,42 @@ public class BizAssayController extends BaseController
 		//区域中心，水厂判断
 		List<AssayResult> list = assayResultService.selectAssayResultList(assayResult);
 		return getDataTable(list);
+	}
+
+
+
+	@RequiresPermissions("system:bizAssay:edit")
+	@GetMapping("/setSample/{assayNo}")
+	public String setSample(@PathVariable("assayNo") String assayNo, ModelMap mmap)
+	{
+		mmap.put("assayNo", assayNo);
+		List<AssaySample> sampleList = assaySampleService.getSampleByAssayno(assayNo);
+		mmap.put("sampleList", sampleList);
+		return "system/bizAssay/bizAssaySample";
+	}
+
+
+
+	@RequiresPermissions("system:bizAssay:edit")
+	@Log(title = "修改化验样品", businessType = BusinessType.UPDATE)
+	@PostMapping("/assaySample")
+	@ResponseBody
+	public AjaxResult assaySample(@RequestBody  List<AssaySample> sampleList){
+
+		for(AssaySample sample:sampleList){
+
+			System.out.println("------------------------");
+			System.out.println(sample.getAssayNo());
+			System.out.println(sample.getSampleNo());
+			System.out.println(sample.getSampleName());
+			System.out.println("~~~~~~~~~~~~~~~~~~~~~~~~~");
+
+			String assayNo=sample.getAssayNo();
+			String sampleNo=sample.getSampleNo();
+			assaySampleService.deleteByAssaySample(assayNo,sampleNo);
+			assaySampleService.insertAssaySample(sample);
+		}
+		return success();
 	}
 
 }

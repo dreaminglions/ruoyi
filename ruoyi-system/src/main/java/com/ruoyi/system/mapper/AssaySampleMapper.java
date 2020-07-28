@@ -2,6 +2,7 @@ package com.ruoyi.system.mapper;
 
 import com.ruoyi.system.domain.AssayResult;
 import com.ruoyi.system.domain.AssaySample;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -63,5 +64,9 @@ public interface AssaySampleMapper
      * @return 样品
      */
 	public int deleteAssaySampleByIds(String[] resultIds);
+
+	public int deleteByAssaySample(@Param(value="assayNo") String assayNo, @Param(value="sampleNo") String sampleNo);
+
+	public List<AssaySample> getSampleByAssayno(String assayNo);
 
 }
