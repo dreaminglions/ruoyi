@@ -19,20 +19,20 @@ public class WaterHeartTaskHandler implements IMqttTaskHandler {
 	
 	@Override
 	public void handle(String message) {
-		System.out.println("这是一条化验心跳数据");
-		try{
-			if("close".equals(message)){
-			}else{
-				JSONObject jsonObject = JSONObject.parseObject(message);
-				String message_content = jsonObject.getJSONObject("d").getString("mtopic/test2");
-
-				System.out.println("内容："+message_content);
-
-
-			}
-		} catch (Exception e) {
-		e.printStackTrace();
-	}
+//		System.out.println("这是一条化验心跳数据");
+//		try{
+//			if("close".equals(message)){
+//			}else{
+//				JSONObject jsonObject = JSONObject.parseObject(message);
+//				String message_content = jsonObject.getJSONObject("d").getString("mtopic/test2");
+//
+//				System.out.println("内容："+message_content);
+//
+//
+//			}
+//		} catch (Exception e) {
+//		e.printStackTrace();
+//	}
 
 	}
 

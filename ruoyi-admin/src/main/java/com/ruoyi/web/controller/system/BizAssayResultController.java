@@ -46,8 +46,8 @@ public class BizAssayResultController extends BaseController
 	private IBizAssayResultService bizAssayResultService;
 	@Autowired
 	private IBizResultAlterService bizResultAlterService;
-	@Autowired
-	private IBizAssayCurveService bizAssayCurveService;
+//	@Autowired
+//	private IBizAssayCurveService bizAssayCurveService;
 	@Autowired
 	private IBizAssayMethodService bizAssayMethodService;
 	@Autowired
@@ -336,68 +336,68 @@ public class BizAssayResultController extends BaseController
 		String nh_k="[";
 		String nh_b="[";
 
-		BizAssayCurve assayCurve = new BizAssayCurve();
-		assayCurve.setReportId(reportId);
-		List<BizAssayCurve> curveList = bizAssayCurveService.selectBizAssayCurveList(assayCurve);
-
-		//获取化验曲线
-		if(curveList!=null){
-
-			int i=1;
-			for(BizAssayCurve object:curveList){
-				resultdata +="'"+i+"',";
-
-
-				in_cod_wave1+=object.getIncodWave1()+",";
-				in_cod_wave2+=object.getIncodWave2()+",";
-				in_cod_k+=object.getIncodCurveK()+",";
-				in_cod_b+=object.getIncodCurveB()+",";
-				out_cod_wave1+=object.getOutcodWave1()+",";
-				out_cod_wave2+=object.getOutcodWave2()+",";
-				out_cod_k+=object.getOutcodCurveK()+",";
-				out_cod_b+=object.getOutcodCurveB()+",";
-				tp_wave1+=object.getTpWave1()+",";
-				tp_wave2+=object.getTpWave2()+",";
-				tp_k+=object.getTpCurveK()+",";
-				tp_b+=object.getTpCurveB()+",";
-				tn_wave1+=object.getTnWave1()+",";
-				tn_wave2+=object.getTnWave1()+",";
-				tn_k+=object.getTnCurveK()+",";
-				tn_b+=object.getTnCurveB()+",";
-				nh_wave1+=object.getNhWave1()+",";
-				nh_wave2+=object.getNhWave1()+",";
-				nh_k+=object.getNhCurveK()+",";
-				nh_b+=object.getNhCurveB()+",";
-
-				i++;
-			}
-
-			if(resultdata.length()>1){
-				resultdata = resultdata.substring(0,resultdata.length()-1);
-			}
-			if(in_cod_wave1.length()>1){
-				in_cod_wave1 = in_cod_wave1.substring(0,in_cod_wave1.length()-1);
-				in_cod_wave2 = in_cod_wave2.substring(0,in_cod_wave2.length()-1);
-				in_cod_k = in_cod_k.substring(0,in_cod_k.length()-1);
-				in_cod_b = in_cod_b.substring(0,in_cod_b.length()-1);
-				out_cod_wave1 = out_cod_wave1.substring(0,out_cod_wave1.length()-1);
-				out_cod_wave2 = out_cod_wave2.substring(0,out_cod_wave2.length()-1);
-				out_cod_k = out_cod_k.substring(0,out_cod_k.length()-1);
-				out_cod_b = out_cod_b.substring(0,out_cod_b.length()-1);
-				tp_wave1 = tp_wave1.substring(0,tp_wave1.length()-1);
-				tp_wave2 = tp_wave2.substring(0,tp_wave2.length()-1);
-				tp_k = tp_k.substring(0,tp_k.length()-1);
-				tp_b = tp_b.substring(0,tp_b.length()-1);
-				tn_wave1 = tn_wave1.substring(0,tn_wave1.length()-1);
-				tn_wave2 = tn_wave2.substring(0,tn_wave2.length()-1);
-				tn_k = tn_k.substring(0,tn_k.length()-1);
-				tn_b = tn_b.substring(0,tn_b.length()-1);
-				nh_wave1 = nh_wave1.substring(0,nh_wave1.length()-1);
-				nh_wave2 = nh_wave2.substring(0,nh_wave2.length()-1);
-				nh_k = nh_k.substring(0,nh_k.length()-1);
-				nh_b = nh_b.substring(0,nh_b.length()-1);
-			}
-		}
+//		BizAssayCurve assayCurve = new BizAssayCurve();
+//		assayCurve.setReportId(reportId);
+//		List<BizAssayCurve> curveList = bizAssayCurveService.selectBizAssayCurveList(assayCurve);
+//
+//		//获取化验曲线
+//		if(curveList!=null){
+//
+//			int i=1;
+//			for(BizAssayCurve object:curveList){
+//				resultdata +="'"+i+"',";
+//
+//
+//				in_cod_wave1+=object.getIncodWave1()+",";
+//				in_cod_wave2+=object.getIncodWave2()+",";
+//				in_cod_k+=object.getIncodCurveK()+",";
+//				in_cod_b+=object.getIncodCurveB()+",";
+//				out_cod_wave1+=object.getOutcodWave1()+",";
+//				out_cod_wave2+=object.getOutcodWave2()+",";
+//				out_cod_k+=object.getOutcodCurveK()+",";
+//				out_cod_b+=object.getOutcodCurveB()+",";
+//				tp_wave1+=object.getTpWave1()+",";
+//				tp_wave2+=object.getTpWave2()+",";
+//				tp_k+=object.getTpCurveK()+",";
+//				tp_b+=object.getTpCurveB()+",";
+//				tn_wave1+=object.getTnWave1()+",";
+//				tn_wave2+=object.getTnWave1()+",";
+//				tn_k+=object.getTnCurveK()+",";
+//				tn_b+=object.getTnCurveB()+",";
+//				nh_wave1+=object.getNhWave1()+",";
+//				nh_wave2+=object.getNhWave1()+",";
+//				nh_k+=object.getNhCurveK()+",";
+//				nh_b+=object.getNhCurveB()+",";
+//
+//				i++;
+//			}
+//
+//			if(resultdata.length()>1){
+//				resultdata = resultdata.substring(0,resultdata.length()-1);
+//			}
+//			if(in_cod_wave1.length()>1){
+//				in_cod_wave1 = in_cod_wave1.substring(0,in_cod_wave1.length()-1);
+//				in_cod_wave2 = in_cod_wave2.substring(0,in_cod_wave2.length()-1);
+//				in_cod_k = in_cod_k.substring(0,in_cod_k.length()-1);
+//				in_cod_b = in_cod_b.substring(0,in_cod_b.length()-1);
+//				out_cod_wave1 = out_cod_wave1.substring(0,out_cod_wave1.length()-1);
+//				out_cod_wave2 = out_cod_wave2.substring(0,out_cod_wave2.length()-1);
+//				out_cod_k = out_cod_k.substring(0,out_cod_k.length()-1);
+//				out_cod_b = out_cod_b.substring(0,out_cod_b.length()-1);
+//				tp_wave1 = tp_wave1.substring(0,tp_wave1.length()-1);
+//				tp_wave2 = tp_wave2.substring(0,tp_wave2.length()-1);
+//				tp_k = tp_k.substring(0,tp_k.length()-1);
+//				tp_b = tp_b.substring(0,tp_b.length()-1);
+//				tn_wave1 = tn_wave1.substring(0,tn_wave1.length()-1);
+//				tn_wave2 = tn_wave2.substring(0,tn_wave2.length()-1);
+//				tn_k = tn_k.substring(0,tn_k.length()-1);
+//				tn_b = tn_b.substring(0,tn_b.length()-1);
+//				nh_wave1 = nh_wave1.substring(0,nh_wave1.length()-1);
+//				nh_wave2 = nh_wave2.substring(0,nh_wave2.length()-1);
+//				nh_k = nh_k.substring(0,nh_k.length()-1);
+//				nh_b = nh_b.substring(0,nh_b.length()-1);
+//			}
+//		}
 
 		resultdata +="]";
 

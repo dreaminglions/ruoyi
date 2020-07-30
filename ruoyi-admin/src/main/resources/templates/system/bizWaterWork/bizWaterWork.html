@@ -91,11 +91,11 @@
 					title : '机构编号',
 					sortable: true
 				},
-				{
-					field : 'worksAddress', 
-					title : '详细地址',
-					sortable: true
-				},
+//				{
+//					field : 'worksAddress',
+//					title : '详细地址',
+//					sortable: true
+//				},
 				{
 					field : 'worksType', 
 					title : '机构类型',
@@ -169,11 +169,6 @@
             };
             $.treeTable.init(options);
         });
-
-		function addScope(worksId){
-            var url = prefix + '/addScope/' + worksId;
-            $.modal.open("设置化验范围", url);
-		}
 
 		function showWater(worksId) {
 			$("#areaId").val(worksId);

@@ -233,12 +233,6 @@ public class BizAssayController extends BaseController
 
 		for(AssaySample sample:sampleList){
 
-			System.out.println("------------------------");
-			System.out.println(sample.getAssayNo());
-			System.out.println(sample.getSampleNo());
-			System.out.println(sample.getSampleName());
-			System.out.println("~~~~~~~~~~~~~~~~~~~~~~~~~");
-
 			String assayNo=sample.getAssayNo();
 			String sampleNo=sample.getSampleNo();
 			assaySampleService.deleteByAssaySample(assayNo,sampleNo);
