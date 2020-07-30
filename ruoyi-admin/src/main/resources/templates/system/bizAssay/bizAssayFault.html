@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="zh" xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
 <head>
-	<th:block th:include="include :: header('化验结果列表')" />
+	<th:block th:include="include :: header('化验故障列表')" />
 </head>
 <body class="gray-bg" id="aaa">
     
@@ -44,20 +44,20 @@
 
         $(function() {
             var options = {
-                url: prefix + "/listResult",
-                detailUrl: prefix + "/checkResult/{id}",
-                updateUrl: prefix + "/editResult/{id}",
-                removeUrl: prefix + "/removeResult",
-				exportUrl: prefix + "/exportResult",
+                url: prefix + "/listFault",
+                detailUrl: prefix + "/checkFault/{id}",
+                updateUrl: prefix + "/editFault/{id}",
+                removeUrl: prefix + "/removeFault",
+				exportUrl: prefix + "/exportFault",
                 queryParams: queryParams,
-                modalName: "化验结果",
+                modalName: "化验故障",
 		        showExport: true,
                 columns: [{
 		            checkbox: true
 		        },
 				{
-					field : 'resultId', 
-					title : '化验结果ID',
+					field : 'faultId',
+					title : '化验故障ID',
 					visible: false
 				},
 				{
@@ -66,65 +66,76 @@
 					sortable: true
 				},
 				{
-					field : 'resultNo', 
-					title : '结果编号',
-					sortable: true
-				},
-				{
-					field : 'assaySample.sampleName',
-					title : '化验样品',
+					field : 'device.deviceName',
+					title : '故障设备',
 					sortable: true,
                     formatter: function(value, item, index) {
-                        var sampleName="";
-                        if(item.assaySample!=null){
-                            if(item.assaySample.sampleName!=null){
-                                sampleName = item.assaySample.sampleName
-							}
+                        var devicename="";
+                        if(item.device!=null){
+                            devicename = item.device.deviceName
                         }
-                        return '<span class="label label-success">'+sampleName+'</span>';
+                        return '<span class="label label-success">'+devicename+'</span>';
                     }
 				},
 				{
-					field : 'assaySample.work.worksName',
-					title : '样品水厂',
+					field : 'faultCode',
+					title : '故障代码',
+					sortable: true
+				},
+				{
+					field : 'faultInfo.faultInfo',
+					title : '故障信息',
+					sortable: true,
+                    formatter: function(value, item, index) {
+                        var faultInfo="";
+                        if(item.faultInfo!=null){
+                            faultInfo = item.faultInfo.faultInfo
+                        }
+                        return '<span class="label label-danger">'+faultInfo+'</span>';
+                    }
+				},
+				{
+					field : 'testTubeInfo',
+					title : '故障试管',
+					sortable: true
+				},
+				{
+					field : 'faultInfo.faultSolution',
+					title : '故障解决办法',
 					sortable: true,
 					formatter: function(value, item, index) {
-						var worksName="";
-						if(item.assaySample!=null){
-							if(item.assaySample.work!=null){
-                                if(item.assaySample.work.worksName!=null){
-                                    worksName = item.assaySample.work.worksName
-								}
-							}
+						var faultSolution="";
+						if(item.faultInfo!=null){
+                            faultSolution = item.faultInfo.faultSolution
 						}
-						return '<span class="label label-success">'+worksName+'</span>';
+						return '<span class="label label-success">'+faultSolution+'</span>';
 					}
 				},
 				{
-					field : 'itemName',
-					title : '化验项目',
+					field : 'assayBigprocess',
+					title : '故障大流程',
 					sortable: true
 				},
 				{
-					field : 'resultConcentration',
-					title : '浓度值',
+					field : 'assaySmallprocess',
+					title : '故障小流程',
 					sortable: true
 				},
 				{
-					field : 'resultAbs',
-					title : 'abs值',
+					field : 'faultTime',
+					title : '故障时间',
 					sortable: true
-				},
-				{
-					field : 'curveK0',
-					title : '曲线k0',
-					sortable: true
-				},
-				{
-					field : 'curveK1',
-					title : '曲线k1',
-					sortable: true
-				}]
+				}
+//				,
+//		        {
+//		            title: '操作',
+//		            align: 'center',
+//		            formatter: function(value, row, index) {
+//		            	var actions = [];
+//						return actions.join('');
+//		            }
+//		        }
+		        ]
             };
             $.table.init(options);
         });

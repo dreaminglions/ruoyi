@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.AssayFaultMapper">
+    
+    <resultMap type="AssayFault" id="AssayFaultResult">
+        <result property="faultId"    column="fault_id"    />
+        <result property="assayNo"    column="assay_no"    />
+        <result property="deviceNo"    column="device_no"    />
+        <result property="faultTime"    column="fault_time"    />
+        <result property="faultCode"    column="fault_code"    />
+        <result property="assayBigprocess"    column="assay_bigprocess"    />
+        <result property="assaySmallprocess"    column="assay_smallprocess"    />
+        <result property="testTubeInfo"    column="test_tube_info"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <association property="device"    column="device_no" javaType="BizDevice" resultMap="deviceResult" />
+        <association property="faultInfo"    column="fault_code" javaType="AssayFaultInfo" resultMap="faultInfoResult" />
+    </resultMap>
+
+    <resultMap id="deviceResult" type="BizDevice">
+        <result property="deviceId"    column="device_id"    />
+        <result property="deviceNo"    column="device_no"    />
+        <result property="deviceName"    column="device_name"    />
+        <result property="deviceStatus"    column="device_status"    />
+    </resultMap>
+
+
+
+    <resultMap id="faultInfoResult" type="AssayFaultInfo">
+        <result property="infoId"    column="info_id"    />
+        <result property="faultCode"    column="fault_code"    />
+        <result property="faultInfo"    column="fault_info"    />
+        <result property="faultSolution"    column="fault_solution"    />
+    </resultMap>
+
+	<sql id="selectAssayFaultVo">
+        select a.fault_id, a.assay_no, a.device_no, a.fault_time, a.fault_code, a.assay_bigprocess, a.assay_smallprocess,a.test_tube_info, a.create_time, a.create_by, a.update_time, a.update_by,
+                d.device_id,d.device_name,d.device_status,
+                i.fault_info,i.fault_solution
+		from z_assay_fault a
+        LEFT JOIN biz_device d on a.device_no = d.device_no
+        LEFT JOIN biz_fault_info i on a.fault_code = i.fault_code
+    </sql>
+	
+    <select id="selectAssayFaultList" parameterType="AssayFault" resultMap="AssayFaultResult">
+        <include refid="selectAssayFaultVo"/>
+        where 1=1
+        <if test="assayNo != null  and assayNo != ''  "> and assay_no = #{assayNo}</if>
+        <if test="deviceNo != null   and deviceNo != ''   "> and device_no = #{deviceNo}</if>
+        <if test="faultTime != null   and faultTime != ''   "> and fault_time = #{faultTime}</if>
+        <if test="faultCode != null  and faultCode != ''  "> and fault_code = #{faultCode}</if>
+        <if test="assayBigprocess != null  and assayBigprocess != ''  "> and assay_bigprocess = #{assayBigprocess}</if>
+        <if test="assaySmallprocess != null  and assaySmallprocess != ''  "> and assay_smallprocess = #{assaySmallprocess}</if>
+
+        <!-- 数据范围过滤 -->
+        ${params.dataScope}
+    </select>
+    
+    <select id="selectAssayFaultById" parameterType="Long" resultMap="AssayFaultResult">
+        <include refid="selectAssayFaultVo"/>
+        where a.fault_id = #{faultId}
+    </select>
+
+    <select id="selectAssayFaultByassayNo" parameterType="String" resultMap="AssayFaultResult">
+        <include refid="selectAssayFaultVo"/>
+        where a.assay_no = #{assayNo}
+    </select>
+
+    <insert id="insertAssayFault" parameterType="AssayFault"  useGeneratedKeys="true" keyProperty="faultId">
+        insert into z_assay_fault
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="assayNo != null  and assayNo != ''  ">assay_no,</if>
+            <if test="deviceNo != null   and deviceNo != ''   ">device_no,</if>
+            <if test="faultTime != null   and faultTime != ''   ">fault_time,</if>
+            <if test="faultCode != null  and faultCode != ''  ">fault_code,</if>
+            <if test="assayBigprocess != null  and assayBigprocess != ''  ">assay_bigprocess,</if>
+            <if test="assaySmallprocess != null  and assaySmallprocess != ''  ">assay_smallprocess,</if>
+            <if test="testTubeInfo != null  and testTubeInfo != ''  ">test_tube_info,</if>
+            <if test="createBy != null  and createBy != ''  ">create_by,</if>
+            create_time
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="assayNo != null  and assayNo != ''  "> #{assayNo},</if>
+            <if test="deviceNo != null   and deviceNo != ''   "> #{deviceNo},</if>
+            <if test="faultTime != null   and faultTime != ''   "> #{faultTime},</if>
+            <if test="faultCode != null  and faultCode != ''  "> #{faultCode},</if>
+            <if test="assayBigprocess != null  and assayBigprocess != ''  "> #{assayBigprocess},</if>
+            <if test="assaySmallprocess != null  and assaySmallprocess != ''  "> #{assaySmallprocess},</if>
+            <if test="testTubeInfo != null  and testTubeInfo != ''  "> #{testTubeInfo},</if>
+			<if test="createBy != null  and createBy != ''  ">#{createBy},</if>
+            getdate()
+         </trim>
+    </insert>
+	 
+    <update id="updateAssayFault" parameterType="AssayFault">
+        update z_assay_fault
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="assayNo != null  and assayNo != ''  ">assay_no = #{assayNo},</if>
+            <if test="deviceNo != null   and deviceNo != ''   ">device_no = #{deviceNo},</if>
+            <if test="faultTime != null   and faultTime != ''   ">fault_time = #{faultTime},</if>
+            <if test="faultCode != null  and faultCode != ''  ">fault_code = #{faultCode},</if>
+            <if test="assayBigprocess != null  and assayBigprocess != ''  ">assay_bigprocess = #{assayBigprocess},</if>
+            <if test="assaySmallprocess != null  and assaySmallprocess != ''  ">assay_smallprocess = #{assaySmallprocess},</if>
+            <if test="testTubeInfo != null  and testTubeInfo != ''  ">test_tube_info = #{testTubeInfo},</if>
+            <if test="updateBy != null  and updateBy != ''  ">update_by = #{updateBy},</if>
+            update_time = getdate()
+        </trim>
+        where fault_id = #{faultId}
+    </update>
+
+	<delete id="deleteAssayFaultById" parameterType="Long">
+        delete from z_assay_fault where fault_id = #{faultId}
+    </delete>
+	
+    <delete id="deleteAssayFaultByIds" parameterType="String">
+        delete from z_assay_fault where fault_id in
+        <foreach item="faultIds" collection="array" open="(" separator="," close=")">
+            #{faultIds}
+        </foreach>
+    </delete>
+
+    
+</mapper>

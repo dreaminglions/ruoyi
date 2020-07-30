@@ -43,6 +43,8 @@ public class BizAssayController extends BaseController
 	private IAssayResultService assayResultService;
 	@Autowired
 	private IAssaySampleService assaySampleService;
+	@Autowired
+	private IAssayFaultService assayFaultService;
 
 
 	
@@ -241,4 +243,27 @@ public class BizAssayController extends BaseController
 		return success();
 	}
 
+
+
+	@RequiresPermissions("system:bizAssay:list")
+	@GetMapping("/getFault/{assayNo}")
+	public String getFault(@PathVariable("assayNo") String assayNo, ModelMap mmap)
+	{
+		mmap.put("assayNo", assayNo);
+		return "system/bizAssay/bizAssayFault";
+	}
+
+	/**
+	 * 查询化验结果列表
+	 */
+	@RequiresPermissions("system:bizAssay:list")
+	@PostMapping("/listFault")
+	@ResponseBody
+	public TableDataInfo listFault(AssayFault assayFault)
+	{
+		startPage();
+		//区域中心，水厂判断
+		List<AssayFault> list = assayFaultService.selectAssayFaultList(assayFault);
+		return getDataTable(list);
+	}
 }

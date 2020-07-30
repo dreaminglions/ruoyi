@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.AssayFaultInfoMapper">
+    
+    <resultMap type="AssayFaultInfo" id="AssayFaultInfoResult">
+        <result property="infoId"    column="info_id"    />
+        <result property="faultCode"    column="fault_code"    />
+        <result property="faultInfo"    column="fault_info"    />
+        <result property="faultSolution"    column="fault_solution"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="updateBy"    column="update_by"    />
+    </resultMap>
+
+
+	<sql id="selectAssayFaultInfoVo">
+        select a.info_id, a.fault_code, a.fault_info, a.fault_solution, a.create_time, a.create_by, a.update_time, a.update_by
+		from biz_fault_info a
+    </sql>
+	
+    <select id="selectAssayFaultInfoList" parameterType="AssayFaultInfo" resultMap="AssayFaultInfoResult">
+        <include refid="selectAssayFaultInfoVo"/>
+        where 1=1
+        <if test="faultCode != null  and faultCode != ''  "> and fault_code = #{faultCode}</if>
+        <if test="faultInfo != null   and faultInfo != ''   "> and fault_info  like '%'+#{faultInfo}+ '%'</if>
+        <if test="faultSolution != null   and faultSolution != ''   "> and fault_solution   like '%'+#{faultSolution}+ '%'</if>
+
+        <!-- 数据范围过滤 -->
+        ${params.dataScope}
+    </select>
+    
+    <select id="selectAssayFaultInfoById" parameterType="Long" resultMap="AssayFaultInfoResult">
+        <include refid="selectAssayFaultInfoVo"/>
+        where a.info_id = #{infoId}
+    </select>
+
+    <select id="selectAssayFaultInfoByFaultCode" parameterType="String" resultMap="AssayFaultInfoResult">
+        <include refid="selectAssayFaultInfoVo"/>
+        where a.fault_code = #{faultCode}
+    </select>
+
+    <insert id="insertAssayFaultInfo" parameterType="AssayFaultInfo"  useGeneratedKeys="true" keyProperty="infoId">
+        insert into biz_fault_info
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="faultCode != null  and faultCode != ''  ">fault_code,</if>
+            <if test="faultInfo != null   and faultInfo != ''   ">fault_info,</if>
+            <if test="faultSolution != null   and faultSolution != ''   ">fault_solution,</if>
+            <if test="createBy != null  and createBy != ''  ">create_by,</if>
+            create_time
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="faultCode != null  and faultCode != ''  "> #{faultCode},</if>
+            <if test="faultInfo != null   and faultInfo != ''   "> #{faultInfo},</if>
+            <if test="faultSolution != null   and faultSolution != ''   "> #{faultSolution},</if>
+			<if test="createBy != null  and createBy != ''  ">#{createBy},</if>
+            getdate()
+         </trim>
+    </insert>
+	 
+    <update id="updateAssayFaultInfo" parameterType="AssayFaultInfo">
+        update biz_fault_info
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="faultCode != null  and faultCode != ''  ">fault_code = #{faultCode},</if>
+            <if test="faultInfo != null   and faultInfo != ''   ">fault_info = #{faultInfo},</if>
+            <if test="faultSolution != null   and faultSolution != ''   ">fault_solution = #{faultSolution},</if>
+            <if test="updateBy != null  and updateBy != ''  ">update_by = #{updateBy},</if>
+            update_time = getdate()
+        </trim>
+        where info_id = #{infoId}
+    </update>
+
+	<delete id="deleteAssayFaultInfoById" parameterType="Long">
+        delete from biz_fault_info where info_id = #{infoId}
+    </delete>
+	
+    <delete id="deleteAssayFaultInfoByIds" parameterType="String">
+        delete from biz_fault_info where info_id in
+        <foreach item="infoIds" collection="array" open="(" separator="," close=")">
+            #{infoIds}
+        </foreach>
+    </delete>
+
+    
+</mapper>

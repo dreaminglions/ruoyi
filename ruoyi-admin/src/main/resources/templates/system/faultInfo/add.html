@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" >
+<head>
+	<th:block th:include="include :: header('新增设备')" />
+</head>
+<body class="white-bg">
+    <div class="wrapper wrapper-content animated fadeInRight ibox-content">
+        <form class="form-horizontal m" id="form-AssayFaultInfo-add">
+			<div class="form-group">
+				<label class="col-sm-3 control-label">故障代码：</label>
+				<div class="col-sm-6">
+					<input id="faultCode" name="faultCode" class="form-control required" type="text">
+				</div>
+			</div>
+
+			<div class="form-group">
+				<label class="col-sm-3 control-label">故障信息：</label>
+				<div class="col-sm-8">
+					<textarea id="faultInfo" name="faultInfo" class="form-control"></textarea>
+				</div>
+			</div>
+
+			<div class="form-group">
+				<label class="col-sm-3 control-label">故障解决办法：</label>
+				<div class="col-sm-8">
+					<textarea id="faultSolution" name="faultSolution" class="form-control"></textarea>
+				</div>
+			</div>
+
+		</form>
+	</div>
+    <div th:include="include::footer"></div>
+    <script type="text/javascript">
+		var prefix = ctx + "system/faultInfo"
+		$("#form-AssayFaultInfo-add").validate({
+			rules:{
+				xxxx:{
+					required:true,
+				},
+			},
+			focusCleanup: true
+		});
+
+		
+		function submitHandler() {
+	        if ($.validate.form()) {
+                var data = $('#form-AssayFaultInfo-add').serializeArray();
+	            $.operate.save(prefix + "/add", data);
+	        }
+	    }
+	</script>
+</body>
+</html>
