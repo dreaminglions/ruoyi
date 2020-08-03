@@ -39,7 +39,12 @@ public class SysIndexController extends BaseController
     @Autowired
     private ISysMenuService menuService;
     @Autowired
-    IBizAssayResultService assayResultService;
+    IBizAssayService assayService;
+    @Autowired
+    IAssayResultService assayResultService;
+    @Autowired
+    IAssayFaultService assayFaultService;
+
     @Autowired
     IBizDeviceService deviceService;
     @Autowired
@@ -125,7 +130,7 @@ public class SysIndexController extends BaseController
     @ResponseBody
     public AjaxResult assayTotal(ModelMap mmap) {
         String jsonData = "{";
-        List<DataEnity> assay =assayResultService.getAssayTotal();
+        List<DataEnity> assay =assayService.getAssayTotal();
         String key1 = "total";
         String key2 = "assayValue";
         if(assay!=null){
@@ -198,11 +203,11 @@ public class SysIndexController extends BaseController
         String  timeValue = params.getString("timeValue");
         String jsonData = "{";
         String key = "assayData";
-        List<BizAssayResult> assayList = assayResultService.getAssayByWorkTime(waterValue,timeValue);
+        List<BizAssay> assayList = assayService.getAssayByWorkTime(waterValue,timeValue);
         if(assayList!=null&&assayList.size()>0){
             String assayData = "\""+key+"\":[";
-            for(BizAssayResult obj:assayList){
-                assayData += "\""+obj.getResultNo()+"\",";
+            for(BizAssay obj:assayList){
+                assayData += "\""+obj.getAssayNo()+"\",";
             }
             assayData += "],";
             jsonData += assayData;
@@ -228,7 +233,9 @@ public class SysIndexController extends BaseController
 
         Map<String, String> nodemap = new HashMap<>();
 
-        BizAssayResult assay = assayResultService.selectBizAssayResultByNo(NoValue);
+        BizAssay assay = assayService.selectBizAssayByAssayNo(NoValue);
+        List<AssayResult> assayResult = assayResultService.selectAssayResultByAssayNo(NoValue);
+        List<AssayFault> assayFault = assayFaultService.selectAssayFaultByAssayNo(NoValue);
 
         String resultdata="[";
 
@@ -253,21 +260,10 @@ public class SysIndexController extends BaseController
         String nh_k="[";
         String nh_b="[";
 
-
-        String fault="[";;
-
         String datesign="0";
 
         //获取化验数据
         if(assay!=null){
-            map.put("in_cod",assay.getInCod());
-            map.put("out_cod",assay.getOutCod());
-            map.put("in_tp",assay.getInTp());
-            map.put("out_tp",assay.getOutTp());
-            map.put("in_tn",assay.getInTn());
-            map.put("out_tn",assay.getOutTn());
-            map.put("in_nh",assay.getInNh3());
-            map.put("out_nh",assay.getOutNh3());
 
             String assayDate = assay.getAssayDate();
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
@@ -276,39 +272,97 @@ public class SysIndexController extends BaseController
                 datesign="1";
             }
 
-
             if(assay.getDevice()!=null){
                 nodemap.put("devicename",assay.getDevice().getDeviceName());
             }else{
                 nodemap.put("devicename","");
+            }
+            nodemap.put("bigprocess",assay.getAssayBigprocess());
+            nodemap.put("smallprocess",assay.getAssaySmallprocess());
+            nodemap.put("repairBy",assay.getAssayBy());
 
+            if("999".equals(assay.getAssayBigprocess())){
+                nodemap.put("node","化验完成");
+            }else{
+                nodemap.put("node","化验中");
             }
 
-            nodemap.put("bigprocess",assay.getResultBigprocess());
-            nodemap.put("smallprocess",assay.getResultSmallprocess());
-            nodemap.put("repairBy",assay.getRepairBy());
+        }
 
+        if(assayFault!=null){
             String alertCon="";
-            if("1".equals(assay.getResultFault())){
+            int fault_status=0;
+            for(AssayFault fault:assayFault){
+                if(!"0".equals(fault.getFaultStatus())){
+                    fault_status ++;
+                    alertCon += fault.getFaultInfo().getFaultInfo()+"--"+fault.getFaultTime()+";";
+                }
+            }
+            if(fault_status > 0){
                 nodemap.put("fault","有故障");
                 nodemap.put("node","化验故障");
-                List<BizAlert> alertList = bizAlertService.selectBizAlertByReportId(NoValue);
-                for(BizAlert alert:alertList){
-                    alertCon += alert.getAlertContent()+"--"+alert.getAlertTime()+";";
-                }
                 nodemap.put("alertCon",alertCon);
             }else{
                 nodemap.put("fault","无故障");
                 nodemap.put("alertCon","");
+            }
+        }else{
+            nodemap.put("fault","无故障");
+            nodemap.put("alertCon","");
+        }
 
-                if("999".equals(assay.getResultBigprocess())){
-                    nodemap.put("node","化验完成");
-                }else{
-                    nodemap.put("node","化验中");
+        if(assayResult!=null){
+            int tn_sign=0;float Intn=0;float OutTn=0;
+            int tp_sign=0;float InTp=0;float OutTp=0;
+            int nh_sign=0;float InNh=0;float OutNh=0;
+            float InCod=0;float OutCod=0;
+
+            for(AssayResult result :assayResult){
+                String item= result.getAssayItem();
+                String resultno = result.getResultNo();
+                int r_no= Integer.valueOf(resultno);
+                float c_value = result.getResultConcentration();
+
+                if("1".equals(item)){
+                    if(r_no>tn_sign){
+                        tn_sign = r_no;
+                        Intn = OutTn;
+                        OutTn = c_value;
+                    }else{
+                        Intn = c_value;
+                    }
+                } else if("2".equals(item)){
+                    if(r_no>nh_sign){
+                        nh_sign = r_no;
+                        InNh = OutNh;
+                        OutNh = c_value;
+                    }else{
+                        InNh = c_value;
+                    }
+                } else if("3".equals(item)){
+                    InCod = c_value;
+                } else if("4".equals(item)){
+                    OutCod = c_value;
+                } else if("5".equals(item)){
+                    if(r_no>tp_sign){
+                        tp_sign = r_no;
+                        InTp = OutTp;
+                        OutTp = c_value;
+                    }else{
+                        InTp = c_value;
+                    }
                 }
             }
+            map.put("in_cod",InCod);
+            map.put("out_cod",OutCod);
+            map.put("in_tp",InTp);
+            map.put("out_tp",OutTp);
+            map.put("in_tn",Intn);
+            map.put("out_tn",OutTn);
+            map.put("in_nh",InNh);
+            map.put("out_nh",OutNh);
 
-            String reportId = assay.getReportId();
+
 //            BizAssayCurve assayCurve = new BizAssayCurve();
 //            assayCurve.setReportId(reportId);
 //            List<BizAssayCurve> curveList = bizAssayCurveService.selectBizAssayCurveList(assayCurve);
@@ -427,114 +481,113 @@ public class SysIndexController extends BaseController
 
 
         String NoValue = params.getString("NoValue");
-        BizAssayResult assay = assayResultService.selectBizAssayResultByNo(NoValue);
-        if(assay!=null){
-            BizAssayResult result = new BizAssayResult();
-            result.setResultId(assay.getResultId());
-            result.setResultAlert("0");
-            result.setResultFault("0");
-            assayResultService.updateBizAssayResult(result);
+        List<AssayFault> assayFaultlist = assayFaultService.selectAssayFaultByAssayNo(NoValue);
+        if(assayFaultlist!=null){
+            for(AssayFault fault:assayFaultlist){
+                AssayFault result = new AssayFault();
+                result.setFaultId(fault.getFaultId());
+                result.setFaultStatus("0");
+                assayFaultService.updateAssayFault(result);
+            }
         }
         AjaxResult ajax = AjaxResult.success();
         return ajax;
     }
 
-
-    @PostMapping("/index/getAssayListByIDBE")
-    @ResponseBody
-    public AjaxResult getAssayListByIDBE(@RequestBody JSONObject params) {
-
-        long waterValue = params.getLong("waterValue");
-        String  startTime = params.getString("startTime");
-        String  endTime = params.getString("endTime");
-        BizAssayResult result = new BizAssayResult();
-        result.setResultWorks(waterValue);
-        Map<String, Object> data_params = new HashMap<>();
-        data_params.put("beginTime",startTime);
-        data_params.put("endTime",endTime);
-        result.setParams(data_params);
-        List<BizAssayResult> assayList = assayResultService.selectBizAssayResultList(result);
-
-        String resultdata="[";
-
-        String in_cod_data="[";
-        String out_cod_data="[";
-        String in_tp_data="[";
-        String out_tp_data="[";
-        String in_tn_data="[";
-        String out_tn_data="[";
-        String in_nh_data="[";
-        String out_nh_data="[";
-
-        if(assayList!=null){
-            for(BizAssayResult object:assayList){
-                resultdata +="'"+object.getResultDate()+"',";
-
-                in_cod_data +=object.getInCod()+",";
-                out_cod_data +=object.getOutCod()+",";
-                in_tp_data +=object.getInTp()+",";
-                out_tp_data +=object.getOutTp()+",";
-                in_tn_data +=object.getInTn()+",";
-                out_tn_data +=object.getOutTn()+",";
-                in_nh_data +=object.getInNh3()+",";
-                out_nh_data +=object.getOutNh3()+",";
-            }
-
-            if(resultdata.length()>1){
-                resultdata = resultdata.substring(0,resultdata.length()-1);
-            }
-            if(in_cod_data.length()>1){
-                in_cod_data = in_cod_data.substring(0,in_cod_data.length()-1);
-                out_cod_data = out_cod_data.substring(0,out_cod_data.length()-1);
-                in_tp_data = in_tp_data.substring(0,in_tp_data.length()-1);
-                out_tp_data = out_tp_data.substring(0,out_tp_data.length()-1);
-                in_tn_data = in_tn_data.substring(0,in_tn_data.length()-1);
-                out_tn_data = out_tn_data.substring(0,out_tn_data.length()-1);
-                in_nh_data = in_nh_data.substring(0,in_nh_data.length()-1);
-                out_nh_data = out_nh_data.substring(0,out_nh_data.length()-1);
-            }
-        }
-
-        resultdata +="]";
-
-        in_cod_data +="]";
-        out_cod_data +="]";
-        in_tp_data +="]";
-        out_tp_data +="]";
-        in_tn_data +="]";
-        out_tn_data +="]";
-        in_nh_data +="]";
-        out_nh_data +="]";
-
-        String assayData = "{assaydate:"+resultdata+",in_cod_data:"+in_cod_data+",out_cod_data:"+out_cod_data+
-                ",in_tp_data:"+in_tp_data+",out_tp_data:"+out_tp_data+
-                ",in_tn_data:"+in_tn_data+",out_tn_data:"+out_tn_data+
-                ",in_nh_data:"+in_nh_data+",out_nh_data:"+out_nh_data+"}";
-
-        AjaxResult ajax = AjaxResult.success();
-        ajax.put("assayData", assayData);
-        return ajax;
-    }
-
+//
+//    @PostMapping("/index/getAssayListByIDBE")
+//    @ResponseBody
+//    public AjaxResult getAssayListByIDBE(@RequestBody JSONObject params) {
+//
+//        long waterValue = params.getLong("waterValue");
+//        String  startTime = params.getString("startTime");
+//        String  endTime = params.getString("endTime");
+//        BizAssayResult result = new BizAssayResult();
+//        result.setResultWorks(waterValue);
+//        Map<String, Object> data_params = new HashMap<>();
+//        data_params.put("beginTime",startTime);
+//        data_params.put("endTime",endTime);
+//        result.setParams(data_params);
+//        List<BizAssayResult> assayList = assayResultService.selectBizAssayResultList(result);
+//
+//        String resultdata="[";
+//
+//        String in_cod_data="[";
+//        String out_cod_data="[";
+//        String in_tp_data="[";
+//        String out_tp_data="[";
+//        String in_tn_data="[";
+//        String out_tn_data="[";
+//        String in_nh_data="[";
+//        String out_nh_data="[";
+//
+//        if(assayList!=null){
+//            for(BizAssayResult object:assayList){
+//                resultdata +="'"+object.getResultDate()+"',";
+//
+//                in_cod_data +=object.getInCod()+",";
+//                out_cod_data +=object.getOutCod()+",";
+//                in_tp_data +=object.getInTp()+",";
+//                out_tp_data +=object.getOutTp()+",";
+//                in_tn_data +=object.getInTn()+",";
+//                out_tn_data +=object.getOutTn()+",";
+//                in_nh_data +=object.getInNh3()+",";
+//                out_nh_data +=object.getOutNh3()+",";
+//            }
+//
+//            if(resultdata.length()>1){
+//                resultdata = resultdata.substring(0,resultdata.length()-1);
+//            }
+//            if(in_cod_data.length()>1){
+//                in_cod_data = in_cod_data.substring(0,in_cod_data.length()-1);
+//                out_cod_data = out_cod_data.substring(0,out_cod_data.length()-1);
+//                in_tp_data = in_tp_data.substring(0,in_tp_data.length()-1);
+//                out_tp_data = out_tp_data.substring(0,out_tp_data.length()-1);
+//                in_tn_data = in_tn_data.substring(0,in_tn_data.length()-1);
+//                out_tn_data = out_tn_data.substring(0,out_tn_data.length()-1);
+//                in_nh_data = in_nh_data.substring(0,in_nh_data.length()-1);
+//                out_nh_data = out_nh_data.substring(0,out_nh_data.length()-1);
+//            }
+//        }
+//
+//        resultdata +="]";
+//
+//        in_cod_data +="]";
+//        out_cod_data +="]";
+//        in_tp_data +="]";
+//        out_tp_data +="]";
+//        in_tn_data +="]";
+//        out_tn_data +="]";
+//        in_nh_data +="]";
+//        out_nh_data +="]";
+//
+//        String assayData = "{assaydate:"+resultdata+",in_cod_data:"+in_cod_data+",out_cod_data:"+out_cod_data+
+//                ",in_tp_data:"+in_tp_data+",out_tp_data:"+out_tp_data+
+//                ",in_tn_data:"+in_tn_data+",out_tn_data:"+out_tn_data+
+//                ",in_nh_data:"+in_nh_data+",out_nh_data:"+out_nh_data+"}";
+//
+//        AjaxResult ajax = AjaxResult.success();
+//        ajax.put("assayData", assayData);
+//        return ajax;
+//    }
+//
 
     @PostMapping("/index/alertTotal")
     @ResponseBody
     public AjaxResult alertTotal(ModelMap mmap) {
         String jsonData = "{";
-        BizAssayResult re = new BizAssayResult();
-        re.setResultStatus("0");
-        re.setResultAlert("0");
-        re.setResultFault("0");
         int normal_size =0;
         int alert_size =0;
         int fault_size =0;
-        List<BizAssayResult> result = assayResultService.selectBizAssayResultList(re);
-        if(result!=null){
-            normal_size = result.size();
-        }
 
-        BizAlert al = new BizAlert();
-        List<BizAlert> alerts = bizAlertService.selectBizAlertList(al);
+        List<DataEnity> assay =assayService.getAssayTotal();
+        for(DataEnity data:assay){
+            if("正常化验".equals(data.getKey())){
+                normal_size = Integer.valueOf(data.getValue());
+            }else if("未完成化验".equals(data.getKey())){
+                fault_size = Integer.valueOf(data.getValue());
+            }
+        }
 
         String key1 = "alertName";
         String key2 = "alertNum";
@@ -545,14 +598,6 @@ public class SysIndexController extends BaseController
 
         alertName +="\"正常\",";
         alertNum += normal_size+",";
-
-        for(BizAlert alert : alerts){
-            if("0".equals(alert.getAlertType())){
-                fault_size++;
-            }else if("1".equals(alert.getAlertType())){
-                alert_size++;
-            }
-        }
 
         alertName +="\"设备告警\",";
         alertNum += alert_size+",";
@@ -798,35 +843,35 @@ public class SysIndexController extends BaseController
         return ajax;
     }
 
-
-    @PostMapping("/index/getOutline")
-    @ResponseBody
-    public AjaxResult getOutline(@RequestBody JSONObject params) {
-        String jsonData = "{";
-        Long  waterValue = params.getLong("waterValue");
-        String  startTime = params.getString("startTime");
-        String  endTime = params.getString("endTime");
-
-        String key1 = "out_r";
-        String key2 = "out_w";
-
-        String out_r = "\""+key1+"\":[";
-        String out_w = "\""+key2+"\":[";
-
-        OutDataEnity outData = assayResultService.getOuaData(waterValue,startTime,endTime);
-        if(outData!=null){
-            out_r +=outData.getOutcod_r()+","+outData.getOutnh_r()+","+outData.getOuttn_r()+","+outData.getOuttp_r();
-            out_w +=outData.getOutcod_w()+","+outData.getOutnh_w()+","+outData.getOuttn_w()+","+outData.getOuttp_w();
-        }
-
-        out_r += "],";
-        out_w += "]";
-        jsonData += out_r+out_w;
-        jsonData += "}";
-        AjaxResult ajax = AjaxResult.success();
-        ajax.put("outData", jsonData);
-        return ajax;
-    }
+//
+//    @PostMapping("/index/getOutline")
+//    @ResponseBody
+//    public AjaxResult getOutline(@RequestBody JSONObject params) {
+//        String jsonData = "{";
+//        Long  waterValue = params.getLong("waterValue");
+//        String  startTime = params.getString("startTime");
+//        String  endTime = params.getString("endTime");
+//
+//        String key1 = "out_r";
+//        String key2 = "out_w";
+//
+//        String out_r = "\""+key1+"\":[";
+//        String out_w = "\""+key2+"\":[";
+//
+//        OutDataEnity outData = assayResultService.getOuaData(waterValue,startTime,endTime);
+//        if(outData!=null){
+//            out_r +=outData.getOutcod_r()+","+outData.getOutnh_r()+","+outData.getOuttn_r()+","+outData.getOuttp_r();
+//            out_w +=outData.getOutcod_w()+","+outData.getOutnh_w()+","+outData.getOuttn_w()+","+outData.getOuttp_w();
+//        }
+//
+//        out_r += "],";
+//        out_w += "]";
+//        jsonData += out_r+out_w;
+//        jsonData += "}";
+//        AjaxResult ajax = AjaxResult.success();
+//        ajax.put("outData", jsonData);
+//        return ajax;
+//    }
 
     @PostMapping("/index/getAreamap")
     @ResponseBody

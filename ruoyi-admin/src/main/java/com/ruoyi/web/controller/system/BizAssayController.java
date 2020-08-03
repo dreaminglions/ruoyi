@@ -1,5 +1,8 @@
 package com.ruoyi.web.controller.system;
 
+import com.deepoove.poi.data.MiniTableRenderData;
+import com.deepoove.poi.data.RowRenderData;
+import com.deepoove.poi.data.TextRenderData;
 import com.ruoyi.common.annotation.Log;
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.AjaxResult;
@@ -266,4 +269,28 @@ public class BizAssayController extends BaseController
 		List<AssayFault> list = assayFaultService.selectAssayFaultList(assayFault);
 		return getDataTable(list);
 	}
+
+	@GetMapping("/getDoc/{assayNo}")
+	@ResponseBody
+	public String  gettnDoc(@PathVariable("assayNo") String assayNo,HttpServletRequest request, HttpServletResponse response) throws IOException {
+		List<Map<String,Object>> mapList =  new ArrayList<>();
+		Map<String,Object> map =  new HashMap<>();
+		RowRenderData header = RowRenderData.build(new TextRenderData("序号"),new TextRenderData("名称"));
+		List<RowRenderData> listone = new ArrayList<>();
+		List<AssaySample> sampleList = assaySampleService.getSampleByAssayno(assayNo);
+		Integer count=0;
+		for(AssaySample sample:sampleList){
+			RowRenderData good = RowRenderData.build(count.toString(),sample.getSampleName());
+			listone.add(good);
+			count++;
+		}
+		map.put("table", new MiniTableRenderData(header,listone));
+		map.put("orderno", assayNo);
+		String newWordName = "报表记录测试1.doc";
+		DocUtil.download(request,response,"报表记录测试1.docx",newWordName, map);
+
+
+		return prefix + "/getdoc";
+	}
+
 }

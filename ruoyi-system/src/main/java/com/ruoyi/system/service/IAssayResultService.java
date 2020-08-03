@@ -21,7 +21,7 @@ public interface IAssayResultService
      */
 	public AssayResult selectAssayResultById(Long resultId);
 
-	public AssayResult selectAssayResultByAssayNo(String assayNo);
+	public List<AssayResult> selectAssayResultByAssayNo(String assayNo);
 
 	/**
      * 查询化验结果列表

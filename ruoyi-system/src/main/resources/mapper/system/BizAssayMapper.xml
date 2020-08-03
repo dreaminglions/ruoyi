@@ -136,6 +136,19 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         </foreach>
     </delete>
 
+    <select id="getAssayTotal" resultType="DataEnity">
+        SELECT '正常化验' as 'key',count(*) as 'value' FROM z_assay t
+        where t.assay_no not in (select assay_no from z_assay_fault where fault_status = '1')
 
+				UNION
+        SELECT '未完成化验' as 'key',count(*) as 'value' FROM z_assay t
+        where t.assay_no in (select assay_no from z_assay_fault where fault_status = '1')
+    </select>
+
+    <select id="getAssayByWorkTime"  resultMap="BizAssayResult">
+        <include refid="selectBizAssayVo"/>
+        where  datediff(d,r.assay_date,#{timeValue} ) = 0
+        and d.device_works = #{waterValue}
+    </select>
     
 </mapper>

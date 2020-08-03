@@ -21,7 +21,7 @@ public interface AssayResultMapper
      */
 	public AssayResult selectAssayResultById(Long resultId);
 
-	public AssayResult selectAssayResultByAssayNo(String assayNo);
+	public List<AssayResult> selectAssayResultByAssayNo(String assayNo);
 
 
 	/**

@@ -13,6 +13,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="assayBigprocess"    column="assay_bigprocess"    />
         <result property="assaySmallprocess"    column="assay_smallprocess"    />
         <result property="testTubeInfo"    column="test_tube_info"    />
+        <result property="faultStatus"    column="fault_status"    />
         <result property="createTime"    column="create_time"    />
         <result property="createBy"    column="create_by"    />
         <result property="updateTime"    column="update_time"    />
@@ -38,7 +39,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
 
 	<sql id="selectAssayFaultVo">
-        select a.fault_id, a.assay_no, a.device_no, a.fault_time, a.fault_code, a.assay_bigprocess, a.assay_smallprocess,a.test_tube_info, a.create_time, a.create_by, a.update_time, a.update_by,
+        select a.fault_id, a.assay_no, a.device_no, a.fault_time, a.fault_code, a.assay_bigprocess, a.assay_smallprocess,a.test_tube_info, a.fault_status, convert(datetime, a.create_time) as create_time, a.create_by, convert(datetime, a.update_time) as update_time, a.update_by,
                 d.device_id,d.device_name,d.device_status,
                 i.fault_info,i.fault_solution
 		from z_assay_fault a
@@ -53,6 +54,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <if test="deviceNo != null   and deviceNo != ''   "> and device_no = #{deviceNo}</if>
         <if test="faultTime != null   and faultTime != ''   "> and fault_time = #{faultTime}</if>
         <if test="faultCode != null  and faultCode != ''  "> and fault_code = #{faultCode}</if>
+        <if test="faultStatus != null  and faultStatus != ''  "> and fault_status = #{faultStatus}</if>
         <if test="assayBigprocess != null  and assayBigprocess != ''  "> and assay_bigprocess = #{assayBigprocess}</if>
         <if test="assaySmallprocess != null  and assaySmallprocess != ''  "> and assay_smallprocess = #{assaySmallprocess}</if>
 
@@ -65,7 +67,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         where a.fault_id = #{faultId}
     </select>
 
-    <select id="selectAssayFaultByassayNo" parameterType="String" resultMap="AssayFaultResult">
+    <select id="selectAssayFaultByAssayNo" parameterType="String" resultMap="AssayFaultResult">
         <include refid="selectAssayFaultVo"/>
         where a.assay_no = #{assayNo}
     </select>
@@ -80,6 +82,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="assayBigprocess != null  and assayBigprocess != ''  ">assay_bigprocess,</if>
             <if test="assaySmallprocess != null  and assaySmallprocess != ''  ">assay_smallprocess,</if>
             <if test="testTubeInfo != null  and testTubeInfo != ''  ">test_tube_info,</if>
+            <if test="faultStatus != null  and faultStatus != ''  "> fault_status,</if>
             <if test="createBy != null  and createBy != ''  ">create_by,</if>
             create_time
          </trim>
@@ -91,6 +94,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="assayBigprocess != null  and assayBigprocess != ''  "> #{assayBigprocess},</if>
             <if test="assaySmallprocess != null  and assaySmallprocess != ''  "> #{assaySmallprocess},</if>
             <if test="testTubeInfo != null  and testTubeInfo != ''  "> #{testTubeInfo},</if>
+            <if test="faultStatus != null  and faultStatus != ''  ">  #{faultStatus},</if>
 			<if test="createBy != null  and createBy != ''  ">#{createBy},</if>
             getdate()
          </trim>
@@ -106,6 +110,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="assayBigprocess != null  and assayBigprocess != ''  ">assay_bigprocess = #{assayBigprocess},</if>
             <if test="assaySmallprocess != null  and assaySmallprocess != ''  ">assay_smallprocess = #{assaySmallprocess},</if>
             <if test="testTubeInfo != null  and testTubeInfo != ''  ">test_tube_info = #{testTubeInfo},</if>
+            <if test="faultStatus != null  and faultStatus != ''  ">  fault_status = #{faultStatus},</if>
             <if test="updateBy != null  and updateBy != ''  ">update_by = #{updateBy},</if>
             update_time = getdate()
         </trim>

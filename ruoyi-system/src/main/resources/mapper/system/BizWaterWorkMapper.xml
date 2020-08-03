@@ -74,7 +74,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <if test="worksStatus != null and worksStatus != ''">
             AND works_status = #{worksStatus}
         </if>
-        AND (works_type ='1'  or works_type ='2')
+        AND (works_type ='3'  or works_type ='4')
         <!-- 数据范围过滤 -->
         ${params.dataScope}
         order by d.order_num

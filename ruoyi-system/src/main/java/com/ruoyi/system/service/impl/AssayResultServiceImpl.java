@@ -37,7 +37,7 @@ public class AssayResultServiceImpl implements IAssayResultService
 	    return assayResultMapper.selectAssayResultById(resultId);
 	}
 
-	public AssayResult selectAssayResultByAssayNo(String assayNo)
+	public List<AssayResult> selectAssayResultByAssayNo(String assayNo)
 	{
 		return assayResultMapper.selectAssayResultByAssayNo(assayNo);
 	}

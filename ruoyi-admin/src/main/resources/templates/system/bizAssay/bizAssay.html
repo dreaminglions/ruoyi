@@ -118,7 +118,7 @@
 		            	var actions = [];
                         actions.push('<a class="btn btn-primary btn-xs ' + listFlag + '" href="#" onclick="detail(\'' + row.assayNo + '\')"><i class="fa fa-search"></i>查看</a> ');
                         actions.push('<a class="btn btn-success btn-xs ' + editFlag + '" href="#" onclick="setSample(\'' + row.assayNo + '\')"><i class="fa fa-search"></i>设置样品</a> ');
-                        actions.push('<a class="btn btn-warning btn-xs ' + listFlag + '" href="#" onclick="assayDetails(\'' + row.assayId + '\')"><i class="fa fa-search"></i>化验报告</a> ');
+                        actions.push('<a class="btn btn-warning btn-xs ' + listFlag + '" href="#" onclick="assayDetails(\'' + row.assayNo + '\')"><i class="fa fa-search"></i>化验报告</a> ');
                         actions.push('<a class="btn btn-danger btn-xs ' + listFlag + '" href="#" onclick="getFault(\'' + row.assayNo + '\')"><i class="fa fa-search"></i>化验故障</a> ');
 						return actions.join('');
 		            }
@@ -141,6 +141,10 @@
             var url = prefix + '/getFault/' + assayNo;
             $.modal.openTab("化验故障信息", url);
 		}
+
+        function assayDetails(assayNo){
+            window.location.href = prefix + "/getDoc/"+assayNo;
+        }
 
 
 
