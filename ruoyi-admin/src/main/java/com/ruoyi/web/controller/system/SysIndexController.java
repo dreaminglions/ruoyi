@@ -49,10 +49,6 @@ public class SysIndexController extends BaseController
     IBizDeviceService deviceService;
     @Autowired
     IBizDeviceMaintainService deviceMaintainService;
-//    @Autowired
-//    private IBizAssayCurveService bizAssayCurveService;
-    @Autowired
-    private IBizAlertService bizAlertService;
     @Autowired
     private IBizAgentiaRecordService bizAgentiaRecordService;
     @Autowired
@@ -494,83 +490,104 @@ public class SysIndexController extends BaseController
         return ajax;
     }
 
-//
-//    @PostMapping("/index/getAssayListByIDBE")
-//    @ResponseBody
-//    public AjaxResult getAssayListByIDBE(@RequestBody JSONObject params) {
-//
-//        long waterValue = params.getLong("waterValue");
-//        String  startTime = params.getString("startTime");
-//        String  endTime = params.getString("endTime");
-//        BizAssayResult result = new BizAssayResult();
-//        result.setResultWorks(waterValue);
-//        Map<String, Object> data_params = new HashMap<>();
-//        data_params.put("beginTime",startTime);
-//        data_params.put("endTime",endTime);
-//        result.setParams(data_params);
-//        List<BizAssayResult> assayList = assayResultService.selectBizAssayResultList(result);
-//
-//        String resultdata="[";
-//
-//        String in_cod_data="[";
-//        String out_cod_data="[";
-//        String in_tp_data="[";
-//        String out_tp_data="[";
-//        String in_tn_data="[";
-//        String out_tn_data="[";
-//        String in_nh_data="[";
-//        String out_nh_data="[";
-//
-//        if(assayList!=null){
-//            for(BizAssayResult object:assayList){
-//                resultdata +="'"+object.getResultDate()+"',";
-//
-//                in_cod_data +=object.getInCod()+",";
-//                out_cod_data +=object.getOutCod()+",";
-//                in_tp_data +=object.getInTp()+",";
-//                out_tp_data +=object.getOutTp()+",";
-//                in_tn_data +=object.getInTn()+",";
-//                out_tn_data +=object.getOutTn()+",";
-//                in_nh_data +=object.getInNh3()+",";
-//                out_nh_data +=object.getOutNh3()+",";
-//            }
-//
-//            if(resultdata.length()>1){
-//                resultdata = resultdata.substring(0,resultdata.length()-1);
-//            }
-//            if(in_cod_data.length()>1){
-//                in_cod_data = in_cod_data.substring(0,in_cod_data.length()-1);
-//                out_cod_data = out_cod_data.substring(0,out_cod_data.length()-1);
-//                in_tp_data = in_tp_data.substring(0,in_tp_data.length()-1);
-//                out_tp_data = out_tp_data.substring(0,out_tp_data.length()-1);
-//                in_tn_data = in_tn_data.substring(0,in_tn_data.length()-1);
-//                out_tn_data = out_tn_data.substring(0,out_tn_data.length()-1);
-//                in_nh_data = in_nh_data.substring(0,in_nh_data.length()-1);
-//                out_nh_data = out_nh_data.substring(0,out_nh_data.length()-1);
-//            }
-//        }
-//
-//        resultdata +="]";
-//
-//        in_cod_data +="]";
-//        out_cod_data +="]";
-//        in_tp_data +="]";
-//        out_tp_data +="]";
-//        in_tn_data +="]";
-//        out_tn_data +="]";
-//        in_nh_data +="]";
-//        out_nh_data +="]";
-//
-//        String assayData = "{assaydate:"+resultdata+",in_cod_data:"+in_cod_data+",out_cod_data:"+out_cod_data+
-//                ",in_tp_data:"+in_tp_data+",out_tp_data:"+out_tp_data+
-//                ",in_tn_data:"+in_tn_data+",out_tn_data:"+out_tn_data+
-//                ",in_nh_data:"+in_nh_data+",out_nh_data:"+out_nh_data+"}";
-//
-//        AjaxResult ajax = AjaxResult.success();
-//        ajax.put("assayData", assayData);
-//        return ajax;
-//    }
-//
+
+    @PostMapping("/index/getAssayListByIDBE")
+    @ResponseBody
+    public AjaxResult getAssayListByIDBE(@RequestBody JSONObject params) {
+
+        long waterValue = params.getLong("waterValue");
+        String  startTime = params.getString("startTime");
+        String  endTime = params.getString("endTime");
+        BizAssay assay = new BizAssay();
+
+        Map<String, Object> data_params = new HashMap<>();
+        data_params.put("beginTime",startTime);
+        data_params.put("endTime",endTime);
+        assay.getParams().put("dataScope", " AND d.device_works="+waterValue+"");
+        assay.setParams(data_params);
+
+        List<BizAssay> assayList = assayService.selectBizAssayList(assay);
+
+        String resultdata="[";
+
+        String in_cod_data="[";
+        String out_cod_data="[";
+        String in_tp_data="[";
+        String out_tp_data="[";
+        String in_tn_data="[";
+        String out_tn_data="[";
+        String in_nh_data="[";
+        String out_nh_data="[";
+
+        if(assayList!=null){
+
+            for(BizAssay object:assayList){
+                String assayno = object.getAssayNo();
+                List<AssayResult> assayResult = assayResultService.selectAssayResultByAssayNo(assayno);
+
+                resultdata +="'"+object.getAssayDate()+"',";
+                for(AssayResult result: assayResult){
+                    String r_no= result.getResultNo();
+                    String item= result.getAssayItem();
+                    float value= result.getResultConcentration();
+
+                    if("001".equals(r_no)){
+                        in_nh_data +=value+",";
+                    }else if("002".equals(r_no)){
+                        out_nh_data +=value+",";
+                    }else if("003".equals(r_no)){
+                        in_tp_data +=value+",";
+                    }else if("004".equals(r_no)){
+                        out_tp_data +=value+",";
+                    }else if("005".equals(r_no)){
+                        in_tn_data +=value+",";
+                    }else if("006".equals(r_no)){
+                        out_tn_data +=value+",";
+                    }else if("007".equals(r_no)){
+                        in_cod_data +=value+",";
+                    }else if("008".equals(r_no)){
+                        out_cod_data +=value+",";
+                    }
+
+                }
+            }
+
+            if(resultdata.length()>1){
+                resultdata = resultdata.substring(0,resultdata.length()-1);
+            }
+            if(in_cod_data.length()>1){
+                in_cod_data = in_cod_data.substring(0,in_cod_data.length()-1);
+                out_cod_data = out_cod_data.substring(0,out_cod_data.length()-1);
+                in_tp_data = in_tp_data.substring(0,in_tp_data.length()-1);
+                out_tp_data = out_tp_data.substring(0,out_tp_data.length()-1);
+                in_tn_data = in_tn_data.substring(0,in_tn_data.length()-1);
+                out_tn_data = out_tn_data.substring(0,out_tn_data.length()-1);
+                in_nh_data = in_nh_data.substring(0,in_nh_data.length()-1);
+                out_nh_data = out_nh_data.substring(0,out_nh_data.length()-1);
+            }
+        }
+
+        resultdata +="]";
+
+        in_cod_data +="]";
+        out_cod_data +="]";
+        in_tp_data +="]";
+        out_tp_data +="]";
+        in_tn_data +="]";
+        out_tn_data +="]";
+        in_nh_data +="]";
+        out_nh_data +="]";
+
+        String assayData = "{assaydate:"+resultdata+",in_cod_data:"+in_cod_data+",out_cod_data:"+out_cod_data+
+                ",in_tp_data:"+in_tp_data+",out_tp_data:"+out_tp_data+
+                ",in_tn_data:"+in_tn_data+",out_tn_data:"+out_tn_data+
+                ",in_nh_data:"+in_nh_data+",out_nh_data:"+out_nh_data+"}";
+
+        AjaxResult ajax = AjaxResult.success();
+        ajax.put("assayData", assayData);
+        return ajax;
+    }
+
 
     @PostMapping("/index/alertTotal")
     @ResponseBody
@@ -843,35 +860,35 @@ public class SysIndexController extends BaseController
         return ajax;
     }
 
-//
-//    @PostMapping("/index/getOutline")
-//    @ResponseBody
-//    public AjaxResult getOutline(@RequestBody JSONObject params) {
-//        String jsonData = "{";
-//        Long  waterValue = params.getLong("waterValue");
-//        String  startTime = params.getString("startTime");
-//        String  endTime = params.getString("endTime");
-//
-//        String key1 = "out_r";
-//        String key2 = "out_w";
-//
-//        String out_r = "\""+key1+"\":[";
-//        String out_w = "\""+key2+"\":[";
-//
-//        OutDataEnity outData = assayResultService.getOuaData(waterValue,startTime,endTime);
-//        if(outData!=null){
-//            out_r +=outData.getOutcod_r()+","+outData.getOutnh_r()+","+outData.getOuttn_r()+","+outData.getOuttp_r();
-//            out_w +=outData.getOutcod_w()+","+outData.getOutnh_w()+","+outData.getOuttn_w()+","+outData.getOuttp_w();
-//        }
-//
-//        out_r += "],";
-//        out_w += "]";
-//        jsonData += out_r+out_w;
-//        jsonData += "}";
-//        AjaxResult ajax = AjaxResult.success();
-//        ajax.put("outData", jsonData);
-//        return ajax;
-//    }
+
+    @PostMapping("/index/getOutline")
+    @ResponseBody
+    public AjaxResult getOutline(@RequestBody JSONObject params) {
+        String jsonData = "{";
+        Long  waterValue = params.getLong("waterValue");
+        String  startTime = params.getString("startTime");
+        String  endTime = params.getString("endTime");
+
+        String key1 = "out_r";
+        String key2 = "out_w";
+
+        String out_r = "\""+key1+"\":[";
+        String out_w = "\""+key2+"\":[";
+
+        OutDataEnity outData = assayResultService.getOuaData(waterValue,startTime,endTime);
+        if(outData!=null){
+            out_r +=outData.getOutcod_r()+","+outData.getOutnh_r()+","+outData.getOuttn_r()+","+outData.getOuttp_r();
+            out_w +=outData.getOutcod_w()+","+outData.getOutnh_w()+","+outData.getOuttn_w()+","+outData.getOuttp_w();
+        }
+
+        out_r += "],";
+        out_w += "]";
+        jsonData += out_r+out_w;
+        jsonData += "}";
+        AjaxResult ajax = AjaxResult.success();
+        ajax.put("outData", jsonData);
+        return ajax;
+    }
 
     @PostMapping("/index/getAreamap")
     @ResponseBody

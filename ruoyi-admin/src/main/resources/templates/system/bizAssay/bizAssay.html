@@ -142,8 +142,10 @@
             $.modal.openTab("化验故障信息", url);
 		}
 
-        function assayDetails(assayNo){
-            window.location.href = prefix + "/getDoc/"+assayNo;
+        /*  化验详情参数查询 */
+        function assayDetails(assayNo) {
+            var url = prefix + '/assayDetails/' + assayNo;
+            $.modal.openTab("化验报告", url);
         }
 
 

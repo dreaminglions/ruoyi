@@ -63,5 +63,4 @@ public interface IBizAssayResultService
 
 	public List<BizAssayResult> getAssayByWorkTime(Long waterValue,String timeValue);
 
-	public OutDataEnity getOuaData(Long workId,String startTime,String endTime);
 }

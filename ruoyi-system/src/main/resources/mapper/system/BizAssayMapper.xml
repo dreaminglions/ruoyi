@@ -27,6 +27,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="deviceId"    column="device_id"    />
         <result property="deviceNo"    column="device_no"    />
         <result property="deviceName"    column="device_name"    />
+        <result property="deviceWorks"    column="device_works"    />
         <result property="deviceStatus"    column="device_status"    />
     </resultMap>
 

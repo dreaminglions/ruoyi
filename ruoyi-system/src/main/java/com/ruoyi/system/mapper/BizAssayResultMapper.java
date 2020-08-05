@@ -71,5 +71,4 @@ public interface BizAssayResultMapper
 
 	public List<BizAssayResult> getAssayByWorkTime(@Param(value="waterValue") Long waterValue,@Param(value="timeValue")  String timeValue);
 
-	public OutDataEnity getOuaData(@Param(value="workId") Long workId, @Param(value="startTime") String startTime, @Param(value="endTime") String endTime);
 }
