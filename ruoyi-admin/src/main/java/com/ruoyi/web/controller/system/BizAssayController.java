@@ -364,28 +364,93 @@ public class BizAssayController extends BaseController
 			if(work!=null){
 				map.put("workname", work.getWorksName());
 			}
-			map.put("assaymethod", "HJ399-2007化学需氧量的测定 快速消解分光光度法");
+			if("cod".equals(obj)){
+				map.put("assaymethod", "HJ399-2007化学需氧量的测定 快速消解分光光度法");
+			}else if(("tp".equals(obj))){
+				map.put("assaymethod", "GB11893-1989水质总磷的测定钼酸铵分光光度法");
+			}else if(("tn".equals(obj))){
+				map.put("assaymethod", "HJ636-2012水质总氮的测定碱性过硫酸钾消解紫外分光光度法");
+			}else if(("nh".equals(obj))){
+				map.put("assaymethod", "HJ535-2009水质氨氮的测定纳氏试剂分光光度法");
+			}
 			if(resultList!=null){
 				for(AssayResult result:resultList){
 					String r_no = result.getResultNo();
-					if("007".equals(r_no)){
-						map.put("incod_v", result.getSampleVolume()+"");
-						map.put("incod_As", result.getResultAbs()+"");
-						map.put("incod_re1", result.getResultConcentration()+"");
-						map.put("incod_re2", result.getResultConcentration()+"");
-					}else if("008".equals(r_no)){
-						map.put("outcod_v1", result.getSampleVolume()+"");
-						map.put("outcod_As1", result.getResultAbs()+"");
-						map.put("outcod_re1_1", result.getResultConcentration()+"");
-						map.put("outcod_re2", result.getResultConcentration()+"");
+					if("cod".equals(obj)){
+						if("007".equals(r_no)){
+							map.put("incod_v", result.getSampleVolume()+"");
+							map.put("incod_As", result.getResultAbs()+"");
+							map.put("incod_re1", result.getResultConcentration()+"");
+							map.put("incod_re2", result.getResultConcentration()+"");
+						}
+						if("008".equals(r_no)){
+							map.put("outcod_v1", result.getSampleVolume()+"");
+							map.put("outcod_As1", result.getResultAbs()+"");
+							map.put("outcod_re1_1", result.getResultConcentration()+"");
+							map.put("outcod_re2", result.getResultConcentration()+"");
+						}
+					}else if("tp".equals(obj)){
+						if("003".equals(r_no)){
+							map.put("intp_v", result.getSampleVolume()+"");
+							map.put("intp_As", result.getResultAbs()+"");
+							map.put("intp_re1", result.getResultConcentration()+"");
+							map.put("intp_re2", result.getResultConcentration()+"");
+						}
+						if("004".equals(r_no)){
+							map.put("outtp_v1", result.getSampleVolume()+"");
+							map.put("outtp_As1", result.getResultAbs()+"");
+							map.put("outtp_re1_1", result.getResultConcentration()+"");
+							map.put("outtp_re2", result.getResultConcentration()+"");
+						}
+					}else if("tn".equals(obj)){
+						if("005".equals(r_no)){
+							map.put("intn_v", result.getSampleVolume()+"");
+							map.put("intn_As", result.getResultAbs()+"");
+							map.put("intn_re1", result.getResultConcentration()+"");
+							map.put("intn_re2", result.getResultConcentration()+"");
+						}
+						if("006".equals(r_no)){
+							map.put("outtn_v1", result.getSampleVolume()+"");
+							map.put("outtn_As1", result.getResultAbs()+"");
+							map.put("outtn_re1_1", result.getResultConcentration()+"");
+							map.put("outtn_re2", result.getResultConcentration()+"");
+						}
+					}else if("nh".equals(obj)){
+						if("001".equals(r_no)){
+							map.put("innh_v", result.getSampleVolume()+"");
+							map.put("innh_As", result.getResultAbs()+"");
+							map.put("innh_re1", result.getResultConcentration()+"");
+							map.put("innh_re2", result.getResultConcentration()+"");
+						}
+						if("002".equals(r_no)){
+							map.put("outnh_v1", result.getSampleVolume()+"");
+							map.put("outnh_As1", result.getResultAbs()+"");
+							map.put("outnh_re1_1", result.getResultConcentration()+"");
+							map.put("outnh_re2", result.getResultConcentration()+"");
+						}
 					}
+
 				}
 			}
 
 		}
 
-		String newWordName = "COD分析项目原始记录.doc";
-		DocUtil.download(request,response,"COD分析项目原始记录.docx",newWordName, map);
+		String docName = "";
+		String docxName = "";
+		if("cod".equals(obj)){
+			 docName = "COD分析项目原始记录.doc";
+			 docxName = "COD分析项目原始记录.docx";
+		}else if(("tp".equals(obj))){
+			docName = "总磷分析项目原始记录.doc";
+			docxName = "总磷分析项目原始记录.docx";
+		}else if(("tn".equals(obj))){
+			docName = "总氮分析项目原始记录.doc";
+			docxName = "总氮分析项目原始记录.docx";
+		}else if(("nh".equals(obj))){
+			docName = "氨氮分析项目原始记录.doc";
+			docxName = "氨氮分析项目原始记录.docx";
+		}
+		DocUtil.download(request,response,docxName,docName, map);
 		return prefix + "/getdoc";
 	}
 
