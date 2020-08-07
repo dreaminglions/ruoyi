@@ -1,12 +1,11 @@
 <!DOCTYPE html>
 <html lang="zh" xmlns:th="http://www.thymeleaf.org" >
 <head>
-	<th:block th:include="include :: header('新增药剂')" />
+	<th:block th:include="include :: header('新增平台药剂')" />
 </head>
 <body class="white-bg">
     <div class="wrapper wrapper-content animated fadeInRight ibox-content">
         <form class="form-horizontal m" id="form-bizAgentia-add">
-			<input name="agentiaBelong" type="hidden" id="treeId"/>
 			<div class="form-group">	
 				<label class="col-sm-3 control-label">药剂编号：</label>
 				<div class="col-sm-6">
@@ -19,25 +18,15 @@
 					<input id="agentiaName" name="agentiaName" class="form-control required" type="text">
 				</div>
 			</div>
-
 			<div class="form-group">
-				<label class="col-sm-3 control-label"><span style="color: red; ">*</span>所属水厂：</label>
+				<label class="col-sm-3 control-label">所属平台：</label>
 				<div class="col-sm-6">
-					<div class="input-group">
-						<input name="worksName" onclick="selectWorkTree()" id="treeName" type="text" placeholder="请选择归属机构" class="form-control required">
-						<span class="input-group-addon"><i class="fa fa-search"></i></span>
-					</div>
+					<select id="agentiaBelong" name="agentiaBelong" class="form-control required"  th:with="type=${@bizWorks.getOnlyPlatform()}" >
+						<option value="">请选择</option>
+						<option th:each="bizWorks : ${type}" th:text="${bizWorks.worksName}" th:value="${bizWorks.worksId}"></option>
+					</select>
 				</div>
 			</div>
-			<!--<div class="form-group">	-->
-				<!--<label class="col-sm-3 control-label">所属机构：</label>-->
-				<!--<div class="col-sm-6">-->
-					<!--<select id="agentiaBelong" name="agentiaBelong" class="form-control"  th:with="type=${@bizWorks.getOnlyWorks()}" >-->
-						<!--<option value="">请选择</option>-->
-						<!--<option th:each="bizWorks : ${type}" th:text="${bizWorks.worksName}" th:value="${bizWorks.worksId}"></option>-->
-					<!--</select>-->
-				<!--</div>-->
-			<!--</div>-->
 			<div class="form-group">	
 				<label class="col-sm-3 control-label">药剂总量（g）：</label>
 				<div class="col-sm-6">
@@ -59,8 +48,8 @@
 			<div class="form-group">	
 				<label class="col-sm-3 control-label">药剂类型：</label>
 				<div class="col-sm-6">
-					<input id="agentiaType" name="agentiaType" class="form-control" type="hidden" value="3">
-					<input id="agentiaTypeName"  class="form-control" type="text" value="机构药剂" readonly="readonly">
+					<input id="agentiaType" name="agentiaType" class="form-control required" type="hidden" value="1">
+					<input id="agentiaTypeName"  class="form-control" type="text" value="平台药剂" readonly="readonly">
 				</div>
 			</div>
 			<div class="form-group">	
@@ -117,31 +106,6 @@
 			},
 			focusCleanup: true
 		});
-
-
-        /*水厂药剂管理-新增-选择水厂树*/
-        function selectWorkTree() {
-            var treeId = $("#treeId").val();
-            var worksId = $.common.isEmpty(treeId) ? "100" : $("#treeId").val();
-            var url = ctx + "system/user/selectWorksTree/" + worksId;
-            var options = {
-                title: '选择水厂',
-                width: "380",
-                url: url,
-                callBack: doSubmit
-            };
-            $.modal.openOptions(options);
-        }
-
-        function doSubmit(index, layero){
-            var tree = layero.find("iframe")[0].contentWindow.$._tree;
-            if ($.tree.notAllowParents(tree)) {
-                var body = layer.getChildFrame('body', index);
-                $("#treeId").val(body.find('#treeId').val());
-                $("#treeName").val(body.find('#treeName').val());
-                layer.close(index);
-            }
-        }
 		
 		function submitHandler() {
 	        if ($.validate.form()) {
