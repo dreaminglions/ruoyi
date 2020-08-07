@@ -30,6 +30,8 @@ public class AssayFault extends BaseEntity
 	private String assaySmallprocess;
 	/** 试管信息 */
 	private String testTubeInfo;
+	/** 故障状态 */
+	private String faultStatus;
 
 	private BizDevice device;
 
@@ -115,6 +117,14 @@ public class AssayFault extends BaseEntity
 		this.faultInfo = faultInfo;
 	}
 
+	public String getFaultStatus() {
+		return faultStatus;
+	}
+
+	public void setFaultStatus(String faultStatus) {
+		this.faultStatus = faultStatus;
+	}
+
 	public String toString() {
         return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
             .append("faultId", getFaultId())
@@ -125,6 +135,7 @@ public class AssayFault extends BaseEntity
             .append("assayBigprocess", getAssayBigprocess())
             .append("assaySmallprocess", getAssaySmallprocess())
 			.append("testTubeInfo", getTestTubeInfo())
+			.append("faultStatus", getFaultStatus())
             .append("createTime", getCreateTime())
             .append("createBy", getCreateBy())
             .append("updateTime", getUpdateTime())

@@ -57,4 +57,7 @@ public interface IBizAssayService
      */
 	public int deleteBizAssayByIds(String assayIds);
 
+	public List<DataEnity> getAssayTotal();
+
+	public List<BizAssay> getAssayByWorkTime(Long waterValue,String timeValue);
 }

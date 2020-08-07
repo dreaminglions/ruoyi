@@ -43,12 +43,6 @@
                 <option class="water_option" value="">请选择</option>
                 <option class="water_option" th:each="bizWorks : ${type}" th:text="${bizWorks.worksName}" th:value="${bizWorks.worksId}"></option>
 
-            <!--<select class="water_chose" id="waterValue" onchange="changewaterid()" >-->
-                <!--<option class="water_option" value="1">明城污水处理厂</option>-->
-                <!--<option class="water_option" value="2">磐石污水处理厂</option>-->
-                <!--<option class="water_option" value="3">卡伦污水处理厂</option>-->
-                <!--<option class="water_option" value="4">营城污水处理厂</option>-->
-                <!--<option class="water_option" value="5">文昌污水处理厂</option>-->
             </select>
 
             <span class="chose_tltle">请选择化验日期：</span>

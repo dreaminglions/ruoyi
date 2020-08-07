@@ -66,11 +66,6 @@
 					sortable: true
 				},
 				{
-					field : 'resultNo', 
-					title : '结果编号',
-					sortable: true
-				},
-				{
 					field : 'assaySample.sampleName',
 					title : '化验样品',
 					sortable: true,
@@ -101,9 +96,25 @@
 					}
 				},
 				{
+					field : 'resultNo',
+					title : '进出水',
+					sortable: true,
+                    formatter: function(value, item, index) {
+                        var resultNo = item.resultNo;
+						if(resultNo=="001"||resultNo=="003"||resultNo=="005"||resultNo=="007"){
+                            return '<span class="label label-success">进水</span>';
+						}else{
+                            return '<span class="label label-warning">出水</span>';
+						}
+                    }
+				},
+				{
 					field : 'itemName',
 					title : '化验项目',
-					sortable: true
+					sortable: true,
+                    formatter: function(value, item, index) {
+                        return '<span class="label label-primary">'+item.itemName+'</span>';
+					}
 				},
 				{
 					field : 'resultConcentration',

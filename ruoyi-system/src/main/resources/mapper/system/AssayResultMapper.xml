@@ -157,5 +157,24 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </delete>
 
 
+    <select id="getOuaData" resultType="OutDataEnity">
+        select
+        sum(case when z.result_no = '008' then 1 else 0 end) as outcod_r,
+        0 as outcod_w,
+        sum(case when z.result_no = '006' then 1 else 0 end) as outtn_r,
+        0 as outtn_w,
+        sum(case when z.result_no = '004' then 1 else 0 end) as outtp_r,
+        0 as outtp_w,
+        sum(case when z.result_no = '002' then 1 else 0 end) as outnh_r,
+        0 as outnh_w
+        from
+        (
+        select t.result_no ,'1' as count from z_assay_result t
+        LEFT JOIN biz_device d on t.device_no = d.device_no
+        where d.device_works = #{workId}
+        and t.result_date BETWEEN #{startTime} and #{endTime}
+        ) z
+    </select>
+
 
 </mapper>

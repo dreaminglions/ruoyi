@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<head>
+	<th:block th:include="include :: header('化验结果列表')" />
+</head>
+<body class="gray-bg">
+
+<div class="wrapper wrapper-content animated fadeInRight ibox-content">
+	<a class="btn btn-primary" onclick="Docx('cod')" shiro:hasPermission="system:bizAssay:export">
+		<i class="fa fa-download"></i> 导出COD分析项目原始记录
+	</a>
+	<a class="btn btn-primary" onclick="Docx('tp')" shiro:hasPermission="system:bizAssay:export">
+		<i class="fa fa-download"></i> 导出总磷分析项目原始记录
+	</a>
+	<a class="btn btn-primary" onclick="Docx('tn')" shiro:hasPermission="system:bizAssay:export">
+		<i class="fa fa-download"></i> 导出总氮分析项目原始记录
+	</a>
+	<a class="btn btn-primary" onclick="Docx('nh')" shiro:hasPermission="system:bizAssay:export">
+		<i class="fa fa-download"></i> 导出氨氮分析项目原始记录
+	</a>
+	<a class="btn btn-primary" onclick="Docx('sample')" shiro:hasPermission="system:bizAssay:export">
+		<i class="fa fa-download"></i> 导出样品接收单
+	</a>
+</div>
+<div class="wrapper wrapper-content animated fadeInRight ibox-content">
+
+	<br>
+
+	<a class="btn btn-success" onclick="look('cod')" shiro:hasPermission="system:bizAssay:export">
+		<i class="fa fa-edit"></i> COD原始记录
+	</a>
+	<a class="btn btn-success" onclick="look('tp')" shiro:hasPermission="system:bizAssay:export">
+		<i class="fa fa-edit"></i> 总磷原始记录
+	</a>
+	<a class="btn btn-success" onclick="look('tn')" shiro:hasPermission="system:bizAssay:export">
+		<i class="fa fa-edit"></i> 总氮原始记录
+	</a>
+	<a class="btn btn-success" onclick="look('nh')" shiro:hasPermission="system:bizAssay:export">
+		<i class="fa fa-edit"></i> 氨氮原始记录
+	</a>
+
+	<br>
+</div>
+<div class="wrapper wrapper-content animated fadeInRight ibox-content">
+
+	<div id="cod_div">
+		<table id="0-table" data-mobile-responsive="true" class="table table-hover">
+			<thead><tr>
+				<th style="" tabindex="0"><div class="th-inner sortable both">编号：[[${assayNo}]]</div><div class="fht-cell"></div></th>
+				<th style="" tabindex="0"><div class="th-inner sortable both">日期：[[${assayDate}]]</div><div class="fht-cell"></div></th>
+				<th style="" tabindex="0"><div class="th-inner sortable both">检测地点：[[${worksName}]]</div><div class="fht-cell"></div></th>
+			</tr></thead>
+		</table>
+
+		<form  th:object="${bizAssayMethod}">
+		<table id="1-table" data-mobile-responsive="true" class="table table-hover">
+			<thead><tr>
+				<th style="" tabindex="0"><div class="th-inner sortable both">方法依据</div><div class="fht-cell"></div></th>
+				<th style="" tabindex="0"><div class="th-inner sortable both" id="methodname">[[${bizAssayMethod?.codName}]]</div><div class="fht-cell"></div></th>
+				<th style="" tabindex="0"><div class="th-inner sortable both" id="wave1">测定波长[[${bizAssayMethod?.codWave1}]]nm（高量程）</div><div class="fht-cell"></div></th>
+				<th style="" tabindex="0" id="th_wave2"><div class="th-inner sortable both" id="wave2">测定波长[[${bizAssayMethod?.codWave2}]]nm（低量程）</div><div class="fht-cell"></div></th>
+				<th style="" tabindex="0"><div class="th-inner sortable both">光程[[${bizAssayMethod?.codOptical}]]mm</div><div class="fht-cell"></div></th>
+			</tr></thead>
+		</table>
+		</form>
+
+		<form  th:object="${CODparameter}">
+			<table id="3-table" data-mobile-responsive="true" class="table">
+				<thead><tr>
+					<th style="" tabindex="0"><div class="th-inner sortable both">序号</div><div class="fht-cell"></div></th>
+					<th style="" tabindex="0"><div class="th-inner sortable both">1</div><div class="fht-cell"></div></th>
+					<th style="" tabindex="0"><div class="th-inner sortable both">2</div><div class="fht-cell"></div></th>
+					<th style="" tabindex="0"><div class="th-inner sortable both">3</div><div class="fht-cell"></div></th>
+					<th style="" tabindex="0"><div class="th-inner sortable both">4</div><div class="fht-cell"></div></th>
+					<th style="" tabindex="0"><div class="th-inner sortable both">5</div><div class="fht-cell"></div></th>
+					<th style="" tabindex="0"><div class="th-inner sortable both">6</div><div class="fht-cell"></div></th>
+					<th style="" tabindex="0"><div class="th-inner sortable both">7</div><div class="fht-cell"></div></th>
+				</tr></thead>
+				<tbody>
+				<tr data-index="0">
+					<td style="">质量（ug）</td><td id="ug1">[[${CODparameter?.ug1}]]</td><td id="ug2">[[${CODparameter?.ug2}]]</td><td id="ug3">[[${CODparameter?.ug3}]]</td><td id="ug4">[[${CODparameter?.ug4}]]</td><td id="ug5">[[${CODparameter?.ug5}]]</td><td id="ug6">[[${CODparameter?.ug6}]]</td><td id="ug7">[[${CODparameter?.ug7}]]</td>
+				</tr>
+				<tr data-index="0">
+					<td style="">吸光度</td><td id="od1">[[${CODparameter?.od1}]]</td><td id="od2">[[${CODparameter?.od2}]]</td><td id="od3">[[${CODparameter?.od3}]]</td><td id="od4">[[${CODparameter?.od4}]]</td><td id="od5">[[${CODparameter?.od5}]]</td><td id="od6">[[${CODparameter?.od6}]]</td><td id="od7">[[${CODparameter?.od7}]]</td>
+				</tr>
+				</tbody>
+			</table>
+		</form>
+
+		<form  th:object="${CODparameter}">
+		<table id="4-table" data-mobile-responsive="true" class="table">
+			<thead><tr>
+				<th style="" tabindex="0"><div class="th-inner sortable both">校准曲线Y=bX+a</div><div class="fht-cell"></div></th>
+				<th style="" tabindex="0"><div class="th-inner sortable both">b=[[${CODparameter?.curveB}]]</div><div class="fht-cell"></div></th>
+				<th style="" tabindex="0"><div class="th-inner sortable both">a=[[${CODparameter?.curveA}]]</div><div class="fht-cell"></div></th>
+				<th style="" tabindex="0"><div class="th-inner sortable both">r=[[${CODparameter?.curveR}]]</div><div class="fht-cell"></div></th>
+			</tr></thead>
+		</table>
+		</form>
+
+			<table id="5-table" data-mobile-responsive="true" class="table">
+				<thead><tr>
+					<th style="" tabindex="0"><div class="th-inner sortable both">序号</div><div class="fht-cell"></div></th>
+					<th style="" tabindex="0"><div class="th-inner sortable both">样品名称</div><div class="fht-cell"></div></th>
+					<th style="" tabindex="0"><div class="th-inner sortable both">取样体积v（mL)</div><div class="fht-cell"></div></th>
+					<th style="" tabindex="0"><div class="th-inner sortable both">吸光度(As-Ab)</div><div class="fht-cell"></div></th>
+					<th style="" tabindex="0"><div class="th-inner sortable both">测定结果(mg/L)</div><div class="fht-cell"></div></th>
+					<th style="" tabindex="0"><div class="th-inner sortable both">报出结果(mg/L)</div><div class="fht-cell"></div></th>
+				</tr></thead>
+				<tbody>
+				<tr data-index="0">
+					<td style="">1</td><td style="">空白</td><td >1</td><td >0.000</td><td >-</td><td >-</td>
+				</tr>
+				<tr data-index="0">
+					<td style="">2</td><td style="">标准物质</td><td >1</td><td id="sta_abs">0.000</td><td  id="sta_value">-</td><td  id="sta_valueR">-</td>
+				</tr>
+				<tr data-index="0">
+					<td style="">3</td><td style="">[[${Sname}]]进水</td><td >1</td><td id="inabs">[[${inCod_As}]]</td><td id="invalue">[[${inCod}]]</td><td id="invalueR">[[${inCod}]]</td>
+				</tr>
+				<tr data-index="0">
+					<td style="">4</td><td style="">[[${Sname}]]出水</td><td >2</td><td id="outabs1">[[${outCod_As}]]</td><td id="outvalue">[[${outCod}]]</td><td id="outvalueR">[[${outCod}]]</td>
+				</tr>
+				<tr data-index="0">
+					<td style=""> </td><td style=""> </td><td >—</td><td>—</td><td>—</td><td>—</td>
+				</tr>
+				</tbody>
+			</table>
+	</div>
+
+</div>
+
+    <div th:include="include :: footer"></div>
+
+	 <script th:src="@{/water/view02/js/echarts-all.js}"></script>
+
+    <script th:inline="javascript">
+        var prefix = ctx + "system/bizAssay";
+
+        var assayNo = [[${assayNo}]];
+
+        function Docx(obj){
+            window.location.href = prefix + "/getDoc/"+assayNo+"/"+obj;
+        }
+
+        //初始化页面数据
+        $(function() {
+            $("#methodname").html([[${bizAssayMethod?.codName}]]);
+            $("#th_wave2").css('display','');
+            $("#wave1").html('测定波长'+[[${bizAssayMethod?.codWave1}]]+'nm（高量程）');
+            $("#wave2").html('测定波长'+[[${bizAssayMethod?.codWave2}]]+'nm（低量程）');
+
+
+            $("#ug1").html([[${CODparameter?.ug1}]]);
+            $("#ug2").html([[${CODparameter?.ug2}]]);
+            $("#ug3").html([[${CODparameter?.ug3}]]);
+            $("#ug4").html([[${CODparameter?.ug4}]]);
+            $("#ug5").html([[${CODparameter?.ug5}]]);
+            $("#ug6").html([[${CODparameter?.ug6}]]);
+            $("#ug7").html([[${CODparameter?.ug7}]]);
+
+            $("#od1").html([[${CODparameter?.od1}]]);
+            $("#od2").html([[${CODparameter?.od2}]]);
+            $("#od3").html([[${CODparameter?.od3}]]);
+            $("#od4").html([[${CODparameter?.od4}]]);
+            $("#od5").html([[${CODparameter?.od5}]]);
+            $("#od6").html([[${CODparameter?.od6}]]);
+            $("#od7").html([[${CODparameter?.od7}]]);
+
+            $("#sta_value").html('48');
+            $("#sta_valueR").html('48');
+            $("#sta_abs").html([[${cod_standard_As}]]);
+
+
+        });
+
+        function look(obj){
+			if(obj == "cod"){
+                $("#methodname").html([[${bizAssayMethod?.codName}]]);
+                $("#th_wave2").css('display','');
+                $("#wave1").html('测定波长'+[[${bizAssayMethod?.codWave1}]]+'nm（高量程）');
+
+                $("#ug1").html([[${CODparameter?.ug1}]]);
+                $("#ug2").html([[${CODparameter?.ug2}]]);
+                $("#ug3").html([[${CODparameter?.ug3}]]);
+                $("#ug4").html([[${CODparameter?.ug4}]]);
+                $("#ug5").html([[${CODparameter?.ug5}]]);
+                $("#ug6").html([[${CODparameter?.ug6}]]);
+                $("#ug7").html([[${CODparameter?.ug7}]]);
+
+                $("#od1").html([[${CODparameter?.od1}]]);
+                $("#od2").html([[${CODparameter?.od2}]]);
+                $("#od3").html([[${CODparameter?.od3}]]);
+                $("#od4").html([[${CODparameter?.od4}]]);
+                $("#od5").html([[${CODparameter?.od5}]]);
+                $("#od6").html([[${CODparameter?.od6}]]);
+                $("#od7").html([[${CODparameter?.od7}]]);
+
+                $("#sta_value").html('48');
+                $("#sta_valueR").html('48');
+                $("#sta_abs").html([[${cod_standard_As}]]);
+
+                $("#invalue").html([[${inCod}]]);
+                $("#invalueR").html([[${inCod}]]);
+                $("#inabs").html([[${inCod_As}]]);
+
+                $("#outvalue").html([[${outCod}]]);
+                $("#outvalueR").html([[${outCod}]]);
+                $("#outabs1").html([[${outCod_As}]]);
+
+
+			}else if(obj == "tp"){
+                $("#methodname").html([[${bizAssayMethod?.tpName}]]);
+                $("#th_wave2").css('display','none');
+                $("#wave1").html('测定波长'+[[${bizAssayMethod?.tpWave1}]]+'nm');
+
+                $("#ug1").html([[${TPparameter?.ug1}]]);
+                $("#ug2").html([[${TPparameter?.ug2}]]);
+                $("#ug3").html([[${TPparameter?.ug3}]]);
+                $("#ug4").html([[${TPparameter?.ug4}]]);
+                $("#ug5").html([[${TPparameter?.ug5}]]);
+                $("#ug6").html([[${TPparameter?.ug6}]]);
+                $("#ug7").html([[${TPparameter?.ug7}]]);
+
+                $("#od1").html([[${TPparameter?.od1}]]);
+                $("#od2").html([[${TPparameter?.od2}]]);
+                $("#od3").html([[${TPparameter?.od3}]]);
+                $("#od4").html([[${TPparameter?.od4}]]);
+                $("#od5").html([[${TPparameter?.od5}]]);
+                $("#od6").html([[${TPparameter?.od6}]]);
+                $("#od7").html([[${TPparameter?.od7}]]);
+
+                $("#sta_value").html('1.33');
+                $("#sta_valueR").html('1.33');
+                $("#sta_abs").html([[${tp_standard_As}]]);
+
+                $("#invalue").html([[${inTp}]]);
+                $("#invalueR").html([[${inTp}]]);
+                $("#inabs").html([[${inTp_As}]]);
+
+                $("#outvalue").html([[${outTp}]]);
+                $("#outvalueR").html([[${outTp}]]);
+                $("#outabs1").html([[${outTp_As}]]);
+
+
+			}else if(obj == "tn"){
+                $("#methodname").html([[${bizAssayMethod?.tnName}]]);
+                $("#th_wave2").css('display','none');
+                $("#wave1").html('测定波长'+[[${bizAssayMethod?.tnWave1}]]+'nm');
+
+                $("#ug1").html([[${TNparameter?.ug1}]]);
+                $("#ug2").html([[${TNparameter?.ug2}]]);
+                $("#ug3").html([[${TNparameter?.ug3}]]);
+                $("#ug4").html([[${TNparameter?.ug4}]]);
+                $("#ug5").html([[${TNparameter?.ug5}]]);
+                $("#ug6").html([[${TNparameter?.ug6}]]);
+                $("#ug7").html([[${TNparameter?.ug7}]]);
+
+                $("#od1").html([[${TNparameter?.od1}]]);
+                $("#od2").html([[${TNparameter?.od2}]]);
+                $("#od3").html([[${TNparameter?.od3}]]);
+                $("#od4").html([[${TNparameter?.od4}]]);
+                $("#od5").html([[${TNparameter?.od5}]]);
+                $("#od6").html([[${TNparameter?.od6}]]);
+                $("#od7").html([[${TNparameter?.od7}]]);
+
+                $("#sta_value").html('2.58');
+                $("#sta_valueR").html('2.58');
+                $("#sta_abs").html([[${tn_standard_As}]]);
+
+                $("#invalue").html([[${inTn}]]);
+                $("#invalueR").html([[${inTn}]]);
+                $("#inabs").html([[${inTn_As}]]);
+
+                $("#outvalue").html([[${outTn}]]);
+                $("#outvalueR").html([[${outTn}]]);
+                $("#outabs1").html([[${outTn_As}]]);
+
+
+            }else if(obj == "nh"){
+                $("#methodname").html([[${bizAssayMethod?.nhName}]]);
+                $("#th_wave2").css('display','none');
+                $("#wave1").html('测定波长'+[[${bizAssayMethod?.nhWave1}]]+'nm');
+
+                $("#ug1").html([[${NHparameter?.ug1}]]);
+                $("#ug2").html([[${NHparameter?.ug2}]]);
+                $("#ug3").html([[${NHparameter?.ug3}]]);
+                $("#ug4").html([[${NHparameter?.ug4}]]);
+                $("#ug5").html([[${NHparameter?.ug5}]]);
+                $("#ug6").html([[${NHparameter?.ug6}]]);
+                $("#ug7").html([[${NHparameter?.ug7}]]);
+
+                $("#od1").html([[${NHparameter?.od1}]]);
+                $("#od2").html([[${NHparameter?.od2}]]);
+                $("#od3").html([[${NHparameter?.od3}]]);
+                $("#od4").html([[${NHparameter?.od4}]]);
+                $("#od5").html([[${NHparameter?.od5}]]);
+                $("#od6").html([[${NHparameter?.od6}]]);
+                $("#od7").html([[${NHparameter?.od7}]]);
+
+                $("#sta_value").html('0.58');
+                $("#sta_valueR").html('0.58');
+                $("#sta_abs").html([[${nh_standard_As}]]);
+
+                $("#invalue").html([[${inNh3}]]);
+                $("#invalueR").html([[${inNh3}]]);
+                $("#inabs").html([[${inNh_As}]]);
+
+                $("#outvalue").html([[${outNh}]]);
+                $("#outvalueR").html([[${outNh}]]);
+                $("#outabs1").html([[${outNh_As}]]);
+
+
+            }
+		}
+    </script>
+</body>
+</html>

@@ -285,29 +285,5 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         where r.result_works = #{waterValue} and datediff(d,r.result_date,#{timeValue} ) = 0
     </select>
 
-
-    <select id="getOuaData" resultType="OutDataEnity">
-        select
-        sum(case when z.outcod = 0 then 1 else 0 end) as outcod_r,
-        sum(case when z.outcod = 1 then 1 else 0 end) as outcod_w,
-        sum(case when z.outtn = 0 then 1 else 0 end) as outtn_r,
-        sum(case when z.outtn = 1 then 1 else 0 end) as outtn_w,
-        sum(case when z.outtp = 0 then 1 else 0 end) as outtp_r,
-        sum(case when z.outtp = 1 then 1 else 0 end) as outtp_w,
-        sum(case when z.outnh = 0 then 1 else 0 end) as outnh_r,
-        sum(case when z.outnh = 1 then 1 else 0 end) as outnh_w
-        from (
-        select
-        t.report_id,
-        (case when (isnull(a.out_COD_min,0) &lt; t.out_COD ) and (t.out_COD &lt; isnull(a.out_COD_max,10000)) then 1 else 0 end) as outcod,
-        (case when (isnull(a.out_TN_min,0) &lt; t.out_TN ) and (t.out_TN &lt; isnull(a.out_TN_max,10000)) then 1 else 0 end) as outtn,
-        (case when (isnull(a.out_TP_min,0) &lt; t.out_TP ) and (t.out_TP &lt; isnull(a.out_TP_max,10000)) then 1 else 0 end) as outtp,
-        (case when (isnull(a.out_NH3_min,0) &lt; t.out_NH3 ) and (t.out_NH3 &lt; isnull(a.out_NH3_max,10000)) then 1 else 0 end) as outnh
-        from biz_assay_result t
-        LEFT JOIN biz_assay_scope a on t.report_id = a.report_id
-        where t.result_works= #{workId}
-        and t.result_date BETWEEN #{startTime} and #{endTime}
-        ) z
-    </select>
     
 </mapper>

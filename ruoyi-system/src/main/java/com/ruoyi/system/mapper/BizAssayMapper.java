@@ -65,4 +65,9 @@ public interface BizAssayMapper
      */
 	public int deleteBizAssayByIds(String[] assayIds);
 
+	public List<DataEnity> getAssayTotal();
+
+
+	public List<BizAssay> getAssayByWorkTime(@Param(value="waterValue") Long waterValue,@Param(value="timeValue")  String timeValue);
+
 }

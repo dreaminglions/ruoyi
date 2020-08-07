@@ -2,6 +2,7 @@ package com.ruoyi.system.service.impl;
 
 import com.ruoyi.common.core.text.Convert;
 import com.ruoyi.system.domain.BizAssay;
+import com.ruoyi.system.domain.BizAssayResult;
 import com.ruoyi.system.domain.DataEnity;
 import com.ruoyi.system.domain.OutDataEnity;
 import com.ruoyi.system.mapper.BizAssayMapper;
@@ -88,4 +89,14 @@ public class BizAssayServiceImpl implements IBizAssayService
 	{
 		return bizAssayMapper.deleteBizAssayByIds(Convert.toStrArray(assayIds));
 	}
+
+	@Override
+	public List<DataEnity> getAssayTotal(){
+		return bizAssayMapper.getAssayTotal();
+	}
+
+	@Override
+	public List<BizAssay> getAssayByWorkTime(Long waterValue, String timeValue){
+		return bizAssayMapper.getAssayByWorkTime(waterValue,timeValue);
+	};
 }

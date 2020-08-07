@@ -2,6 +2,8 @@ package com.ruoyi.system.mapper;
 
 import com.ruoyi.system.domain.AssayResult;
 import com.ruoyi.system.domain.BizAssay;
+import com.ruoyi.system.domain.OutDataEnity;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -21,7 +23,7 @@ public interface AssayResultMapper
      */
 	public AssayResult selectAssayResultById(Long resultId);
 
-	public AssayResult selectAssayResultByAssayNo(String assayNo);
+	public List<AssayResult> selectAssayResultByAssayNo(String assayNo);
 
 
 	/**
@@ -64,4 +66,5 @@ public interface AssayResultMapper
      */
 	public int deleteAssayResultByIds(String[] resultIds);
 
+	public OutDataEnity getOuaData(@Param(value="workId") Long workId, @Param(value="startTime") String startTime, @Param(value="endTime") String endTime);
 }

@@ -2,6 +2,7 @@ package com.ruoyi.system.service;
 
 import com.ruoyi.system.domain.AssayResult;
 import com.ruoyi.system.domain.BizAssay;
+import com.ruoyi.system.domain.OutDataEnity;
 
 import java.util.List;
 
@@ -21,7 +22,7 @@ public interface IAssayResultService
      */
 	public AssayResult selectAssayResultById(Long resultId);
 
-	public AssayResult selectAssayResultByAssayNo(String assayNo);
+	public List<AssayResult> selectAssayResultByAssayNo(String assayNo);
 
 	/**
      * 查询化验结果列表
@@ -54,5 +55,7 @@ public interface IAssayResultService
      * @return 结果
      */
 	public int deleteAssayResultByIds(String resultIds);
+
+	public OutDataEnity getOuaData(Long workId, String startTime, String endTime);
 
 }

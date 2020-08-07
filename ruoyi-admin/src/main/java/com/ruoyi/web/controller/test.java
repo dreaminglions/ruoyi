@@ -40,7 +40,7 @@ public class test {
 //            ss = "";
 //        };
 //        System.out.println(ss);
-
+        System.out.println(Integer.valueOf("008"));
 
     }
 }

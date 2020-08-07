@@ -103,8 +103,4 @@ public class BizAssayResultServiceImpl implements IBizAssayResultService
 		return bizAssayResultMapper.getAssayByWorkTime(waterValue,timeValue);
 	};
 
-	@Override
-	public OutDataEnity getOuaData(Long workId, String startTime, String endTime){
-		return bizAssayResultMapper.getOuaData( workId, startTime, endTime);
-	};
 }

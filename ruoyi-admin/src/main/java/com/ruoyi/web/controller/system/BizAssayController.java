@@ -1,5 +1,8 @@
 package com.ruoyi.web.controller.system;
 
+import com.deepoove.poi.data.MiniTableRenderData;
+import com.deepoove.poi.data.RowRenderData;
+import com.deepoove.poi.data.TextRenderData;
 import com.ruoyi.common.annotation.Log;
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.AjaxResult;
@@ -45,6 +48,8 @@ public class BizAssayController extends BaseController
 	private IAssaySampleService assaySampleService;
 	@Autowired
 	private IAssayFaultService assayFaultService;
+	@Autowired
+	private IBizWaterWorkService waterWorkService;
 
 
 	
@@ -266,4 +271,187 @@ public class BizAssayController extends BaseController
 		List<AssayFault> list = assayFaultService.selectAssayFaultList(assayFault);
 		return getDataTable(list);
 	}
+
+
+
+
+	@RequiresPermissions("system:bizAssay:list")
+	@GetMapping("/assayDetails/{assayNo}")
+	public String assayDetails(@PathVariable("assayNo") String assayNo, ModelMap mmap)
+	{
+		BizAssay assay = bizAssayService.selectBizAssayByAssayNo(assayNo);
+		if(assay!=null){
+			mmap.put("assayDate",assay.getAssayDate());
+			BizWaterWork work = waterWorkService.selectBizWaterWorkById(assay.getDevice().getDeviceWorks());
+			if(work!=null){
+				mmap.put("worksName",work.getWorksName());
+				mmap.put("Sname", "");
+			}
+		}
+
+		List<AssayResult> resultList = assayResultService.selectAssayResultByAssayNo(assayNo);
+		for(AssayResult result : resultList ){
+			String r_no =result.getResultNo();
+			if("001".equals(r_no)){
+				//in_nh
+				mmap.put("inNh", result.getResultConcentration());
+				mmap.put("inNh_As", result.getResultAbs());
+			}else if("002".equals(r_no)){
+				//out_nh
+				mmap.put("outNh", result.getResultConcentration());
+				mmap.put("outNh_As", result.getResultAbs());
+			}else if("003".equals(r_no)){
+				//in_tp
+				mmap.put("inTp", result.getResultConcentration());
+				mmap.put("inTp_As", result.getResultAbs());
+			}else if("004".equals(r_no)){
+				//out_tp
+				mmap.put("outTp", result.getResultConcentration());
+				mmap.put("outTp_As", result.getResultAbs());
+			}else if("005".equals(r_no)){
+				//in_tn
+				mmap.put("inTn", result.getResultConcentration());
+				mmap.put("inTn_As", result.getResultAbs());
+			}else if("006".equals(r_no)){
+				//out_tn
+				mmap.put("outTn", result.getResultConcentration());
+				mmap.put("outTn_As", result.getResultAbs());
+			}else if("007".equals(r_no)){
+				//in_cod
+				mmap.put("inCod", result.getResultConcentration());
+				mmap.put("inCod_As", result.getResultAbs());
+			}else if("008".equals(r_no)){
+				//out_cod
+				mmap.put("outCod", result.getResultConcentration());
+				mmap.put("outCod_As", result.getResultAbs());
+			}
+
+		}
+
+		DecimalFormat decimalFormat=new DecimalFormat("0.000");
+
+		mmap.put("assayNo", assayNo);
+		return prefix + "/assayDetails";
+	}
+
+
+	@GetMapping("/getDoc/{assayNo}/{obj}")
+	@ResponseBody
+	public String  gettnDoc(@PathVariable("assayNo") String assayNo,@PathVariable("obj") String obj,HttpServletRequest request, HttpServletResponse response) throws IOException {
+//		List<Map<String,Object>> mapList =  new ArrayList<>();
+//		Map<String,Object> map =  new HashMap<>();
+//		RowRenderData header = RowRenderData.build(new TextRenderData("序号"),new TextRenderData("名称"));
+//		List<RowRenderData> listone = new ArrayList<>();
+//		List<AssaySample> sampleList = assaySampleService.getSampleByAssayno(assayNo);
+//		Integer count=0;
+//		for(AssaySample sample:sampleList){
+//			RowRenderData good = RowRenderData.build(count.toString(),sample.getSampleName());
+//			listone.add(good);
+//			count++;
+//		}
+//		map.put("table", new MiniTableRenderData(header,listone));
+//		map.put("orderno", assayNo);
+
+		Map<String,Object> map =  new HashMap<>();
+		BizAssay assay = bizAssayService.selectBizAssayByAssayNo(assayNo);
+		List<AssayResult> resultList =assayResultService.selectAssayResultByAssayNo(assayNo);
+
+		if(assay!=null){
+			BizWaterWork work = waterWorkService.selectBizWaterWorkById(assay.getDevice().getDeviceWorks());
+
+			map.put("orderno", assayNo);
+			map.put("assaydate", assay.getAssayDate());
+			if(work!=null){
+				map.put("workname", work.getWorksName());
+			}
+			if("cod".equals(obj)){
+				map.put("assaymethod", "HJ399-2007化学需氧量的测定 快速消解分光光度法");
+			}else if(("tp".equals(obj))){
+				map.put("assaymethod", "GB11893-1989水质总磷的测定钼酸铵分光光度法");
+			}else if(("tn".equals(obj))){
+				map.put("assaymethod", "HJ636-2012水质总氮的测定碱性过硫酸钾消解紫外分光光度法");
+			}else if(("nh".equals(obj))){
+				map.put("assaymethod", "HJ535-2009水质氨氮的测定纳氏试剂分光光度法");
+			}
+			if(resultList!=null){
+				for(AssayResult result:resultList){
+					String r_no = result.getResultNo();
+					if("cod".equals(obj)){
+						if("007".equals(r_no)){
+							map.put("incod_v", result.getSampleVolume()+"");
+							map.put("incod_As", result.getResultAbs()+"");
+							map.put("incod_re1", result.getResultConcentration()+"");
+							map.put("incod_re2", result.getResultConcentration()+"");
+						}
+						if("008".equals(r_no)){
+							map.put("outcod_v1", result.getSampleVolume()+"");
+							map.put("outcod_As1", result.getResultAbs()+"");
+							map.put("outcod_re1_1", result.getResultConcentration()+"");
+							map.put("outcod_re2", result.getResultConcentration()+"");
+						}
+					}else if("tp".equals(obj)){
+						if("003".equals(r_no)){
+							map.put("intp_v", result.getSampleVolume()+"");
+							map.put("intp_As", result.getResultAbs()+"");
+							map.put("intp_re1", result.getResultConcentration()+"");
+							map.put("intp_re2", result.getResultConcentration()+"");
+						}
+						if("004".equals(r_no)){
+							map.put("outtp_v1", result.getSampleVolume()+"");
+							map.put("outtp_As1", result.getResultAbs()+"");
+							map.put("outtp_re1_1", result.getResultConcentration()+"");
+							map.put("outtp_re2", result.getResultConcentration()+"");
+						}
+					}else if("tn".equals(obj)){
+						if("005".equals(r_no)){
+							map.put("intn_v", result.getSampleVolume()+"");
+							map.put("intn_As", result.getResultAbs()+"");
+							map.put("intn_re1", result.getResultConcentration()+"");
+							map.put("intn_re2", result.getResultConcentration()+"");
+						}
+						if("006".equals(r_no)){
+							map.put("outtn_v1", result.getSampleVolume()+"");
+							map.put("outtn_As1", result.getResultAbs()+"");
+							map.put("outtn_re1_1", result.getResultConcentration()+"");
+							map.put("outtn_re2", result.getResultConcentration()+"");
+						}
+					}else if("nh".equals(obj)){
+						if("001".equals(r_no)){
+							map.put("innh_v", result.getSampleVolume()+"");
+							map.put("innh_As", result.getResultAbs()+"");
+							map.put("innh_re1", result.getResultConcentration()+"");
+							map.put("innh_re2", result.getResultConcentration()+"");
+						}
+						if("002".equals(r_no)){
+							map.put("outnh_v1", result.getSampleVolume()+"");
+							map.put("outnh_As1", result.getResultAbs()+"");
+							map.put("outnh_re1_1", result.getResultConcentration()+"");
+							map.put("outnh_re2", result.getResultConcentration()+"");
+						}
+					}
+
+				}
+			}
+
+		}
+
+		String docName = "";
+		String docxName = "";
+		if("cod".equals(obj)){
+			 docName = "COD分析项目原始记录.doc";
+			 docxName = "COD分析项目原始记录.docx";
+		}else if(("tp".equals(obj))){
+			docName = "总磷分析项目原始记录.doc";
+			docxName = "总磷分析项目原始记录.docx";
+		}else if(("tn".equals(obj))){
+			docName = "总氮分析项目原始记录.doc";
+			docxName = "总氮分析项目原始记录.docx";
+		}else if(("nh".equals(obj))){
+			docName = "氨氮分析项目原始记录.doc";
+			docxName = "氨氮分析项目原始记录.docx";
+		}
+		DocUtil.download(request,response,docxName,docName, map);
+		return prefix + "/getdoc";
+	}
+
 }
