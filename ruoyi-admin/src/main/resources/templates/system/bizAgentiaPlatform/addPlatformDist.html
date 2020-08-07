@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <th:block th:include="include :: header('平台药剂下发')" />
+</head>
+<body class = "white-bg">
+<div class="wrapper wrapper-content animated fadeInRight ibox-content">
+    <form class="form-horizontal m" id="form-bizDistribute-Add">
+        <fieldset>
+            <div class="form-group">
+                <label class="col-sm-3 control-label">下发名称：</label>
+                <div class="col-sm-6">
+                    <input  id="distributeName" name="distributeName" class="form-control required" type="text">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-sm-3 control-label">下发机构：</label>
+                <div class="col-sm-6">
+                    <input  id="distributeFrom" name="distributeFrom" class="form-control required" type="text">
+                </div>
+            </div>
+
+
+
+        </fieldset>
+
+    </form>
+</div>
+
+</body>
+</html>

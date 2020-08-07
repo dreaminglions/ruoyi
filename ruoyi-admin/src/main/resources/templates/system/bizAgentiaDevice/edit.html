@@ -22,7 +22,7 @@
 			<div class="form-group">	
 				<label class="col-sm-3 control-label">所属设备：</label>
 				<div class="col-sm-6">
-					<select id="agentiaBelong" name="agentiaBelong" class="form-control required"  th:with="type=${@bizDevice.getBizDevice()}" th:field="*{agentiaBelong}">
+					<select id="agentiaDevice" name="agentiaDevice" class="form-control required"  th:with="type=${@bizDevice.getBizDevice()}" th:field="*{agentiaDevice}">
 						<option value="">请选择</option>
 						<option th:each="bizDevice : ${type}" th:text="${bizDevice.deviceName}" th:value="${bizDevice.deviceId}"></option>
 					</select>
@@ -49,7 +49,7 @@
 			<div class="form-group">	
 				<label class="col-sm-3 control-label">药剂类型：</label>
 				<div class="col-sm-6">
-					<input id="agentiaType" name="agentiaType" th:field="*{agentiaType}" class="form-control required" type="hidden" value="2">
+					<input id="agentiaType" name="agentiaType" th:field="*{agentiaType}" class="form-control required" type="hidden" value="4">
 					<input id="agentiaTypeName"  class="form-control" type="text" value="设备药剂" readonly="readonly">
 				</div>
 			</div>
@@ -98,7 +98,7 @@
     </div>
     <div th:include="include::footer"></div>
     <script type="text/javascript">
-		var prefix = ctx + "system/bizAgentia";
+		var prefix = ctx + "system/bizDeviceAgentia";
 		$("#form-bizAgentia-edit").validate({
 			rules:{
 				xxxx:{
@@ -110,7 +110,7 @@
 		
 		function submitHandler() {
 	        if ($.validate.form()) {
-	            $.operate.save(prefix + "/deviceedit", $('#form-bizAgentia-edit').serialize());
+	            $.operate.save(prefix + "/deviceeditsave", $('#form-bizAgentia-edit').serialize());
 	        }
 	    }
 	</script>

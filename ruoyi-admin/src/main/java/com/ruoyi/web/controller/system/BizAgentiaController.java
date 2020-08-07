@@ -39,15 +39,16 @@ public class BizAgentiaController extends BaseController
 	private String prefixGroup = "system/bizAgentiaGroup";
 	private String prefixWork = "system/bizAgentiaWork";
 	private String prefixDevice = "system/bizAgentiaDevice";
+	private String prefixPlatform = "system/bizAgentiaPlatform";
 
-	
+
 	@Autowired
 	private IBizAgentiaService bizAgentiaService;
 	@Autowired
 	private IBizAgentiaRecordService bizAgentiaRecordService;
 	@Autowired
 	private IBizAgentiaContrastService bizAgentiaContrastService;
-	
+
 	@RequiresPermissions("system:bizAgentia:view")
 	@GetMapping()
 	public String bizAgentia()
@@ -75,6 +76,13 @@ public class BizAgentiaController extends BaseController
 	public String bizAgentiaDevice()
 	{
 		return prefixDevice + "/bizAgentiaDevice";
+	}
+
+	@RequiresPermissions("system:bizAgentiaPlatform:view")
+	@GetMapping("/platform")
+	public String bizAgentiaPlatform()
+	{
+		return prefixPlatform + "/bizAgentiaPlatform";
 	}
 
 
@@ -137,7 +145,7 @@ public class BizAgentiaController extends BaseController
 		startPage();
 		SysRole role = ShiroUtils.getSysUser().getRole();
 		String dataScope = role.getDataScope();
-		bizAgentia.setAgentiaType("0");
+		bizAgentia.setAgentiaType("2");
 		List<BizAgentia> list = new ArrayList<BizAgentia>();
 		if ("1".equals(dataScope)){
 			list = bizAgentiaService.selectBizAgentiaList(bizAgentia);
@@ -154,7 +162,7 @@ public class BizAgentiaController extends BaseController
 	public TableDataInfo worklist(BizAgentia bizAgentia)
 	{
 		startPage();
-		bizAgentia.setAgentiaType("1");
+		bizAgentia.setAgentiaType("3");
 		StringBuilder sqlString = new StringBuilder();
 		SysRole role = ShiroUtils.getSysUser().getRole();
 		String dataScope = role.getDataScope();
@@ -207,6 +215,25 @@ public class BizAgentiaController extends BaseController
 		return getDataTable(list);
 	}
 
+	/**
+	 * 查询平台药剂列表
+	 */
+	@RequiresPermissions("system:bizAgentiaGroup:list")
+	@PostMapping("/platformlist")
+	@ResponseBody
+	public TableDataInfo platformlist(BizAgentia bizAgentia)
+	{
+		startPage();
+		SysRole role = ShiroUtils.getSysUser().getRole();
+		String dataScope = role.getDataScope();
+		bizAgentia.setAgentiaType("1");
+		List<BizAgentia> list = new ArrayList<BizAgentia>();
+		if ("1".equals(dataScope)){
+			list = bizAgentiaService.selectBizAgentiaList(bizAgentia);
+		}
+		return getDataTable(list);
+	}
+
 
 	/**
 	 * 导出药剂列表
@@ -220,7 +247,7 @@ public class BizAgentiaController extends BaseController
         ExcelUtil<BizAgentia> util = new ExcelUtil<BizAgentia>(BizAgentia.class);
         return util.exportExcel(list, "bizAgentia");
     }
-	
+
 	/**
 	 * 新增药剂
 	 */
@@ -260,6 +287,12 @@ public class BizAgentiaController extends BaseController
 	}
 
 	/**
+	 * 新增平台药剂
+	 **/
+	@GetMapping("/platformadd")
+	public String platformadd() {return prefixPlatform + "/add"; }
+
+	/**
 	 * 新增保存药剂
 	 */
 	@RequiresPermissions("system:bizAgentia:add")
@@ -267,7 +300,7 @@ public class BizAgentiaController extends BaseController
 	@PostMapping("/add")
 	@ResponseBody
 	public AjaxResult addSave(BizAgentia bizAgentia)
-	{		
+	{
 		return toAjax(bizAgentiaService.insertBizAgentia(bizAgentia));
 	}
 
@@ -356,6 +389,17 @@ public class BizAgentiaController extends BaseController
 	}
 
 	/**
+	 * 修改平台药剂
+	 */
+	@GetMapping("/platformedit/{agentiaId}")
+	public String platformedit(@PathVariable("agentiaId") Long agentiaId, ModelMap mmap)
+	{
+		BizAgentia bizAgentia = bizAgentiaService.selectBizAgentiaById(agentiaId);
+		mmap.put("bizAgentia", bizAgentia);
+		return prefixPlatform + "/edit";
+	}
+
+	/**
 	 * 修改保存药剂
 	 */
 	@RequiresPermissions("system:bizAgentia:edit")
@@ -402,7 +446,19 @@ public class BizAgentiaController extends BaseController
 	{
 		return toAjax(bizAgentiaService.updateBizAgentia(bizAgentia));
 	}
-	
+
+	/**
+	 * 修改保存平台药剂
+	 */
+	@RequiresPermissions("system:bizAgentiaDevice:edit")
+	@Log(title = "平台药剂信息修改", businessType = BusinessType.UPDATE)
+	@PostMapping("/platformeditSave")
+	@ResponseBody
+	public AjaxResult platformeditSave(BizAgentia bizAgentia)
+	{
+		return toAjax(bizAgentiaService.updateBizAgentia(bizAgentia));
+	}
+
 	/**
 	 * 删除药剂
 	 */
@@ -411,7 +467,7 @@ public class BizAgentiaController extends BaseController
 	@PostMapping( "/remove")
 	@ResponseBody
 	public AjaxResult remove(String ids)
-	{		
+	{
 		return toAjax(bizAgentiaService.deleteBizAgentiaByIds(ids));
 	}
 
@@ -451,6 +507,18 @@ public class BizAgentiaController extends BaseController
 		return toAjax(bizAgentiaService.deleteBizAgentiaByIds(ids));
 	}
 
+
+	/**
+	 * 删除平台药剂
+	 */
+	@RequiresPermissions("system:bizAgentiaDevice:remove")
+	@Log(title = "删除平台药剂", businessType = BusinessType.DELETE)
+	@PostMapping( "/platformremove")
+	@ResponseBody
+	public AjaxResult platformremove(String ids)
+	{
+		return toAjax(bizAgentiaService.deleteBizAgentiaByIds(ids));
+	}
 
 
 	/**
@@ -661,5 +729,14 @@ public class BizAgentiaController extends BaseController
 
 		return toAjax(bizAgentiaRecordService.insertBizAgentiaRecord(bizAgentiaRecord));
 	}
-	
+
+	/**
+	 * 平台药剂下发
+	 */
+	@GetMapping("/addPlatformDist")
+	public String addPlatformDist()
+	{
+		return prefixPlatform + "/addPlatformDist";
+	}
+
 }

@@ -41,7 +41,8 @@ public class BizWorksService
     public List<BizWaterWork> getOnlyGroup()
     {
         BizWaterWork bizWorks = new BizWaterWork();
-        bizWorks.setWorksType("0");
+//        bizWorks.setWorksType("0");
+        bizWorks.setWorksType("2");
         return bizWaterWorkService.selectBizWaterWorkList(bizWorks);
     }
 
@@ -69,6 +70,18 @@ public class BizWorksService
             worksName = bizWorks.getWorksName();
         }
         return worksName;
+    }
+
+    /**
+     * 查询集团列表
+     * @return 参数键值
+     */
+    public List<BizWaterWork> getOnlyPlatform()
+    {
+        BizWaterWork bizWorks = new BizWaterWork();
+//        bizWorks.setWorksType("0");
+        bizWorks.setWorksType("1");
+        return bizWaterWorkService.selectBizWaterWorkList(bizWorks);
     }
 
 }

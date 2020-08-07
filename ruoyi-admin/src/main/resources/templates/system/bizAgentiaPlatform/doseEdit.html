@@ -20,7 +20,7 @@
 				<!--</div>-->
 			<!--</div>-->
 			<div class="form-group">
-				<label class="col-sm-3 control-label">药剂剩余量（ml）：</label>
+				<label class="col-sm-3 control-label">药剂剩余量：</label>
 				<div class="col-sm-6">
 					<input th:field="*{agentiaRemain}" class="form-control required" type="text" readonly="readonly">
 				</div>
@@ -36,7 +36,7 @@
 			</div>
 
 			<div class="form-group">
-				<label class="col-sm-3 control-label">药剂变化量（ml）：</label>
+				<label class="col-sm-3 control-label">药剂变化量（g）：</label>
 				<div class="col-sm-6">
 					<input id="agentiaChange" name="agentiaChange"  class="form-control required" type="text" >
 				</div>
@@ -54,7 +54,7 @@
     </div>
     <div th:include="include::footer"></div>
     <script type="text/javascript">
-		var prefix = ctx + "system/bizDeviceAgentia";
+		var prefix = ctx + "system/bizAgentia";
 		$("#form-bizAgentia-edit").validate({
 			rules:{
 				xxxx:{

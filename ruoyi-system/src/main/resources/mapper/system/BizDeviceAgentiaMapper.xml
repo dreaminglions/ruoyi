@@ -1,0 +1,229 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.BizDeviceAgentiaMapper">
+    
+    <resultMap type="BizDeviceAgentia" id="BizAgentiaResult">
+        <result property="agentiaId"    column="agentia_id"    />
+        <result property="agentiaNo"    column="agentia_no"    />
+        <result property="agentiaName"    column="agentia_name"    />
+        <result property="agentiaDevice"    column="agentia_device"    />
+        <result property="agentiaTotal"    column="agentia_total"    />
+        <result property="agentiaRemain"    column="agentia_remain"    />
+        <result property="agentiaAlert"    column="agentia_alert"    />
+        <result property="agentiaType"    column="agentia_type"    />
+        <result property="agentiaKind"    column="agentia_kind"    />
+        <result property="agentiaMaker"    column="agentia_maker"    />
+        <result property="agentiaStatus"    column="agentia_status"    />
+        <result property="useTime"    column="use_time"    />
+        <result property="lastRepairTime"    column="last_repair_time"    />
+        <result property="repairTime"    column="repair_time"    />
+        <result property="repairBy"    column="repair_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <association property="device"    column="agentia_belong" javaType="BizDevice" resultMap="deviceResult" />
+        <association property="works"    column="agentia_belong" javaType="BizWaterWork" resultMap="worksResult" />
+    </resultMap>
+
+
+    <resultMap id="deviceResult" type="BizDevice">
+        <result property="deviceId"    column="device_id"    />
+        <result property="deviceNo"    column="device_no"    />
+        <result property="deviceName"    column="device_name"    />
+        <result property="deviceStatus"    column="device_status"    />
+    </resultMap>
+
+    <resultMap id="worksResult" type="BizWaterWork">
+        <result property="worksId"    column="works_id"    />
+        <result property="worksNo"    column="works_no"    />
+        <result property="worksName"    column="works_name"    />
+        <result property="worksStatus"    column="works_status"    />
+    </resultMap>
+	
+	<sql id="selectBizAgentiaDevice">
+        select a.agentia_id, a.agentia_no, a.agentia_name, a.agentia_belong, a.agentia_total, a.agentia_remain, a.agentia_alert, a.agentia_type, a.agentia_kind, a.agentia_maker, a.agentia_status, a.use_time, a.last_repair_time, a.repair_time, a.repair_by, a.create_time, a.create_by, a.update_time, a.update_by,
+                a.device_id,a.device_no,a.device_name,a.device_status,a.device_works,
+                w.works_id,w.works_no,w.works_name,w.works_status
+		from
+            (
+                SELECT agentia.*,d.device_id,d.device_no,d.device_name,d.device_status,d.device_works
+                from biz_agentia agentia
+                LEFT JOIN biz_device d on agentia.agentia_belong = d.device_id
+            ) a
+		LEFT JOIN biz_water_work w on a.device_works = w.works_id
+    </sql>
+
+    <select id="selectDeviceAgentiaList" parameterType="BizDeviceAgentia" resultMap="BizAgentiaResult">
+        select a.agentia_id, a.agentia_no, a.agentia_name, a.agentia_device, a.agentia_total, a.agentia_remain, a.agentia_alert, a.agentia_type, a.agentia_kind, a.agentia_maker, a.agentia_status, a.use_time, a.last_repair_time, a.repair_time, a.repair_by, a.create_time, a.create_by, a.update_time, a.update_by,
+            d.device_id,d.device_no,d.device_name,d.device_status,d.device_works,w.works_id,w.works_no,w.works_name,w.works_status
+        from biz_device_agentia a
+        left join biz_device d on a.agentia_device = d.device_id
+        left join biz_water_work w on d.device_works = w.works_id
+
+        where 1=1
+
+        <if test="agentiaNo != null  and agentiaNo != '' "> and a.agentia_no = #{agentiaNo}</if>
+        <if test="agentiaName != null  and agentiaName != '' "> and a.agentia_name = #{agentiaName}</if>
+        <if test="agentiaDevice != null "> and a.agentiaDevice = #{agentiaDevice}</if>
+        <if test="agentiaTotal != null "> and a.agentia_total = #{agentiaTotal}</if>
+        <if test="agentiaRemain != null "> and a.agentia_remain = #{agentiaRemain}</if>
+        <if test="agentiaAlert != null "> and a.agentia_alert = #{agentiaAlert}</if>
+        <if test="agentiaType != null  and agentiaType != '' "> and a.agentia_type = #{agentiaType}</if>
+        <if test="agentiaKind != null  and agentiaKind != '' "> and a.agentia_kind = #{agentiaKind}</if>
+        <if test="agentiaMaker != null  and agentiaMaker != '' "> and a.agentia_maker = #{agentiaMaker}</if>
+        <if test="agentiaStatus != null  and agentiaStatus != '' "> and a.agentia_status = #{agentiaStatus}</if>
+        <if test="lastRepairTime != null  and lastRepairTime != ''  "> and a.last_repair_time = #{lastRepairTime}</if>
+        <if test="repairTime != null  and repairTime != ''  "> and a.repair_time = #{repairTime}</if>
+        <if test="repairBy != null  and repairBy != '' "> and a.repair_by = #{repairBy}</if>
+
+        <if test="useTime != null and useTime != ''"><!-- 开始时间检索 -->
+            AND datediff(d,a.use_time,#{useTime} ) = 0
+        </if>
+
+        <if test="params.beginTime != null and params.beginTime != ''"><!-- 开始时间检索 -->
+            AND datediff(dd,#{params.beginTime},a.use_time) &gt;=0
+        </if>
+        <if test="params.endTime != null and params.endTime != ''"><!-- 结束时间检索 -->
+            AND datediff(dd,a.use_time,#{params.endTime}) &gt;=0
+        </if>
+
+        <!-- 数据范围过滤 -->
+        ${params.dataScope}
+
+    </select>
+
+    <select id="selectDeviceAgentiaList_bak" parameterType="BizAgentia" resultMap="BizAgentiaResult">
+        <include refid="selectBizAgentiaDevice"/>
+        where 1=1
+
+            <if test="agentiaNo != null  and agentiaNo != '' "> and a.agentia_no = #{agentiaNo}</if>
+            <if test="agentiaName != null  and agentiaName != '' "> and a.agentia_name = #{agentiaName}</if>
+            <if test="agentiaBelong != null "> and a.agentia_belong = #{agentiaBelong}</if>
+            <if test="agentiaTotal != null "> and a.agentia_total = #{agentiaTotal}</if>
+            <if test="agentiaRemain != null "> and a.agentia_remain = #{agentiaRemain}</if>
+            <if test="agentiaAlert != null "> and a.agentia_alert = #{agentiaAlert}</if>
+            <if test="agentiaType != null  and agentiaType != '' "> and a.agentia_type = #{agentiaType}</if>
+            <if test="agentiaKind != null  and agentiaKind != '' "> and a.agentia_kind = #{agentiaKind}</if>
+            <if test="agentiaMaker != null  and agentiaMaker != '' "> and a.agentia_maker = #{agentiaMaker}</if>
+            <if test="agentiaStatus != null  and agentiaStatus != '' "> and a.agentia_status = #{agentiaStatus}</if>
+            <if test="lastRepairTime != null  and lastRepairTime != ''  "> and a.last_repair_time = #{lastRepairTime}</if>
+            <if test="repairTime != null  and repairTime != ''  "> and a.repair_time = #{repairTime}</if>
+            <if test="repairBy != null  and repairBy != '' "> and a.repair_by = #{repairBy}</if>
+
+            <if test="useTime != null and useTime != ''"><!-- 开始时间检索 -->
+                AND datediff(d,a.use_time,#{useTime} ) = 0
+            </if>
+
+            <if test="params.beginTime != null and params.beginTime != ''"><!-- 开始时间检索 -->
+                AND datediff(dd,#{params.beginTime},a.use_time) &gt;=0
+            </if>
+            <if test="params.endTime != null and params.endTime != ''"><!-- 结束时间检索 -->
+                AND datediff(dd,a.use_time,#{params.endTime}) &gt;=0
+            </if>
+
+        <!-- 数据范围过滤 -->
+        ${params.dataScope}
+    </select>
+
+
+    <select id="selectContrastList" parameterType="BizAgentia" resultMap="BizAgentiaResult">
+      <include refid="selectBizAgentiaDevice"/>
+      where 1=1
+        <if test="agentiaBelong != null "> and a.agentia_belong = #{agentiaBelong}</if>
+        <if test="agentiaType != null  and agentiaType != '' "> and a.agentia_type = #{agentiaType}</if>
+        <if test="agentiaKind != null  and agentiaKind != '' "> and a.agentia_kind = #{agentiaKind}</if>
+        <if test="agentiaBelong != null "> and a.agentia_id not in (
+            select c.contrast_agentia from biz_agentia_contrast c where contrast_device = #{agentiaBelong}
+            ) </if>
+    </select>
+
+    <select id="selectDeviceAgentiaById" parameterType="Long" resultMap="BizAgentiaResult">
+
+        select a.agentia_id, a.agentia_no, a.agentia_name, a.agentia_device, a.agentia_total, a.agentia_remain, a.agentia_alert, a.agentia_type, a.agentia_kind, a.agentia_maker, a.agentia_status, a.use_time, a.last_repair_time, a.repair_time, a.repair_by, a.create_time, a.create_by, a.update_time, a.update_by,
+        d.device_id,d.device_no,d.device_name,d.device_status,d.device_works,w.works_id,w.works_no,w.works_name,w.works_status
+        from biz_device_agentia a
+        left join biz_device d on a.agentia_device = d.device_id
+        left join biz_water_work w on d.device_works = w.works_id
+
+        where a.agentia_id = #{agentiaId}
+    </select>
+
+        
+    <insert id="insertBizDeviceAgentia" parameterType="BizDeviceAgentia" useGeneratedKeys="true" keyProperty="agentiaId">
+        insert into biz_device_agentia
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="agentiaNo != null  and agentiaNo != ''  ">agentia_no,</if>
+			<if test="agentiaName != null  and agentiaName != ''  ">agentia_name,</if>
+			<if test="agentiaDevice != null  ">agentia_device,</if>
+			<if test="agentiaTotal != null  ">agentia_total,</if>
+			<if test="agentiaRemain != null  ">agentia_remain,</if>
+			<if test="agentiaAlert != null  ">agentia_alert,</if>
+			<if test="agentiaType != null  and agentiaType != ''  ">agentia_type,</if>
+            <if test="agentiaKind != null  and agentiaKind != '' ">agentia_kind,</if>
+			<if test="agentiaMaker != null  and agentiaMaker != ''  ">agentia_maker,</if>
+			<if test="agentiaStatus != null  and agentiaStatus != ''  ">agentia_status,</if>
+			<if test="useTime != null  ">use_time,</if>
+			<if test="lastRepairTime != null  and lastRepairTime != ''  ">last_repair_time,</if>
+			<if test="repairTime != null  and repairTime != ''  ">repair_time,</if>
+			<if test="repairBy != null  and repairBy != ''  ">repair_by,</if>
+			<if test="createBy != null  and createBy != ''  ">create_by,</if>
+            create_time
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="agentiaNo != null  and agentiaNo != ''  ">#{agentiaNo},</if>
+			<if test="agentiaName != null  and agentiaName != ''  ">#{agentiaName},</if>
+			<if test="agentiaDevice != null  ">#{agentiaDevice},</if>
+			<if test="agentiaTotal != null  ">#{agentiaTotal},</if>
+			<if test="agentiaRemain != null  ">#{agentiaRemain},</if>
+			<if test="agentiaAlert != null  ">#{agentiaAlert},</if>
+			<if test="agentiaType != null  and agentiaType != ''  ">#{agentiaType},</if>
+            <if test="agentiaKind != null  and agentiaKind != '' ">#{agentiaKind},</if>
+			<if test="agentiaMaker != null  and agentiaMaker != ''  ">#{agentiaMaker},</if>
+			<if test="agentiaStatus != null  and agentiaStatus != ''  ">#{agentiaStatus},</if>
+			<if test="useTime != null  and useTime != ''  ">#{useTime},</if>
+			<if test="lastRepairTime != null  and lastRepairTime != ''   ">#{lastRepairTime},</if>
+			<if test="repairTime != null  and repairTime != ''   ">#{repairTime},</if>
+			<if test="repairBy != null  and repairBy != ''  ">#{repairBy},</if>
+			<if test="createBy != null  and createBy != ''  ">#{createBy},</if>
+            getdate()
+         </trim>
+    </insert>
+	 
+    <update id="updateBizAgentia" parameterType="BizDeviceAgentia">
+        update biz_device_agentia
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="agentiaNo != null  and agentiaNo != ''  ">agentia_no = #{agentiaNo},</if>
+            <if test="agentiaName != null  and agentiaName != ''  ">agentia_name = #{agentiaName},</if>
+            <if test="agentiaDevice != null  ">agentia_device = #{agentiaDevice},</if>
+            <if test="agentiaTotal != null  ">agentia_total = #{agentiaTotal},</if>
+            <if test="agentiaRemain != null  ">agentia_remain = #{agentiaRemain},</if>
+            <if test="agentiaAlert != null  ">agentia_alert = #{agentiaAlert},</if>
+            <if test="agentiaType != null  and agentiaType != ''  ">agentia_type = #{agentiaType},</if>
+            <if test="agentiaKind != null  and agentiaKind != '' "> agentia_kind = #{agentiaKind},</if>
+            <if test="agentiaMaker != null  and agentiaMaker != ''  ">agentia_maker = #{agentiaMaker},</if>
+            <if test="agentiaStatus != null  and agentiaStatus != ''  ">agentia_status = #{agentiaStatus},</if>
+            <if test="useTime != null  and useTime != ''  ">use_time = #{useTime},</if>
+            <if test="lastRepairTime != null  and lastRepairTime != ''  ">last_repair_time = #{lastRepairTime},</if>
+            <if test="repairTime != null  and repairTime != ''  ">repair_time = #{repairTime},</if>
+            <if test="repairBy != null  and repairBy != ''  ">repair_by = #{repairBy},</if>
+            <if test="updateBy != null  and updateBy != ''  ">update_by = #{updateBy},</if>
+            update_time = getdate()
+        </trim>
+        where agentia_id = #{agentiaId}
+    </update>
+
+	<delete id="deleteBizAgentiaById" parameterType="Long">
+        delete from biz_device_agentia where agentia_id = #{agentiaId}
+    </delete>
+	
+    <delete id="deleteBizAgentiaByIds" parameterType="String">
+        delete from biz_device_agentia where agentia_id in
+        <foreach item="agentiaId" collection="array" open="(" separator="," close=")">
+            #{agentiaId}
+        </foreach>
+    </delete>
+    
+</mapper>
