@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.AssayCurveMapper">
+    
+    <resultMap type="AssayCurve" id="AssayCurveResult">
+        <result property="curveId"    column="curve_id"    />
+        <result property="curveNo"    column="curve_no"    />
+        <result property="deviceNo"    column="device_no"    />
+        <result property="curveK0"    column="curve_k0"    />
+        <result property="curveK1"    column="curve_k1"    />
+        <result property="curveR"    column="curve_r"    />
+        <result property="curveCon1"    column="curve_concentration1"    />
+        <result property="curveAbs1"    column="curve_abs1"    />
+        <result property="curveCon2"    column="curve_concentration2"    />
+        <result property="curveAbs2"    column="curve_abs2"    />
+        <result property="curveCon3"    column="curve_concentration3"    />
+        <result property="curveAbs3"    column="curve_abs3"    />
+        <result property="curveCon4"    column="curve_concentration4"    />
+        <result property="curveAbs4"    column="curve_abs4"    />
+        <result property="curveCon5"    column="curve_concentration5"    />
+        <result property="curveAbs5"    column="curve_abs5"    />
+        <result property="curveCon6"    column="curve_concentration6"    />
+        <result property="curveAbs6"    column="curve_abs6"    />
+        <result property="curveCon7"    column="curve_concentration7"    />
+        <result property="curveAbs7"    column="curve_abs7"    />
+        <result property="curveCon8"    column="curve_concentration8"    />
+        <result property="curveAbs8"    column="curve_abs8"    />
+        <result property="curveCon9"    column="curve_concentration9"    />
+        <result property="curveAbs9"    column="curve_abs9"    />
+        <result property="curveCon10"    column="curve_concentration10"    />
+        <result property="curveAbs10"    column="curve_abs10"    />
+
+        <result property="curveOpticalH"    column="curve_optical_h"    />
+        <result property="curveOpticalL"    column="curve_optical_l"    />
+
+        <result property="createTime"    column="create_time"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <association property="device"    column="device_no" javaType="BizDevice" resultMap="deviceResult" />
+    </resultMap>
+
+    <resultMap id="deviceResult" type="BizDevice">
+        <result property="deviceId"    column="device_id"    />
+        <result property="deviceNo"    column="device_no"    />
+        <result property="deviceName"    column="device_name"    />
+        <result property="deviceStatus"    column="device_status"    />
+    </resultMap>
+
+
+	<sql id="selectAssayCurveVo">
+        select a.curve_id, a.device_no, a.curve_no, a.curve_k0, a.curve_k1, a.curve_r, a.curve_concentration1, a.curve_abs1, a.curve_concentration2, a.curve_abs2, a.curve_concentration3, a.curve_abs3, a.curve_concentration4, a.curve_abs4, a.curve_concentration5, a.curve_abs5, a.curve_concentration6, a.curve_abs6, a.curve_concentration7, a.curve_abs7, a.curve_concentration8, a.curve_abs8, a.curve_concentration9, a.curve_abs9, a.curve_concentration10, a.curve_abs10, a.curve_time, a.create_by, a.create_time, a.update_by, a.update_time, a.curve_optical_h, a.curve_optical_l,
+        d.device_id,d.device_name,d.device_status
+		from z_assay_curve a
+        LEFT JOIN biz_device d on a.device_no = d.device_no
+    </sql>
+	
+    <select id="selectAssayCurveList" parameterType="AssayCurve" resultMap="AssayCurveResult">
+        <include refid="selectAssayCurveVo"/>
+        where 1=1
+        <if test="curveNo != null  and curveNo != ''  "> and curve_no = #{curveNo}</if>
+        <if test="deviceNo != null   and deviceNo != ''   "> and device_no = #{deviceNo}</if>
+        <!-- 数据范围过滤 -->
+        ${params.dataScope}
+    </select>
+    
+    <select id="selectAssayCurveById" parameterType="Long" resultMap="AssayCurveResult">
+        <include refid="selectAssayCurveVo"/>
+        where a.curve_id = #{curveId}
+    </select>
+
+    <select id="selectAssayCurveByCurveNo" parameterType="String" resultMap="AssayCurveResult">
+        <include refid="selectAssayCurveVo"/>
+        where a.curve_no = #{curveNo}
+    </select>
+
+    <insert id="insertAssayCurve" parameterType="AssayCurve"  useGeneratedKeys="true" keyProperty="curveId">
+        insert into z_assay_curve
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="curveNo != null  and curveNo != ''  ">curve_no,</if>
+            <if test="deviceNo != null   and deviceNo != ''   ">device_no,</if>
+            <if test="curveK0 != null   and curveK0 != ''   ">curve_k0,</if>
+            <if test="curveK1 != null   and curveK1 != ''   ">curve_k1,</if>
+            <if test="curveR != null   and curveR != ''   ">curve_r,</if>
+            <if test="curveCon1 != null   and curveCon1 != ''   ">curve_concentration1,</if>
+            <if test="curveAbs1 != null   and curveAbs1 != ''   ">curve_abs1,</if>
+            <if test="curveCon2 != null   and curveCon2 != ''   ">curve_concentration2,</if>
+            <if test="curveAbs2 != null   and curveAbs2 != ''   ">curve_abs2,</if>
+            <if test="curveCon3 != null   and curveCon3 != ''   ">curve_concentration3,</if>
+            <if test="curveAbs3 != null   and curveAbs3 != ''   ">curve_abs3,</if>
+            <if test="curveCon4 != null   and curveCon4 != ''   ">curve_concentration4,</if>
+            <if test="curveAbs4 != null   and curveAbs4 != ''   ">curve_abs4,</if>
+            <if test="curveCon5 != null   and curveCon5 != ''   ">curve_concentration5,</if>
+            <if test="curveAbs5 != null   and curveAbs5 != ''   ">curve_abs5,</if>
+            <if test="curveCon6 != null   and curveCon6 != ''   ">curve_concentration6,</if>
+            <if test="curveAbs6 != null   and curveAbs6 != ''   ">curve_abs6,</if>
+            <if test="curveCon7 != null   and curveCon7 != ''   ">curve_concentration7,</if>
+            <if test="curveAbs7 != null   and curveAbs7 != ''   ">curve_abs7,</if>
+            <if test="curveCon8 != null   and curveCon8 != ''   ">curve_concentration8,</if>
+            <if test="curveAbs8 != null   and curveAbs8 != ''   ">curve_abs8,</if>
+            <if test="curveCon9 != null   and curveCon9 != ''   ">curve_concentration9,</if>
+            <if test="curveAbs9 != null   and curveAbs9 != ''   ">curve_abs9,</if>
+            <if test="curveCon10 != null   and curveCon10 != ''   ">curve_concentration10,</if>
+            <if test="curveAbs10 != null   and curveAbs10 != ''   ">curve_abs10,</if>
+            <if test="curveOpticalH != null   and curveOpticalH != ''   ">curve_optical_h,</if>
+            <if test="curveOpticalL != null   and curveOpticalL != ''   ">curve_optical_l,</if>
+            <if test="createBy != null  and createBy != ''  ">create_by,</if>
+            create_time
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="curveNo != null  and curveNo != ''  "> #{curveNo},</if>
+            <if test="deviceNo != null   and deviceNo != ''   "> #{deviceNo},</if>
+            <if test="curveK0 != null   and curveK0 != ''   ">#{curveK0},</if>
+            <if test="curveK1 != null   and curveK1 != ''   ">#{curveK1},</if>
+            <if test="curveR != null   and curveR != ''   ">#{curveR},</if>
+            <if test="curveCon1 != null   and curveCon1 != ''   ">#{curveCon1},</if>
+            <if test="curveAbs1 != null   and curveAbs1 != ''   ">#{curveAbs1},</if>
+            <if test="curveCon2 != null   and curveCon2 != ''   ">#{curveCon2},</if>
+            <if test="curveAbs2 != null   and curveAbs2 != ''   ">#{curveAbs2},</if>
+            <if test="curveCon3 != null   and curveCon3 != ''   ">#{curveCon3},</if>
+            <if test="curveAbs3 != null   and curveAbs3 != ''   ">#{curveAbs3},</if>
+            <if test="curveCon4 != null   and curveCon4 != ''   ">#{curveCon4},</if>
+            <if test="curveAbs4 != null   and curveAbs4 != ''   ">#{curveAbs4},</if>
+            <if test="curveCon5 != null   and curveCon5 != ''   ">#{curveCon5},</if>
+            <if test="curveAbs5 != null   and curveAbs5 != ''   ">#{curveAbs5},</if>
+            <if test="curveCon6 != null   and curveCon6 != ''   ">#{curveCon6},</if>
+            <if test="curveAbs6 != null   and curveAbs6 != ''   ">#{curveAbs6},</if>
+            <if test="curveCon7 != null   and curveCon7 != ''   ">#{curveCon7},</if>
+            <if test="curveAbs7 != null   and curveAbs7 != ''   ">#{curveAbs7},</if>
+            <if test="curveCon8 != null   and curveCon8 != ''   ">#{curveCon8},</if>
+            <if test="curveAbs8 != null   and curveAbs8 != ''   ">#{curveAbs8},</if>
+            <if test="curveCon9 != null   and curveCon9 != ''   ">#{curveCon9},</if>
+            <if test="curveAbs9 != null   and curveAbs9 != ''   ">#{curveAbs9},</if>
+            <if test="curveCon10 != null   and curveCon10 != ''   ">#{curveCon10},</if>
+            <if test="curveAbs10 != null   and curveAbs10 != ''   ">#{curveAbs10},</if>
+            <if test="curveOpticalH != null   and curveOpticalH != ''   ">#{curveOpticalH},</if>
+            <if test="curveOpticalL != null   and curveOpticalL != ''   ">#{curveOpticalL},</if>
+			<if test="createBy != null  and createBy != ''  ">#{createBy},</if>
+            getdate()
+         </trim>
+    </insert>
+	 
+    <update id="updateAssayCurve" parameterType="AssayCurve">
+        update z_assay_curve
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="curveNo != null  and curveNo != ''  ">curve_no = #{curveNo},</if>
+            <if test="deviceNo != null   and deviceNo != ''   ">device_no = #{deviceNo},</if>
+            <if test="curveK0 != null   and curveK0 != ''   ">curve_k0 = #{curveK0},</if>
+            <if test="curveK1 != null   and curveK1 != ''   ">curve_k1 = #{curveK1},</if>
+            <if test="curveR != null   and curveR != ''   ">curve_r = #{curveR},</if>
+            <if test="curveCon1 != null   and curveCon1 != ''   ">curve_concentration1 = #{curveCon1},</if>
+            <if test="curveAbs1 != null   and curveAbs1 != ''   ">curve_abs1 = #{curveAbs1},</if>
+            <if test="curveCon2 != null   and curveCon2 != ''   ">curve_concentration2 = #{curveCon2},</if>
+            <if test="curveAbs2 != null   and curveAbs2 != ''   ">curve_abs2 = #{curveAbs2},</if>
+            <if test="curveCon3 != null   and curveCon3 != ''   ">curve_concentration3 = #{curveCon3},</if>
+            <if test="curveAbs3 != null   and curveAbs3 != ''   ">curve_abs3 = #{curveAbs3},</if>
+            <if test="curveCon4 != null   and curveCon4 != ''   ">curve_concentration4 = #{curveCon4},</if>
+            <if test="curveAbs4 != null   and curveAbs4 != ''   ">curve_abs4 = #{curveAbs4},</if>
+            <if test="curveCon5 != null   and curveCon5 != ''   ">curve_concentration5 = #{curveCon5},</if>
+            <if test="curveAbs5 != null   and curveAbs5 != ''   ">curve_abs5 = #{curveAbs5},</if>
+            <if test="curveCon6 != null   and curveCon6 != ''   ">curve_concentration6 = #{curveCon6},</if>
+            <if test="curveAbs6 != null   and curveAbs6 != ''   ">curve_abs6 = #{curveAbs6},</if>
+            <if test="curveCon7 != null   and curveCon7 != ''   ">curve_concentration7 = #{curveCon7},</if>
+            <if test="curveAbs7 != null   and curveAbs7 != ''   ">curve_abs7 = #{curveAbs7},</if>
+            <if test="curveCon8 != null   and curveCon8 != ''   ">curve_concentration8 = #{curveCon8},</if>
+            <if test="curveAbs8 != null   and curveAbs8 != ''   ">curve_abs8 = #{curveAbs8},</if>
+            <if test="curveCon9 != null   and curveCon9 != ''   ">curve_concentration9 = #{curveCon9},</if>
+            <if test="curveAbs9 != null   and curveAbs9 != ''   ">curve_abs9 = #{curveAbs9},</if>
+            <if test="curveCon10 != null   and curveCon10 != ''   ">curve_concentration10 = #{curveCon10},</if>
+            <if test="curveAbs10 != null   and curveAbs10 != ''   ">curve_abs10 = #{curveAbs10},</if>
+            <if test="curveOpticalH != null   and curveOpticalH != ''   ">curve_optical_h = #{curveOpticalH},</if>
+            <if test="curveOpticalL != null   and curveOpticalL != ''   ">curve_optical_l = #{curveOpticalL},</if>
+            <if test="updateBy != null  and updateBy != ''  ">update_by = #{updateBy},</if>
+            update_time = getdate()
+        </trim>
+        where curve_id = #{curveId}
+    </update>
+
+	<delete id="deleteAssayCurveById" parameterType="Long">
+        delete from z_assay_curve where curve_id = #{curveId}
+    </delete>
+	
+    <delete id="deleteAssayCurveByIds" parameterType="String">
+        delete from z_assay_curve where curve_id in
+        <foreach item="curveIds" collection="array" open="(" separator="," close=")">
+            #{curveIds}
+        </foreach>
+    </delete>
+
+    
+</mapper>

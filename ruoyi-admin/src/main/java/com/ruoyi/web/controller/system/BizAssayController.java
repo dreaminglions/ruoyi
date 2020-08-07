@@ -50,6 +50,8 @@ public class BizAssayController extends BaseController
 	private IAssayFaultService assayFaultService;
 	@Autowired
 	private IBizWaterWorkService waterWorkService;
+	@Autowired
+	private IAssayCurveService assayCurveService;
 
 
 	
@@ -328,6 +330,15 @@ public class BizAssayController extends BaseController
 
 		}
 
+		AssayCurve curve_cod = assayCurveService.selectAssayCurveByCurveNo("1");
+		mmap.put("CODparameter", curve_cod);
+		AssayCurve curve_tp = assayCurveService.selectAssayCurveByCurveNo("2");
+		mmap.put("TPparameter", curve_tp);
+		AssayCurve curve_tn = assayCurveService.selectAssayCurveByCurveNo("3");
+		mmap.put("TNparameter", curve_tn);
+		AssayCurve curve_nh = assayCurveService.selectAssayCurveByCurveNo("4");
+		mmap.put("NHparameter", curve_nh);
+
 		DecimalFormat decimalFormat=new DecimalFormat("0.000");
 
 		mmap.put("assayNo", assayNo);
@@ -364,15 +375,33 @@ public class BizAssayController extends BaseController
 			if(work!=null){
 				map.put("workname", work.getWorksName());
 			}
+
+			AssayCurve curve =new AssayCurve();
+
 			if("cod".equals(obj)){
 				map.put("assaymethod", "HJ399-2007化学需氧量的测定 快速消解分光光度法");
+				 curve = assayCurveService.selectAssayCurveByCurveNo("1");
 			}else if(("tp".equals(obj))){
 				map.put("assaymethod", "GB11893-1989水质总磷的测定钼酸铵分光光度法");
+				 curve = assayCurveService.selectAssayCurveByCurveNo("2");
 			}else if(("tn".equals(obj))){
 				map.put("assaymethod", "HJ636-2012水质总氮的测定碱性过硫酸钾消解紫外分光光度法");
+				 curve = assayCurveService.selectAssayCurveByCurveNo("3");
 			}else if(("nh".equals(obj))){
 				map.put("assaymethod", "HJ535-2009水质氨氮的测定纳氏试剂分光光度法");
+				 curve = assayCurveService.selectAssayCurveByCurveNo("4");
 			}
+			map.put("ug1", curve.getCurveCon1());map.put("OD1", curve.getCurveAbs1());
+			map.put("ug2", curve.getCurveCon2());map.put("OD2", curve.getCurveAbs2());
+			map.put("ug3", curve.getCurveCon3());map.put("OD3", curve.getCurveAbs3());
+			map.put("ug4", curve.getCurveCon4());map.put("OD4", curve.getCurveAbs4());
+			map.put("ug5", curve.getCurveCon5());map.put("OD5", curve.getCurveAbs5());
+			map.put("ug6", curve.getCurveCon6());map.put("OD6", curve.getCurveAbs6());
+			map.put("ug7", curve.getCurveCon7());map.put("OD7", curve.getCurveAbs7());
+//			map.put("b", curve.getCurveB());
+//			map.put("a", curve.getCurveA());
+			map.put("r", curve.getCurveR());
+
 			if(resultList!=null){
 				for(AssayResult result:resultList){
 					String r_no = result.getResultNo();

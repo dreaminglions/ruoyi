@@ -78,10 +78,10 @@
 				</tr></thead>
 				<tbody>
 				<tr data-index="0">
-					<td style="">质量（ug）</td><td id="ug1">[[${CODparameter?.ug1}]]</td><td id="ug2">[[${CODparameter?.ug2}]]</td><td id="ug3">[[${CODparameter?.ug3}]]</td><td id="ug4">[[${CODparameter?.ug4}]]</td><td id="ug5">[[${CODparameter?.ug5}]]</td><td id="ug6">[[${CODparameter?.ug6}]]</td><td id="ug7">[[${CODparameter?.ug7}]]</td>
+					<td style="">质量（ug）</td><td id="CurveCon1">[[${CODparameter?.CurveCon1}]]</td><td id="CurveCon2">[[${CODparameter?.CurveCon2}]]</td><td id="CurveCon3">[[${CODparameter?.CurveCon3}]]</td><td id="CurveCon4">[[${CODparameter?.CurveCon4}]]</td><td id="CurveCon5">[[${CODparameter?.CurveCon5}]]</td><td id="CurveCon6">[[${CODparameter?.CurveCon6}]]</td><td id="CurveCon7">[[${CODparameter?.CurveCon7}]]</td>
 				</tr>
 				<tr data-index="0">
-					<td style="">吸光度</td><td id="od1">[[${CODparameter?.od1}]]</td><td id="od2">[[${CODparameter?.od2}]]</td><td id="od3">[[${CODparameter?.od3}]]</td><td id="od4">[[${CODparameter?.od4}]]</td><td id="od5">[[${CODparameter?.od5}]]</td><td id="od6">[[${CODparameter?.od6}]]</td><td id="od7">[[${CODparameter?.od7}]]</td>
+					<td style="">吸光度</td><td id="curveAbs1">[[${CODparameter?.curveAbs1}]]</td><td id="curveAbs2">[[${CODparameter?.curveAbs2}]]</td><td id="curveAbs3">[[${CODparameter?.curveAbs3}]]</td><td id="curveAbs4">[[${CODparameter?.curveAbs4}]]</td><td id="curveAbs5">[[${CODparameter?.curveAbs5}]]</td><td id="curveAbs6">[[${CODparameter?.curveAbs6}]]</td><td id="curveAbs7">[[${CODparameter?.curveAbs7}]]</td>
 				</tr>
 				</tbody>
 			</table>
@@ -91,8 +91,8 @@
 		<table id="4-table" data-mobile-responsive="true" class="table">
 			<thead><tr>
 				<th style="" tabindex="0"><div class="th-inner sortable both">校准曲线Y=bX+a</div><div class="fht-cell"></div></th>
-				<th style="" tabindex="0"><div class="th-inner sortable both">b=[[${CODparameter?.curveB}]]</div><div class="fht-cell"></div></th>
-				<th style="" tabindex="0"><div class="th-inner sortable both">a=[[${CODparameter?.curveA}]]</div><div class="fht-cell"></div></th>
+				<th style="" tabindex="0"><div class="th-inner sortable both">b=[[${CODparameter?.curveK0}]]</div><div class="fht-cell"></div></th>
+				<th style="" tabindex="0"><div class="th-inner sortable both">a=[[${CODparameter?.curveK1}]]</div><div class="fht-cell"></div></th>
 				<th style="" tabindex="0"><div class="th-inner sortable both">r=[[${CODparameter?.curveR}]]</div><div class="fht-cell"></div></th>
 			</tr></thead>
 		</table>
@@ -150,21 +150,21 @@
             $("#wave2").html('测定波长'+[[${bizAssayMethod?.codWave2}]]+'nm（低量程）');
 
 
-            $("#ug1").html([[${CODparameter?.ug1}]]);
-            $("#ug2").html([[${CODparameter?.ug2}]]);
-            $("#ug3").html([[${CODparameter?.ug3}]]);
-            $("#ug4").html([[${CODparameter?.ug4}]]);
-            $("#ug5").html([[${CODparameter?.ug5}]]);
-            $("#ug6").html([[${CODparameter?.ug6}]]);
-            $("#ug7").html([[${CODparameter?.ug7}]]);
+            $("#CurveCon1").html([[${CODparameter?.CurveCon1}]]);
+            $("#CurveCon2").html([[${CODparameter?.CurveCon2}]]);
+            $("#CurveCon3").html([[${CODparameter?.CurveCon3}]]);
+            $("#CurveCon4").html([[${CODparameter?.CurveCon4}]]);
+            $("#CurveCon5").html([[${CODparameter?.CurveCon5}]]);
+            $("#CurveCon6").html([[${CODparameter?.CurveCon6}]]);
+            $("#CurveCon7").html([[${CODparameter?.CurveCon7}]]);
 
-            $("#od1").html([[${CODparameter?.od1}]]);
-            $("#od2").html([[${CODparameter?.od2}]]);
-            $("#od3").html([[${CODparameter?.od3}]]);
-            $("#od4").html([[${CODparameter?.od4}]]);
-            $("#od5").html([[${CODparameter?.od5}]]);
-            $("#od6").html([[${CODparameter?.od6}]]);
-            $("#od7").html([[${CODparameter?.od7}]]);
+            $("#curveAbs1").html([[${CODparameter?.curveAbs1}]]);
+            $("#curveAbs2").html([[${CODparameter?.curveAbs2}]]);
+            $("#curveAbs3").html([[${CODparameter?.curveAbs3}]]);
+            $("#curveAbs4").html([[${CODparameter?.curveAbs4}]]);
+            $("#curveAbs5").html([[${CODparameter?.curveAbs5}]]);
+            $("#curveAbs6").html([[${CODparameter?.curveAbs6}]]);
+            $("#curveAbs7").html([[${CODparameter?.curveAbs7}]]);
 
             $("#sta_value").html('48');
             $("#sta_valueR").html('48');
@@ -179,25 +179,25 @@
                 $("#th_wave2").css('display','');
                 $("#wave1").html('测定波长'+[[${bizAssayMethod?.codWave1}]]+'nm（高量程）');
 
-                $("#ug1").html([[${CODparameter?.ug1}]]);
-                $("#ug2").html([[${CODparameter?.ug2}]]);
-                $("#ug3").html([[${CODparameter?.ug3}]]);
-                $("#ug4").html([[${CODparameter?.ug4}]]);
-                $("#ug5").html([[${CODparameter?.ug5}]]);
-                $("#ug6").html([[${CODparameter?.ug6}]]);
-                $("#ug7").html([[${CODparameter?.ug7}]]);
+                $("#CurveCon1").html([[${CODparameter?.CurveCon1}]]);
+                $("#CurveCon2").html([[${CODparameter?.CurveCon2}]]);
+                $("#CurveCon3").html([[${CODparameter?.CurveCon3}]]);
+                $("#CurveCon4").html([[${CODparameter?.CurveCon4}]]);
+                $("#CurveCon5").html([[${CODparameter?.CurveCon5}]]);
+                $("#CurveCon6").html([[${CODparameter?.CurveCon6}]]);
+                $("#CurveCon7").html([[${CODparameter?.CurveCon7}]]);
 
-                $("#od1").html([[${CODparameter?.od1}]]);
-                $("#od2").html([[${CODparameter?.od2}]]);
-                $("#od3").html([[${CODparameter?.od3}]]);
-                $("#od4").html([[${CODparameter?.od4}]]);
-                $("#od5").html([[${CODparameter?.od5}]]);
-                $("#od6").html([[${CODparameter?.od6}]]);
-                $("#od7").html([[${CODparameter?.od7}]]);
+                $("#curveAbs1").html([[${CODparameter?.curveAbs1}]]);
+                $("#curveAbs2").html([[${CODparameter?.curveAbs2}]]);
+                $("#curveAbs3").html([[${CODparameter?.curveAbs3}]]);
+                $("#curveAbs4").html([[${CODparameter?.curveAbs4}]]);
+                $("#curveAbs5").html([[${CODparameter?.curveAbs5}]]);
+                $("#curveAbs6").html([[${CODparameter?.curveAbs6}]]);
+                $("#curveAbs7").html([[${CODparameter?.curveAbs7}]]);
 
                 $("#sta_value").html('48');
                 $("#sta_valueR").html('48');
-                $("#sta_abs").html([[${cod_standard_As}]]);
+                $("#sta_abs").html([[${ccurveAbs_standard_As}]]);
 
                 $("#invalue").html([[${inCod}]]);
                 $("#invalueR").html([[${inCod}]]);
@@ -213,21 +213,21 @@
                 $("#th_wave2").css('display','none');
                 $("#wave1").html('测定波长'+[[${bizAssayMethod?.tpWave1}]]+'nm');
 
-                $("#ug1").html([[${TPparameter?.ug1}]]);
-                $("#ug2").html([[${TPparameter?.ug2}]]);
-                $("#ug3").html([[${TPparameter?.ug3}]]);
-                $("#ug4").html([[${TPparameter?.ug4}]]);
-                $("#ug5").html([[${TPparameter?.ug5}]]);
-                $("#ug6").html([[${TPparameter?.ug6}]]);
-                $("#ug7").html([[${TPparameter?.ug7}]]);
+                $("#CurveCon1").html([[${TPparameter?.CurveCon1}]]);
+                $("#CurveCon2").html([[${TPparameter?.CurveCon2}]]);
+                $("#CurveCon3").html([[${TPparameter?.CurveCon3}]]);
+                $("#CurveCon4").html([[${TPparameter?.CurveCon4}]]);
+                $("#CurveCon5").html([[${TPparameter?.CurveCon5}]]);
+                $("#CurveCon6").html([[${TPparameter?.CurveCon6}]]);
+                $("#CurveCon7").html([[${TPparameter?.CurveCon7}]]);
 
-                $("#od1").html([[${TPparameter?.od1}]]);
-                $("#od2").html([[${TPparameter?.od2}]]);
-                $("#od3").html([[${TPparameter?.od3}]]);
-                $("#od4").html([[${TPparameter?.od4}]]);
-                $("#od5").html([[${TPparameter?.od5}]]);
-                $("#od6").html([[${TPparameter?.od6}]]);
-                $("#od7").html([[${TPparameter?.od7}]]);
+                $("#curveAbs1").html([[${TPparameter?.curveAbs1}]]);
+                $("#curveAbs2").html([[${TPparameter?.curveAbs2}]]);
+                $("#curveAbs3").html([[${TPparameter?.curveAbs3}]]);
+                $("#curveAbs4").html([[${TPparameter?.curveAbs4}]]);
+                $("#curveAbs5").html([[${TPparameter?.curveAbs5}]]);
+                $("#curveAbs6").html([[${TPparameter?.curveAbs6}]]);
+                $("#curveAbs7").html([[${TPparameter?.curveAbs7}]]);
 
                 $("#sta_value").html('1.33');
                 $("#sta_valueR").html('1.33');
@@ -243,25 +243,25 @@
 
 
 			}else if(obj == "tn"){
-                $("#methodname").html([[${bizAssayMethod?.tnName}]]);
+                $("#methcurveAbsname").html([[${bizAssayMethod?.tnName}]]);
                 $("#th_wave2").css('display','none');
                 $("#wave1").html('测定波长'+[[${bizAssayMethod?.tnWave1}]]+'nm');
 
-                $("#ug1").html([[${TNparameter?.ug1}]]);
-                $("#ug2").html([[${TNparameter?.ug2}]]);
-                $("#ug3").html([[${TNparameter?.ug3}]]);
-                $("#ug4").html([[${TNparameter?.ug4}]]);
-                $("#ug5").html([[${TNparameter?.ug5}]]);
-                $("#ug6").html([[${TNparameter?.ug6}]]);
-                $("#ug7").html([[${TNparameter?.ug7}]]);
+                $("#CurveCon1").html([[${TNparameter?.CurveCon1}]]);
+                $("#CurveCon2").html([[${TNparameter?.CurveCon2}]]);
+                $("#CurveCon3").html([[${TNparameter?.CurveCon3}]]);
+                $("#CurveCon4").html([[${TNparameter?.CurveCon4}]]);
+                $("#CurveCon5").html([[${TNparameter?.CurveCon5}]]);
+                $("#CurveCon6").html([[${TNparameter?.CurveCon6}]]);
+                $("#CurveCon7").html([[${TNparameter?.CurveCon7}]]);
 
-                $("#od1").html([[${TNparameter?.od1}]]);
-                $("#od2").html([[${TNparameter?.od2}]]);
-                $("#od3").html([[${TNparameter?.od3}]]);
-                $("#od4").html([[${TNparameter?.od4}]]);
-                $("#od5").html([[${TNparameter?.od5}]]);
-                $("#od6").html([[${TNparameter?.od6}]]);
-                $("#od7").html([[${TNparameter?.od7}]]);
+                $("#curveAbs1").html([[${TNparameter?.curveAbs1}]]);
+                $("#curveAbs2").html([[${TNparameter?.curveAbs2}]]);
+                $("#curveAbs3").html([[${TNparameter?.curveAbs3}]]);
+                $("#curveAbs4").html([[${TNparameter?.curveAbs4}]]);
+                $("#curveAbs5").html([[${TNparameter?.curveAbs5}]]);
+                $("#curveAbs6").html([[${TNparameter?.curveAbs6}]]);
+                $("#curveAbs7").html([[${TNparameter?.curveAbs7}]]);
 
                 $("#sta_value").html('2.58');
                 $("#sta_valueR").html('2.58');
@@ -281,21 +281,21 @@
                 $("#th_wave2").css('display','none');
                 $("#wave1").html('测定波长'+[[${bizAssayMethod?.nhWave1}]]+'nm');
 
-                $("#ug1").html([[${NHparameter?.ug1}]]);
-                $("#ug2").html([[${NHparameter?.ug2}]]);
-                $("#ug3").html([[${NHparameter?.ug3}]]);
-                $("#ug4").html([[${NHparameter?.ug4}]]);
-                $("#ug5").html([[${NHparameter?.ug5}]]);
-                $("#ug6").html([[${NHparameter?.ug6}]]);
-                $("#ug7").html([[${NHparameter?.ug7}]]);
+                $("#CurveCon1").html([[${NHparameter?.CurveCon1}]]);
+                $("#CurveCon2").html([[${NHparameter?.CurveCon2}]]);
+                $("#CurveCon3").html([[${NHparameter?.CurveCon3}]]);
+                $("#CurveCon4").html([[${NHparameter?.CurveCon4}]]);
+                $("#CurveCon5").html([[${NHparameter?.CurveCon5}]]);
+                $("#CurveCon6").html([[${NHparameter?.CurveCon6}]]);
+                $("#CurveCon7").html([[${NHparameter?.CurveCon7}]]);
 
-                $("#od1").html([[${NHparameter?.od1}]]);
-                $("#od2").html([[${NHparameter?.od2}]]);
-                $("#od3").html([[${NHparameter?.od3}]]);
-                $("#od4").html([[${NHparameter?.od4}]]);
-                $("#od5").html([[${NHparameter?.od5}]]);
-                $("#od6").html([[${NHparameter?.od6}]]);
-                $("#od7").html([[${NHparameter?.od7}]]);
+                $("#curveAbs1").html([[${NHparameter?.curveAbs1}]]);
+                $("#curveAbs2").html([[${NHparameter?.curveAbs2}]]);
+                $("#curveAbs3").html([[${NHparameter?.curveAbs3}]]);
+                $("#curveAbs4").html([[${NHparameter?.curveAbs4}]]);
+                $("#curveAbs5").html([[${NHparameter?.curveAbs5}]]);
+                $("#curveAbs6").html([[${NHparameter?.curveAbs6}]]);
+                $("#curveAbs7").html([[${NHparameter?.curveAbs7}]]);
 
                 $("#sta_value").html('0.58');
                 $("#sta_valueR").html('0.58');
