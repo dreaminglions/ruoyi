@@ -1523,6 +1523,14 @@
                         var daypower = weatherData.daypower;
                         var nigpower = weatherData.nigpower;
 
+                        if(weatherTime='[]'){
+                            weatherTime = ['-'];
+                            daytemp = ['-'];
+                            nighttemp = ['-'];
+                            daypower = ['-'];
+                            nigpower = ['-'];
+                        }
+
                         initgongyi(weatherTime,daytemp,nighttemp);
                         initfengli(weatherTime,daypower,nigpower)
 

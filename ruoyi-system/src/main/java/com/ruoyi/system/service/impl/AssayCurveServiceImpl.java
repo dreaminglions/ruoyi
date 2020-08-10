@@ -46,9 +46,9 @@ public class AssayCurveServiceImpl implements IAssayCurveService
 	}
 
 	@Override
-	public AssayCurve selectAssayCurveByCurveNo(String assayNo)
+	public AssayCurve selectAssayCurveByCurveNo(String curveNo)
 	{
-		return assayCurveMapper.selectAssayCurveByCurveNo(assayNo);
+		return assayCurveMapper.selectAssayCurveByCurveNo(curveNo);
 	}
     /**
      * 新增曲线

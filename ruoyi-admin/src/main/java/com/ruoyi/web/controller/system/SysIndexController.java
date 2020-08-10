@@ -44,6 +44,8 @@ public class SysIndexController extends BaseController
     IAssayResultService assayResultService;
     @Autowired
     IAssayFaultService assayFaultService;
+    @Autowired
+    private IAssayCurveService assayCurveService;
 
     @Autowired
     IBizDeviceService deviceService;
@@ -233,29 +235,6 @@ public class SysIndexController extends BaseController
         List<AssayResult> assayResult = assayResultService.selectAssayResultByAssayNo(NoValue);
         List<AssayFault> assayFault = assayFaultService.selectAssayFaultByAssayNo(NoValue);
 
-        String resultdata="[";
-
-        String in_cod_wave1="[";
-        String in_cod_wave2="[";
-        String in_cod_k="[";
-        String in_cod_b="[";
-        String out_cod_wave1="[";
-        String out_cod_wave2="[";
-        String out_cod_k="[";
-        String out_cod_b="[";
-        String tp_wave1="[";
-        String tp_wave2="[";
-        String tp_k="[";
-        String tp_b="[";
-        String tn_wave1="[";
-        String tn_wave2="[";
-        String tn_k="[";
-        String tn_b="[";
-        String nh_wave1="[";
-        String nh_wave2="[";
-        String nh_k="[";
-        String nh_b="[";
-
         String datesign="0";
 
         //获取化验数据
@@ -306,6 +285,17 @@ public class SysIndexController extends BaseController
             nodemap.put("fault","无故障");
             nodemap.put("alertCon","");
         }
+
+        String in_cod_con="[";
+        String in_cod_abs="[";
+        String out_cod_con="[";
+        String out_cod_abs="[";
+        String tp_con="[";
+        String tp_abs="[";
+        String tn_con="[";
+        String tn_abs="[";
+        String nh_con="[";
+        String nh_abs="[";
 
         if(assayResult!=null){
             int tn_sign=0;float Intn=0;float OutTn=0;
@@ -359,105 +349,45 @@ public class SysIndexController extends BaseController
             map.put("out_nh",OutNh);
 
 
-//            BizAssayCurve assayCurve = new BizAssayCurve();
-//            assayCurve.setReportId(reportId);
-//            List<BizAssayCurve> curveList = bizAssayCurveService.selectBizAssayCurveList(assayCurve);
-            //获取化验曲线
-//            if(curveList!=null){
-//
-//                int i=1;
-//                for(BizAssayCurve object:curveList){
-//                    resultdata +="'"+i+"',";
-//
-//                    in_cod_wave1+=object.getIncodWave1()+",";
-//                    in_cod_wave2+=object.getIncodWave2()+",";
-//                    in_cod_k+=object.getIncodCurveK()+",";
-//                    in_cod_b+=object.getIncodCurveB()+",";
-//                    out_cod_wave1+=object.getOutcodWave1()+",";
-//                    out_cod_wave2+=object.getOutcodWave2()+",";
-//                    out_cod_k+=object.getOutcodCurveK()+",";
-//                    out_cod_b+=object.getOutcodCurveB()+",";
-//                    tp_wave1+=object.getTpWave1()+",";
-//                    tp_wave2+=object.getTpWave2()+",";
-//                    tp_k+=object.getTpCurveK()+",";
-//                    tp_b+=object.getTpCurveB()+",";
-//                    tn_wave1+=object.getTnWave1()+",";
-//                    tn_wave2+=object.getTnWave1()+",";
-//                    tn_k+=object.getTnCurveK()+",";
-//                    tn_b+=object.getTnCurveB()+",";
-//                    nh_wave1+=object.getNhWave1()+",";
-//                    nh_wave2+=object.getNhWave1()+",";
-//                    nh_k+=object.getNhCurveK()+",";
-//                    nh_b+=object.getNhCurveB()+",";
-//
-//                    i++;
-//                }
-//
-//                if(resultdata.length()>1){
-//                    resultdata = resultdata.substring(0,resultdata.length()-1);
-//                }
-//                if(in_cod_wave1.length()>1){
-//                    in_cod_wave1 = in_cod_wave1.substring(0,in_cod_wave1.length()-1);
-//                    in_cod_wave2 = in_cod_wave2.substring(0,in_cod_wave2.length()-1);
-//                    in_cod_k = in_cod_k.substring(0,in_cod_k.length()-1);
-//                    in_cod_b = in_cod_b.substring(0,in_cod_b.length()-1);
-//                    out_cod_wave1 = out_cod_wave1.substring(0,out_cod_wave1.length()-1);
-//                    out_cod_wave2 = out_cod_wave2.substring(0,out_cod_wave2.length()-1);
-//                    out_cod_k = out_cod_k.substring(0,out_cod_k.length()-1);
-//                    out_cod_b = out_cod_b.substring(0,out_cod_b.length()-1);
-//                    tp_wave1 = tp_wave1.substring(0,tp_wave1.length()-1);
-//                    tp_wave2 = tp_wave2.substring(0,tp_wave2.length()-1);
-//                    tp_k = tp_k.substring(0,tp_k.length()-1);
-//                    tp_b = tp_b.substring(0,tp_b.length()-1);
-//                    tn_wave1 = tn_wave1.substring(0,tn_wave1.length()-1);
-//                    tn_wave2 = tn_wave2.substring(0,tn_wave2.length()-1);
-//                    tn_k = tn_k.substring(0,tn_k.length()-1);
-//                    tn_b = tn_b.substring(0,tn_b.length()-1);
-//                    nh_wave1 = nh_wave1.substring(0,nh_wave1.length()-1);
-//                    nh_wave2 = nh_wave2.substring(0,nh_wave2.length()-1);
-//                    nh_k = nh_k.substring(0,nh_k.length()-1);
-//                    nh_b = nh_b.substring(0,nh_b.length()-1);
-//                }
-//            }
+            AssayCurve curve = assayCurveService.selectAssayCurveByCurveNo("1");
+             in_cod_con += curve.getCurveCon1()+","+curve.getCurveCon2()+","+curve.getCurveCon3()+","+curve.getCurveCon4()+","+curve.getCurveCon5()+","+curve.getCurveCon6()+","+curve.getCurveCon7();
+             in_cod_abs += curve.getCurveAbs1()+","+curve.getCurveAbs2()+","+curve.getCurveAbs3()+","+curve.getCurveAbs4()+","+curve.getCurveAbs5()+","+curve.getCurveAbs6()+","+curve.getCurveAbs7();
 
-            //设备工作累计
-            //药剂消耗情况
-            //废液消耗情况
+            curve = assayCurveService.selectAssayCurveByCurveNo("2");
+             tp_con += curve.getCurveCon1()+","+curve.getCurveCon2()+","+curve.getCurveCon3()+","+curve.getCurveCon4()+","+curve.getCurveCon5()+","+curve.getCurveCon6()+","+curve.getCurveCon7();
+             tp_abs += curve.getCurveAbs1()+","+curve.getCurveAbs2()+","+curve.getCurveAbs3()+","+curve.getCurveAbs4()+","+curve.getCurveAbs5()+","+curve.getCurveAbs6()+","+curve.getCurveAbs7();
+
+            curve = assayCurveService.selectAssayCurveByCurveNo("3");
+             tn_con += curve.getCurveCon1()+","+curve.getCurveCon2()+","+curve.getCurveCon3()+","+curve.getCurveCon4()+","+curve.getCurveCon5()+","+curve.getCurveCon6()+","+curve.getCurveCon7();
+             tn_abs += curve.getCurveAbs1()+","+curve.getCurveAbs2()+","+curve.getCurveAbs3()+","+curve.getCurveAbs4()+","+curve.getCurveAbs5()+","+curve.getCurveAbs6()+","+curve.getCurveAbs7();
+
+            curve = assayCurveService.selectAssayCurveByCurveNo("3");
+             nh_con += curve.getCurveCon1()+","+curve.getCurveCon2()+","+curve.getCurveCon3()+","+curve.getCurveCon4()+","+curve.getCurveCon5()+","+curve.getCurveCon6()+","+curve.getCurveCon7();
+             nh_abs += curve.getCurveAbs1()+","+curve.getCurveAbs2()+","+curve.getCurveAbs3()+","+curve.getCurveAbs4()+","+curve.getCurveAbs5()+","+curve.getCurveAbs6()+","+curve.getCurveAbs7();
+
+            curve = assayCurveService.selectAssayCurveByCurveNo("3");
+             out_cod_con += curve.getCurveCon1()+","+curve.getCurveCon2()+","+curve.getCurveCon3()+","+curve.getCurveCon4()+","+curve.getCurveCon5()+","+curve.getCurveCon6()+","+curve.getCurveCon7();
+             out_cod_abs += curve.getCurveAbs1()+","+curve.getCurveAbs2()+","+curve.getCurveAbs3()+","+curve.getCurveAbs4()+","+curve.getCurveAbs5()+","+curve.getCurveAbs6()+","+curve.getCurveAbs7();
+
+
         }
 
-        resultdata +="]";
+        in_cod_con+="]";
+        in_cod_abs+="]";
+        out_cod_con+="]";
+        out_cod_abs+="]";
+        tp_con+="]";
+        tp_abs+="]";
+        tn_con+="]";
+        tn_abs+="]";
+        nh_con+="]";
+        nh_abs+="]";
 
-        in_cod_wave1+="]";
-        in_cod_wave2+="]";
-        in_cod_k+="]";
-        in_cod_b+="]";
-        out_cod_wave1+="]";
-        out_cod_wave2+="]";
-        out_cod_k+="]";
-        out_cod_b+="]";
-        tp_wave1+="]";
-        tp_wave2+="]";
-        tp_k+="]";
-        tp_b+="]";
-        tn_wave1+="]";
-        tn_wave2+="]";
-        tn_k+="]";
-        tn_b+="]";
-        nh_wave1+="]";
-        nh_wave2+="]";
-        nh_k+="]";
-        nh_b+="]";
-
-        String curveData = "{curvedate:"+resultdata+",in_cod_wave1:"+in_cod_wave1+",in_cod_wave2:"+in_cod_wave2+
-                ",in_cod_k:"+in_cod_k+",in_cod_b:"+in_cod_b+
-                ",out_cod_wave1:"+out_cod_wave1+",out_cod_wave2:"+out_cod_wave2+
-                ",out_cod_k:"+out_cod_k+",out_cod_b:"+out_cod_b+
-                ",tp_wave1:"+tp_wave1+",tp_wave2:"+tp_wave2+
-                ",tp_k:"+tp_k+",tp_b:"+tp_b+
-                ",tn_wave1:"+tn_wave1+",tn_wave2:"+tn_wave2+
-                ",tn_k:"+tn_k+",tn_b:"+tn_b+
-                ",nh_wave1:"+nh_wave1+",nh_wave2:"+nh_wave2+
-                ",nh_k:"+nh_k+",nh_b:"+nh_b+"}";
+        String curveData = "{in_cod_con:"+in_cod_con+",in_cod_abs:"+in_cod_abs+
+                ",out_cod_con:"+out_cod_con+",out_cod_abs:"+out_cod_abs+
+                ",tp_con:"+tp_con+",tp_abs:"+tp_abs+
+                ",tn_con:"+tn_con+",tn_abs:"+tn_abs+
+                ",nh_con:"+nh_con+",nh_abs:"+nh_abs+"}";
 
         Gson gson = new Gson();
         String jsonData = gson.toJson(map);

@@ -28,7 +28,7 @@ public interface IAssayCurveService
      */
 	public List<AssayCurve> selectAssayCurveList(AssayCurve assayCurve);
 
-	public AssayCurve selectAssayCurveByCurveNo(String assayNo);
+	public AssayCurve selectAssayCurveByCurveNo(String curveNo);
 	
 	/**
      * 新增曲线

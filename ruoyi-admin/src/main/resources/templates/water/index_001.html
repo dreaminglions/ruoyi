@@ -136,12 +136,10 @@
                                     <tr><td>出水</td><td class="font6" id="tval09"></td><td class="font6" id="tval10"></td><td class="font6" id="tval11"></td><td class="font6" id="tval12"></td></tr>
                                 </table>
                             </div>
-
-                            <div style="height:6%"></div>
-                            <div style="height:10%">
+                            <div style="height:1%"></div>
+                            <div style="height:5%">
                                 <span class="chose_tltle">请选择化验曲线：</span>
                                 <select class="time_chose" id="curveValue" onchange="chage_curve(this.value)" style="width: 140px;">
-                                    <option value="0" class="water_option" >请选择</option>
                                     <option value="1" class="water_option" selected>入水COD曲线参数</option>
                                     <option value="2" class="water_option" >出水COD曲线参数</option>
                                     <option value="3" class="water_option" >NH3曲线参数</option>
@@ -151,18 +149,14 @@
 
                             </div>
 
-
-
-
-                            <img id="printImg1" style="width:100%;">
-                            <div style="height:15%">
-                                <table class="table_data01" id="curve_table" >
-                                    <tr>
-                                        <td class="font04" id="wave1_name">入水COD波长1</td><td class="font04" id="wave2_name">入水COD波长2	</td><td class="font04" id="k_name">入水COD曲线k</td><td class="font04" id="b_name">入水COD曲线B</td>
-                                    </tr>
-                                    <td class="font6" id="wave1"></td><td class="font6" id="wave2"></td><td class="font6" id="curve_k"></td><td class="font6" id="curve_b"></td></tr>
-                                </table>
-                                <!--<p class="zhanleft02" id="allAly03"></p>-->
+                            <div style="height:30%">
+                                <!--<table class="table_data01" id="curve_table" >-->
+                                    <!--<tr>-->
+                                        <!--<td class="font04" id="wave1_name">入水COD波长1</td><td class="font04" id="wave2_name">入水COD波长2	</td><td class="font04" id="k_name">入水COD曲线k</td><td class="font04" id="b_name">入水COD曲线B</td>-->
+                                    <!--</tr>-->
+                                    <!--<td class="font6" id="wave1"></td><td class="font6" id="wave2"></td><td class="font6" id="curve_k"></td><td class="font6" id="curve_b"></td></tr>-->
+                                <!--</table>-->
+                                <p class="zhanleft02" id="allAly03"></p>
                             </div>
 
                         </div>
@@ -602,7 +596,7 @@
         var myChart = echarts.init($("#allAly03")[0]);
         option = {
             title : {
-                text: '化验曲线',
+                text: '',
                 textStyle:{
                     color:"#e9ebee"
 
@@ -633,7 +627,7 @@
                             align: 'right'
                         }
                     },
-                    data : obj1
+                    data : obj1,
                 }
             ],
             yAxis : [
@@ -922,70 +916,16 @@
 
     function chage_curve(){
         var curveValue = $("#curveValue").val();
-//        var obj = QXList[curveValue];
-        if(curveValue==0){
-            $("#curve_table").css('display','none');
-        }else if(curveValue==1){
-            $("#wave1_name").html("入水COD波长1");
-            $("#wave2_name").html("入水COD波长2");
-            $("#k_name").html("入水COD曲线k");
-            $("#b_name").html("入水COD曲线B");
-
-            $("#wave1").html(in_cod_wave1[0]);
-            $("#wave2").html(in_cod_wave2[0]);
-            $("#curve_k").html(in_cod_k[0]);
-            $("#curve_b").html(in_cod_b[0]);
-
-//            initcurve(in_cod_k,in_cod_b,out_cod_k,out_cod_b);
-            $("#curve_table").css('display','');
+        if(curveValue==1){
+            initcurve(in_cod_con,in_cod_abs);
         }else if(curveValue==2){
-            $("#wave1_name").html("出水COD波长1");
-            $("#wave2_name").html("出水COD波长2");
-            $("#k_name").html("出水COD曲线k");
-            $("#b_name").html("出水COD曲线B");
-
-            $("#wave1").html(out_cod_wave1[0]);
-            $("#wave2").html(out_cod_wave2[0]);
-            $("#curve_k").html(out_cod_k[0]);
-            $("#curve_b").html(out_cod_b[0]);
-
-            $("#curve_table").css('display','');
+            initcurve(out_cod_con,out_cod_abs);
         }else if(curveValue==3){
-            $("#wave1_name").html("氨氮波长1");
-            $("#wave2_name").html("氨氮波长2");
-            $("#k_name").html("氨氮曲线k");
-            $("#b_name").html("氨氮曲线B");
-
-            $("#wave1").html(nh_wave1[0]);
-            $("#wave2").html(nh_wave2[0]);
-            $("#curve_k").html(nh_k[0]);
-            $("#curve_b").html(nh_b[0]);
-
-            $("#curve_table").css('display','');
+            initcurve(nh_con,nh_abs);
         }else if(curveValue==4){
-            $("#wave1_name").html("总磷波长1");
-            $("#wave2_name").html("总磷波长2");
-            $("#k_name").html("总磷曲线k");
-            $("#b_name").html("总磷曲线B");
-
-            $("#wave1").html(tp_wave1[0]);
-            $("#wave2").html(tp_wave2[0]);
-            $("#curve_k").html(tp_k[0]);
-            $("#curve_b").html(tp_b[0]);
-
-            $("#curve_table").css('display','');
+            initcurve(tp_con,tp_abs);
         }else if(curveValue==5){
-            $("#wave1_name").html("总氮波长1");
-            $("#wave2_name").html("总氮波长2");
-            $("#k_name").html("总氮曲线k");
-            $("#b_name").html("总氮曲线B");
-
-            $("#wave1").html(tn_wave1[0]);
-            $("#wave2").html(tn_wave2[0]);
-            $("#curve_k").html(tn_k[0]);
-            $("#curve_b").html(tn_b[0]);
-
-            $("#curve_table").css('display','');
+            initcurve(tn_con,tn_abs);
         }
     }
 
@@ -1063,30 +1003,16 @@
 
     var curvedate=[];
 
-    var in_cod_wave1=[];
-    var in_cod_wave2=[];
-    var in_cod_k=[];
-    var in_cod_b=[];
-
-    var out_cod_wave1=[];
-    var out_cod_wave2=[];
-    var out_cod_k=[];
-    var out_cod_b=[];
-
-    var tp_wave1=[];
-    var tp_wave2=[];
-    var tp_k=[];
-    var tp_b=[];
-
-    var tn_wave1=[];
-    var tn_wave2=[];
-    var tn_k=[];
-    var tn_b=[];
-
-    var nh_wave1=[];
-    var nh_wave2=[];
-    var nh_k=[];
-    var nh_b=[];
+    var in_cod_con=[];
+    var in_cod_abs=[];
+    var out_cod_con=[];
+    var out_cod_abs=[];
+    var tp_con=[];
+    var tp_abs=[];
+    var tn_con=[];
+    var tn_abs=[];
+    var nh_con=[];
+    var nh_abs=[];
 
     //循环标记
     var select_tip =0;
@@ -1196,35 +1122,23 @@
 
                 if(curveData !=''&& curveData != null&& curveData !== 'undefined'){
                     curvedate = curveData.curvedate;
-                    in_cod_wave1 = curveData.in_cod_wave1;
-                    in_cod_wave2 = curveData.in_cod_wave2;
-                    in_cod_k = curveData.in_cod_k;
-                    in_cod_b = curveData.in_cod_b;
 
-                    out_cod_wave1 = curveData.out_cod_wave1;
-                    out_cod_wave2 = curveData.out_cod_wave2;
-                    out_cod_k = curveData.out_cod_k;
-                    out_cod_b = curveData.out_cod_b;
+                    in_cod_con = curveData.in_cod_con;
+                    in_cod_abs = curveData.in_cod_abs;
 
-                    tp_wave1 = curveData.tp_wave1;
-                    tp_wave2 = curveData.tp_wave2;
-                    tp_k = curveData.tp_k;
-                    tp_b = curveData.tp_b;
+                    out_cod_con = curveData.out_cod_con;
+                    out_cod_abs = curveData.out_cod_abs;
 
-                    tn_wave1 = curveData.tn_wave1;
-                    tn_wave2 = curveData.tn_wave2;
-                    tn_k = curveData.tn_k;
-                    tn_b = curveData.tn_b;
+                    tp_con = curveData.tp_con;
+                    tp_abs = curveData.tp_abs;
 
-                    nh_wave1 = curveData.nh_wave1;
-                    nh_wave2 = curveData.nh_wave2;
-                    nh_k = curveData.nh_k;
-                    nh_b = curveData.nh_b;
+                    tn_con = curveData.tn_con;
+                    tn_abs = curveData.tn_abs;
+
+                    nh_con = curveData.nh_con;
+                    nh_abs = curveData.nh_abs;
 
                     chage_curve();
-//                    $("#curveValue").val("0");
-//                    $("#curve_table").css('display','none');
-//                    $("#allAly03").html("");
                 }else{
                     alert("化验编号: "+NoValue+" 无化验曲线");
                 }
@@ -1314,6 +1228,11 @@
                     var agentia = agentiaTotal.agentia;
                     var total = agentiaTotal.total;
                     var avg = agentiaTotal.avg;
+                    if(agentia='[]'){
+                        agentia = ['-'];
+                        total = ['-'];
+                        avg = ['-'];
+                    }
                     inityaoji(agentia,total,avg);
                 }
             },
