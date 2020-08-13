@@ -129,17 +129,6 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </select>
 
 
-    <select id="selectContrastList" parameterType="BizAgentia" resultMap="BizAgentiaResult">
-      <include refid="selectBizAgentiaDevice"/>
-      where 1=1
-        <if test="agentiaBelong != null "> and a.agentia_belong = #{agentiaBelong}</if>
-        <if test="agentiaType != null  and agentiaType != '' "> and a.agentia_type = #{agentiaType}</if>
-        <if test="agentiaKind != null  and agentiaKind != '' "> and a.agentia_kind = #{agentiaKind}</if>
-        <if test="agentiaBelong != null "> and a.agentia_id not in (
-            select c.contrast_agentia from biz_agentia_contrast c where contrast_device = #{agentiaBelong}
-            ) </if>
-    </select>
-
     <select id="selectDeviceAgentiaById" parameterType="Long" resultMap="BizAgentiaResult">
 
         select a.agentia_id, a.agentia_no, a.agentia_name, a.agentia_device, a.agentia_total, a.agentia_remain, a.agentia_alert, a.agentia_type, a.agentia_kind, a.agentia_maker, a.agentia_status, a.use_time, a.last_repair_time, a.repair_time, a.repair_by, a.create_time, a.create_by, a.update_time, a.update_by,

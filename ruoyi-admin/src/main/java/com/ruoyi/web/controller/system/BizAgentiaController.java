@@ -9,7 +9,6 @@ import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.framework.util.ShiroUtils;
 import com.ruoyi.framework.web.domain.server.Sys;
 import com.ruoyi.system.domain.*;
-import com.ruoyi.system.service.IBizAgentiaContrastService;
 import com.ruoyi.system.service.IBizAgentiaRecordService;
 import net.sf.json.JSONObject;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
@@ -46,8 +45,6 @@ public class BizAgentiaController extends BaseController
 	private IBizAgentiaService bizAgentiaService;
 	@Autowired
 	private IBizAgentiaRecordService bizAgentiaRecordService;
-	@Autowired
-	private IBizAgentiaContrastService bizAgentiaContrastService;
 
 	@RequiresPermissions("system:bizAgentia:view")
 	@GetMapping()
@@ -554,104 +551,6 @@ public class BizAgentiaController extends BaseController
 		List<BizAgentiaRecord> list = bizAgentiaRecordService.selectBizAgentiaRecordList(bizAgentiaRecord);
 		return getDataTable(list);
 	}
-
-	/**
-	 * 查询化验药剂对照列表
-	 */
-	@RequiresPermissions("system:bizAgentia:list")
-	@PostMapping("/contrastlist")
-	@ResponseBody
-	public TableDataInfo contrastlist(BizAgentiaContrast bizAgentiaContrast)
-	{
-		startPage();
-		List<BizAgentiaContrast> list = bizAgentiaContrastService.selectBizAgentiaContrastList(bizAgentiaContrast);
-		return getDataTable(list);
-	}
-
-	/**
-	 * 新增设备药剂对照
-	 */
-	@GetMapping("/contrastadd")
-	public String contrastadd()
-	{
-		return prefix + "/contrastadd";
-	}
-
-	/**
-	 * 新增保存药剂对照
-	 */
-	@RequiresPermissions("system:bizAgentia:add")
-	@Log(title = "新增药剂对照", businessType = BusinessType.INSERT)
-	@PostMapping("/contrastadd")
-	@ResponseBody
-	public AjaxResult contrastaddSave(BizAgentiaContrast bizAgentiaContrast)
-	{
-		return toAjax(bizAgentiaContrastService.insertBizAgentiaContrast(bizAgentiaContrast));
-	}
-
-	/**
-	 * 修改设备药剂
-	 */
-	@GetMapping("/contrastedit/{contrastId}")
-	public String contrastedit(@PathVariable("contrastId") Long contrastId, ModelMap mmap)
-	{
-		BizAgentiaContrast bizAgentiaContrast = bizAgentiaContrastService.selectBizAgentiaContrastById(contrastId);
-		mmap.put("bizAgentiaContrast", bizAgentiaContrast);
-		return prefix + "/contrastedit";
-	}
-
-	/**
-	 * 修改保存药剂
-	 */
-	@RequiresPermissions("system:bizAgentia:edit")
-	@Log(title = "药剂对照保存", businessType = BusinessType.UPDATE)
-	@PostMapping("/contrastedit")
-	@ResponseBody
-	public AjaxResult contrasteditSave(BizAgentiaContrast bizAgentiaContrast)
-	{
-		return toAjax(bizAgentiaContrastService.updateBizAgentiaContrast(bizAgentiaContrast));
-	}
-
-
-	/**
-	 * 根据设备Id查询未对照的药剂select
-	 */
-	@PostMapping("/getContrastBydevice")
-	@ResponseBody
-	public AjaxResult getContrastBydevice(@RequestBody JSONObject params) {
-		long deviceId = params.getLong("deviceId");
-		String jsonData = "{";
-		String key1 = "agentiaId";
-		String key2 = "agentiaName";
-		BizAgentia agentia=new BizAgentia();
-		agentia.setAgentiaBelong(deviceId);
-		agentia.setAgentiaType("2");
-		List<BizAgentia> agentiaList = bizAgentiaService.selectContrastList(agentia);
-		if(agentiaList!=null&&agentiaList.size()>0){
-			String IdData = "\""+key1+"\":[";
-			String NameData = "\""+key2+"\":[";
-			for(BizAgentia obj:agentiaList){
-				IdData += "\""+obj.getAgentiaId()+"\",";
-				NameData += "\""+obj.getAgentiaName()+"\",";
-			}
-			IdData += "],";
-			NameData += "],";
-			jsonData += IdData+NameData;
-			if(jsonData.length()>0){
-				jsonData = jsonData.substring(0,jsonData.length()-1);
-			}
-		}else{
-			jsonData += "\""+key1+"\":[],"+"\""+key2+"\":[]";
-		}
-		jsonData += "}";
-		AjaxResult ajax = AjaxResult.success();
-		ajax.put("agentiaData", jsonData);
-		return ajax;
-	}
-
-
-
-
 
 	/**
 	 * 修改集团药剂量
