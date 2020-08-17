@@ -41,7 +41,6 @@ public class BizWorksService
     public List<BizWaterWork> getOnlyGroup()
     {
         BizWaterWork bizWorks = new BizWaterWork();
-//        bizWorks.setWorksType("0");
         bizWorks.setWorksType("2");
         return bizWaterWorkService.selectBizWaterWorkList(bizWorks);
     }

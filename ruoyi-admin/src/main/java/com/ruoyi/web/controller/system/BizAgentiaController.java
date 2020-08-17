@@ -10,6 +10,7 @@ import com.ruoyi.framework.util.ShiroUtils;
 import com.ruoyi.framework.web.domain.server.Sys;
 import com.ruoyi.system.domain.*;
 import com.ruoyi.system.service.IBizAgentiaRecordService;
+import com.ruoyi.system.service.IBizAgentiaSendService;
 import net.sf.json.JSONObject;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,6 +46,8 @@ public class BizAgentiaController extends BaseController
 	private IBizAgentiaService bizAgentiaService;
 	@Autowired
 	private IBizAgentiaRecordService bizAgentiaRecordService;
+	@Autowired
+	private IBizAgentiaSendService bizAgentiaSendService;
 
 	@RequiresPermissions("system:bizAgentia:view")
 	@GetMapping()
@@ -146,8 +149,12 @@ public class BizAgentiaController extends BaseController
 		List<BizAgentia> list = new ArrayList<BizAgentia>();
 		if ("1".equals(dataScope)){
 			list = bizAgentiaService.selectBizAgentiaList(bizAgentia);
+		}else if ("2".equals(dataScope)) {
+			long worksId = ShiroUtils.getSysUser().getWorksId();
+			bizAgentia.setAgentiaBelong(worksId);
+			list = bizAgentiaService.selectBizAgentiaList(bizAgentia);
 		}
-		return getDataTable(list);
+			return getDataTable(list);
 	}
 
 	/**
@@ -633,9 +640,95 @@ public class BizAgentiaController extends BaseController
 	 * 平台药剂下发
 	 */
 	@GetMapping("/addPlatformDist")
-	public String addPlatformDist()
+	public String addPlatformDist(ModelMap mmap)
 	{
+
+		mmap.put("worksId", "212");
 		return prefixPlatform + "/addPlatformDist";
+	}
+
+	/**
+	 * 修改保存平台药剂
+	 */
+	@RequiresPermissions("system:bizAgentiaPlatform:dist")
+	@Log(title = "平台药剂下发", businessType = BusinessType.UPDATE)
+	@PostMapping("/addPlatformDist")
+	@ResponseBody
+	public AjaxResult PlatformDistSave(BizAgentiaSend bizAgentiaSend)
+	{
+		long agentiaId = bizAgentiaSend.getAgentiaId();
+		BizAgentia agentia = bizAgentiaService.selectBizAgentiaById(agentiaId);
+		float remain = agentia.getAgentiaRemain();
+		float total = agentia.getAgentiaTotal();
+		float distTotal =bizAgentiaSend.getSendTotal();
+		total = total + distTotal;
+		remain = remain - distTotal;
+		agentia.setAgentiaRemain(remain);
+		agentia.setAgentiaTotal(total);
+		//更新药剂变更
+		bizAgentiaService.updateBizAgentia(agentia);
+		return toAjax(bizAgentiaSendService.insertBizAgentiaSend(bizAgentiaSend));
+	}
+
+	@RequiresPermissions("system:bizAgentiaPlatform:dist")
+	@GetMapping("/platformDist")
+	public String platformDist()
+	{
+		return prefixPlatform + "/platformDist";
+	}
+
+	/**
+	 * 查询平台药剂下发
+	 */
+	@RequiresPermissions("system:bizAgentiaPlatform:dist")
+	@PostMapping("/platformDistlist")
+	@ResponseBody
+	public TableDataInfo platformDistlist(BizAgentiaSend bizAgentiaSend)
+	{
+		startPage();
+
+		List<BizAgentiaSend> list = new ArrayList<BizAgentiaSend>();
+		bizAgentiaSend.setSendType("1");
+		list = bizAgentiaSendService.selectBizAgentiaSendList(bizAgentiaSend);
+		return getDataTable(list);
+	}
+
+
+
+	@RequiresPermissions("system:bizAgentiaGroup:dist")
+	@GetMapping("/groupDist")
+	public String groupDist()
+	{
+		return prefixGroup + "/groupDist";
+	}
+
+
+	/**
+	 * 查询集团药剂接发
+	 */
+	@RequiresPermissions("system:bizAgentiaGroup:dist")
+	@PostMapping("/groupDistlist")
+	@ResponseBody
+	public TableDataInfo groupDistlist(BizAgentiaSend bizAgentiaSend)
+	{
+		startPage();
+		StringBuilder sqlString = new StringBuilder();
+		SysRole role = ShiroUtils.getSysUser().getRole();
+		String dataScope = role.getDataScope();
+		if ("1".equals(dataScope))
+		{
+			sqlString.append(" OR a.send_type ='1' OR a.send_type ='2'  ");
+		} else  if ("2".equals(dataScope)){
+			long worksId = ShiroUtils.getSysUser().getWorksId();
+			sqlString.append(" OR (a.send_type ='1' and a.receive_works ="+worksId+") ");
+			sqlString.append(" OR (a.send_type ='2' and a.send_works ="+worksId+") ");
+		}
+		if (StringUtils.isNotBlank(sqlString.toString()))
+		{
+			bizAgentiaSend.getParams().put("dataScope", " AND (" + sqlString.substring(4) + ")");
+		}
+		List<BizAgentiaSend>  list = bizAgentiaSendService.selectBizAgentiaSendList(bizAgentiaSend);
+		return getDataTable(list);
 	}
 
 }

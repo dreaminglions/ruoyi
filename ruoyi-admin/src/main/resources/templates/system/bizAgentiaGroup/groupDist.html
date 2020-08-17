@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<head>
+    <th:block th:include="include :: header('集团药剂收发列表')" />
+</head>
+<body class="gray-bg">
+
+<div class="container-div">
+    <div class="row">
+        <div class="col-sm-12 search-collapse">
+            <form id="formId">
+                <div class="select-list">
+                    <ul>
+                        <li>
+                            药剂名称：<input type="text" name="agentiaName"/>
+                        </li>
+
+                        <li>
+                            <a class="btn btn-primary btn-rounded btn-sm" onclick="$.table.search()"><i class="fa fa-search"></i>&nbsp;搜索</a>
+                            <a class="btn btn-warning btn-rounded btn-sm" onclick="$.form.reset()"><i class="fa fa-refresh"></i>&nbsp;重置</a>
+                        </li>
+                    </ul>
+                </div>
+            </form>
+        </div>
+
+        <div class="btn-group-sm" id="toolbar" role="group">
+        </div>
+        <div class="col-sm-12 select-table table-striped">
+            <table id="bootstrap-table" data-mobile-responsive="true"></table>
+        </div>
+    </div>
+</div>
+<div th:include="include :: footer"></div>
+<script th:inline="javascript">
+    var editFlag = [[${@permission.hasPermi('system:bizAgentiaGroup:view')}]];
+    var prefix = ctx + "system/bizAgentia";
+
+    $(function() {
+        var options = {
+            url: prefix + "/groupDistlist",
+            modalName: "药剂下发记录",
+            showExport: true,
+            columns: [{
+                checkbox: true
+            },
+                {
+                    field : 'recordId',
+                    title : '记录ID',
+                    visible: false
+                },
+                {
+                    field : 'bizAgentia.agentiaName',
+                    title : '药剂名称',
+                    sortable: true,
+                    formatter: function(value, item, index) {
+                        var agentiaName="";
+                        if(item.bizAgentia!=null){
+                            agentiaName = item.bizAgentia.agentiaName
+                        }
+                        return '<span class="label label-success">'+agentiaName+'</span>';
+                    }
+                },
+                {
+                    field : 'sendWork.worksName',
+                    title : '下发机构',
+                    sortable: true,
+                    formatter: function(value, item, index) {
+                        var worksname="";
+                        if(item.sendWork!=null){
+                            worksname = item.sendWork.worksName
+                        }
+                        return '<span class="label label-success">'+worksname+'</span>';
+                    }
+                },
+                {
+                    field : 'receiveWork.worksName',
+                    title : '接收机构',
+                    sortable: true,
+                    formatter: function(value, item, index) {
+                        var worksname="";
+                        if(item.receiveWork!=null){
+                            worksname = item.receiveWork.worksName
+                        }
+                        return '<span class="label label-success">'+worksname+'</span>';
+                    }
+                },
+                {
+                    field : 'recordStatus',
+                    title : '下发状态',
+                    sortable: true
+                },
+                {
+                    field : 'sendTotal',
+                    title : '下发剂量',
+                    sortable: true
+                },
+                {
+                    field : 'recordDate',
+                    title : '下发时间',
+                    sortable: true
+                },
+                {
+                    title: '操作',
+                    align: 'center',
+                    formatter: function(value, row, index) {
+                        var actions = [];
+                        if(row.recordStatus==0){
+                            if(row.sendType==1){
+                                actions.push('<a class="btn btn-primary btn-xs ' + editFlag + '" href="#" onclick="sureDist(\'' + row.recordId + '\')"><i class="fa fa-edit"></i>接收下发</a> ');
+                                actions.push('<a class="btn btn-danger btn-xs ' + editFlag + '" href="#" onclick="cancelDist(\'' + row.recordId + '\')"><i class="fa fa-edit"></i>拒绝接收</a> ');
+                            }else if(row.sendType==2){
+                                actions.push('<a class="btn btn-warning btn-xs ' + editFlag + '" href="#" onclick="cancelDist(\'' + row.recordId + '\')"><i class="fa fa-edit"></i>取消下发</a> ');
+                            }
+                        }
+                        return actions.join('');
+                    }
+                }]
+        };
+        $.table.init(options);
+    });
+
+    /*  取消平台下发 */
+    function cancelDist(recordId) {
+        $.ajax({
+            cache : true,
+            type : "POST",
+            url : prefix + "/cancelDist",
+            data : {
+                "recordId": recordId
+            },
+            async : false,
+            error : function(request) {
+                $.modal.alertError("系统错误");
+            },
+            success : function(data) {
+                $.modal.alertSuccess("取消下发成功");
+                $.form.reset()
+            }
+        });
+    }
+
+</script>
+</body>
+</html>

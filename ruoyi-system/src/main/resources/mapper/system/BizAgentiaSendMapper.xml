@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.BizAgentiaSendMapper">
+    
+    <resultMap type="BizAgentiaSend" id="BizAgentiaSendResult">
+        <result property="recordId"    column="record_id"    />
+        <result property="recordNo"    column="record_no"    />
+        <result property="recordName"    column="record_name"    />
+        <result property="agentiaId"    column="agentia_id"    />
+        <result property="sendWorks"    column="send_works"    />
+        <result property="receiveWorks"    column="receive_works"    />
+        <result property="recordStatus"    column="record_status"    />
+        <result property="sendType"    column="send_type"    />
+        <result property="sendTotal"    column="send_total"    />
+        <result property="recordDate"    column="record_date"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <association property="bizAgentia"    column="agentia_id" javaType="BizAgentia" resultMap="bizAgentiaResult" />
+        <association property="sendWork"    column="send_works" javaType="BizWaterWork" resultMap="sendWorkResult" />
+        <association property="receiveWork"    column="receive_works" javaType="BizWaterWork" resultMap="receiveWorkResult" />
+    </resultMap>
+
+    <resultMap id="bizAgentiaResult" type="BizAgentia">
+        <result property="agentiaId"    column="agentia_id"    />
+        <result property="agentiaNo"    column="agentia_no"    />
+        <result property="agentiaName"    column="agentia_name"    />
+    </resultMap>
+
+    <resultMap id="sendWorkResult" type="BizWaterWork">
+        <result property="worksId"    column="send_works_id"    />
+        <result property="worksNo"    column="send_works_no"    />
+        <result property="worksName"    column="send_works_name"    />
+    </resultMap>
+
+    <resultMap id="receiveWorkResult" type="BizWaterWork">
+        <result property="worksId"    column="works_id"    />
+        <result property="worksNo"    column="works_no"    />
+        <result property="worksName"    column="works_name"    />
+    </resultMap>
+
+
+	<sql id="selectBizAgentiaSendVo">
+        select a.record_id, a.record_no, a.record_name, a.agentia_id, a.send_works, a.receive_works, a.send_total, a.record_status,a.send_type, a.record_date,
+         a.create_time, a.create_by, a.update_time, a.update_by,
+         b.agentia_no, b.agentia_name,
+         s.works_id as send_works_id ,s.works_no as send_works_no ,s.works_name  as send_works_name,
+         w.works_id,w.works_no,w.works_name
+         from biz_agentia_send a
+        LEFT JOIN biz_agentia b on a.agentia_id = b.agentia_id
+        LEFT JOIN biz_water_work s on a.send_works = s.works_id
+        LEFT JOIN biz_water_work w on a.receive_works = w.works_id
+    </sql>
+
+    <select id="selectBizAgentiaSendList" parameterType="BizAgentiaSend" resultMap="BizAgentiaSendResult">
+        <include refid="selectBizAgentiaSendVo"/>
+        where 1=1
+            <if test="recordId != null "> and a.record_id = #{recordId}</if>
+             <if test="recordNo != null  and recordNo != '' "> and a.record_no = #{recordNo}</if>
+             <if test="recordName != null  and recordName != '' "> and a.record_name = #{recordName}</if>
+             <if test="agentiaId != null "> and a.agentia_id = #{agentiaId}</if>
+            <if test="sendWorks != null  and sendWorks != '' "> and a.send_works = #{sendWorks}</if>
+            <if test="receiveWorks != null  and receiveWorks != '' "> and a.receive_works = #{receiveWorks}</if>
+             <if test="recordStatus != null  and recordStatus != '' "> and a.record_status = #{recordStatus}</if>
+             <if test="recordDate != null  and recordDate != '' "> and a.record_date = #{recordDate}</if>
+
+        <!-- 数据范围过滤 -->
+        ${params.dataScope}
+
+    </select>
+
+    <select id="selectBizAgentiaSendById" parameterType="Long" resultMap="BizAgentiaSendResult">
+        <include refid="selectBizAgentiaSendVo"/>
+        where a.record_id = #{recordId}
+    </select>
+
+    <insert id="insertBizAgentiaSend" parameterType="BizAgentiaSend" useGeneratedKeys="true" keyProperty="recordId">
+        insert into biz_agentia_send
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="recordNo != null  and recordNo != ''  ">record_no,</if>
+			<if test="recordName != null  and recordName != ''  ">record_name,</if>
+			<if test="agentiaId != null  ">agentia_id,</if>
+            <if test="sendWorks != null  and sendWorks != '' ">send_works,</if>
+            <if test="receiveWorks != null  and receiveWorks != '' "> receive_works,</if>
+			<if test="recordStatus != null  and recordStatus != ''  ">record_status,</if>
+            <if test="sendType != null  and sendType != ''  ">send_type,</if>
+			<if test="sendTotal != null  ">send_total,</if>
+			<if test="recordDate != null  and recordDate != ''  ">record_date,</if>
+			<if test="createBy != null  and createBy != ''  ">create_by,</if>
+            create_time
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="recordNo != null  and recordNo != ''  ">#{recordNo},</if>
+			<if test="recordName != null  and recordName != ''  ">#{recordName},</if>
+			<if test="agentiaId != null  ">#{agentiaId},</if>
+            <if test="sendWorks != null  and sendWorks != '' ">#{sendWorks},</if>
+            <if test="receiveWorks != null  and receiveWorks != '' "> #{receiveWorks},</if>
+            <if test="recordStatus != null  and recordStatus != ''  ">#{recordStatus},</if>
+            <if test="sendType != null  and sendType != ''  ">#{sendType},</if>
+            <if test="sendTotal != null  ">#{sendTotal},</if>
+			<if test="recordDate != null  and recordDate != ''  ">#{recordDate},</if>
+			<if test="createBy != null  and createBy != ''  ">#{createBy},</if>
+            getdate()
+         </trim>
+    </insert>
+
+    <update id="updateBizAgentiaSend" parameterType="BizAgentiaSend">
+        update biz_agentia_send
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="recordNo != null  and recordNo != ''  ">record_no = #{recordNo},</if>
+            <if test="recordName != null  and recordName != ''  ">record_name = #{recordName},</if>
+            <if test="agentiaId != null  ">agentia_id = #{agentiaId},</if>
+            <if test="sendWorks != null  and sendWorks != '' ">send_works = #{sendWorks},</if>
+            <if test="receiveWorks != null  and receiveWorks != '' "> receive_works = #{receiveWorks},</if>
+            <if test="recordStatus != null  and recordStatus != ''  ">record_status = #{recordStatus},</if>
+            <if test="sendType != null  and sendType != ''  ">send_type = #{sendType},</if>
+            <if test="sendTotal != null  ">send_total = #{sendTotal},</if>
+            <if test="recordDate != null  and recordDate != ''  ">record_date = #{recordDate},</if>
+            <if test="updateTime != null  ">update_time = #{updateTime},</if>
+            <if test="updateBy != null  and updateBy != ''  ">update_by = #{updateBy},</if>
+            update_time = getdate()
+        </trim>
+        where record_id = #{recordId}
+    </update>
+
+	<delete id="deleteBizAgentiaSendById" parameterType="Long">
+        delete from biz_agentia_send where record_id = #{recordId}
+    </delete>
+
+    <delete id="deleteBizAgentiaSendByIds" parameterType="String">
+        delete from biz_agentia_send where record_id in
+        <foreach item="recordId" collection="array" open="(" separator="," close=")">
+            #{recordId}
+        </foreach>
+    </delete>
+
+
+</mapper>
