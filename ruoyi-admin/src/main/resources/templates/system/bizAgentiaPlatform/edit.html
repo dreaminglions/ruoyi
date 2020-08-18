@@ -22,7 +22,7 @@
 			<div class="form-group">	
 				<label class="col-sm-3 control-label">所属机构：</label>
 				<div class="col-sm-6">
-					<select id="agentiaBelong" name="agentiaBelong" class="form-control required"  th:with="type=${@bizWorks.getOnlyGroup()}" th:field="*{agentiaBelong}">
+					<select id="agentiaBelong" name="agentiaBelong" class="form-control required"  th:with="type=${@bizWorks.getOnlyPlatform()}" th:field="*{agentiaBelong}">
 						<option th:each="bizWorks : ${type}" th:text="${bizWorks.worksName}" th:value="${bizWorks.worksId}"></option>
 					</select>
 				</div>

@@ -66,6 +66,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="receiveWorks != null  and receiveWorks != '' "> and a.receive_works = #{receiveWorks}</if>
              <if test="recordStatus != null  and recordStatus != '' "> and a.record_status = #{recordStatus}</if>
              <if test="recordDate != null  and recordDate != '' "> and a.record_date = #{recordDate}</if>
+            <if test="sendType != null  and sendType != '' "> and a.send_type = #{sendType}</if>
 
         <!-- 数据范围过滤 -->
         ${params.dataScope}

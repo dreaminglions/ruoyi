@@ -667,6 +667,9 @@ public class BizAgentiaController extends BaseController
 		agentia.setAgentiaTotal(total);
 		//更新药剂变更
 		bizAgentiaService.updateBizAgentia(agentia);
+
+		SimpleDateFormat format_date = new SimpleDateFormat("yyyy-MM-dd");
+		bizAgentiaSend.setRecordDate(format_date.format(new Date()));
 		return toAjax(bizAgentiaSendService.insertBizAgentiaSend(bizAgentiaSend));
 	}
 
@@ -686,7 +689,6 @@ public class BizAgentiaController extends BaseController
 	public TableDataInfo platformDistlist(BizAgentiaSend bizAgentiaSend)
 	{
 		startPage();
-
 		List<BizAgentiaSend> list = new ArrayList<BizAgentiaSend>();
 		bizAgentiaSend.setSendType("1");
 		list = bizAgentiaSendService.selectBizAgentiaSendList(bizAgentiaSend);
@@ -694,6 +696,41 @@ public class BizAgentiaController extends BaseController
 	}
 
 
+	/**
+	 * 平台药剂下发
+	 */
+	@GetMapping("/addGroupDist")
+	public String addGroupDist(ModelMap mmap)
+	{
+
+		return prefixGroup + "/addGroupDist";
+	}
+
+	/**
+	 * 修改保存平台药剂
+	 */
+	@RequiresPermissions("system:bizAgentiaGroup:dist")
+	@Log(title = "集团药剂下发", businessType = BusinessType.UPDATE)
+	@PostMapping("/addGroupDist")
+	@ResponseBody
+	public AjaxResult GroupDistSave(BizAgentiaSend bizAgentiaSend)
+	{
+		long agentiaId = bizAgentiaSend.getAgentiaId();
+		BizAgentia agentia = bizAgentiaService.selectBizAgentiaById(agentiaId);
+		float remain = agentia.getAgentiaRemain();
+		float total = agentia.getAgentiaTotal();
+		float distTotal =bizAgentiaSend.getSendTotal();
+		total = total + distTotal;
+		remain = remain - distTotal;
+		agentia.setAgentiaRemain(remain);
+		agentia.setAgentiaTotal(total);
+		//更新药剂变更
+		bizAgentiaService.updateBizAgentia(agentia);
+
+		SimpleDateFormat format_date = new SimpleDateFormat("yyyy-MM-dd");
+		bizAgentiaSend.setRecordDate(format_date.format(new Date()));
+		return toAjax(bizAgentiaSendService.insertBizAgentiaSend(bizAgentiaSend));
+	}
 
 	@RequiresPermissions("system:bizAgentiaGroup:dist")
 	@GetMapping("/groupDist")
@@ -729,6 +766,238 @@ public class BizAgentiaController extends BaseController
 		}
 		List<BizAgentiaSend>  list = bizAgentiaSendService.selectBizAgentiaSendList(bizAgentiaSend);
 		return getDataTable(list);
+	}
+
+
+	/**
+	 * 取消平台药剂下发
+	 */
+	@RequiresPermissions("system:bizAgentiaPlatform:dist")
+	@Log(title = "取消平台药剂下发", businessType = BusinessType.UPDATE)
+	@PostMapping( "/cancelPlatformDist")
+	@ResponseBody
+	public AjaxResult cancelDist(long recordId)
+	{
+		BizAgentiaSend bizAgentiaSend = bizAgentiaSendService.selectBizAgentiaSendById(recordId);
+		long agentiaId = bizAgentiaSend.getAgentiaId();
+		BizAgentia agentia = bizAgentiaService.selectBizAgentiaById(agentiaId);
+
+		float distTotal =bizAgentiaSend.getSendTotal();
+		float remain = agentia.getAgentiaRemain();
+		float total = agentia.getAgentiaTotal();
+		total = total - distTotal;
+		remain = remain + distTotal;
+		agentia.setAgentiaRemain(remain);
+		agentia.setAgentiaTotal(total);
+		//更新药剂变更
+		bizAgentiaService.updateBizAgentia(agentia);
+		bizAgentiaSend.setRecordStatus("3");
+
+		return toAjax(bizAgentiaSendService.updateBizAgentiaSend(bizAgentiaSend));
+	}
+
+	/**
+	 * 取消集团药剂下发
+	 */
+	@RequiresPermissions("system:bizAgentiaGroup:dist")
+	@Log(title = "取消药剂下发", businessType = BusinessType.UPDATE)
+	@PostMapping( "/cancelGroupDist")
+	@ResponseBody
+	public AjaxResult cancelGroupDist(long recordId)
+	{
+		BizAgentiaSend bizAgentiaSend = bizAgentiaSendService.selectBizAgentiaSendById(recordId);
+		long agentiaId = bizAgentiaSend.getAgentiaId();
+		BizAgentia agentia = bizAgentiaService.selectBizAgentiaById(agentiaId);
+
+		float distTotal =bizAgentiaSend.getSendTotal();
+		float remain = agentia.getAgentiaRemain();
+		float total = agentia.getAgentiaTotal();
+		total = total - distTotal;
+		remain = remain + distTotal;
+		agentia.setAgentiaRemain(remain);
+		agentia.setAgentiaTotal(total);
+		//更新药剂变更
+		bizAgentiaService.updateBizAgentia(agentia);
+		bizAgentiaSend.setRecordStatus("3");
+
+		return toAjax(bizAgentiaSendService.updateBizAgentiaSend(bizAgentiaSend));
+	}
+
+
+
+	/**
+	 * 集团接受下发
+	 */
+	@RequiresPermissions("system:bizAgentiaGroup:dist")
+	@Log(title = "取消药剂下发", businessType = BusinessType.UPDATE)
+	@PostMapping( "/sureGroupDist")
+	@ResponseBody
+	public AjaxResult sureGroupDist(long recordId)
+	{
+		BizAgentiaSend bizAgentiaSend = bizAgentiaSendService.selectBizAgentiaSendById(recordId);
+		long agentiaId = bizAgentiaSend.getAgentiaId();
+		long receiveId = bizAgentiaSend.getReceiveWorks();
+		float sendtotal = bizAgentiaSend.getSendTotal();
+		BizAgentia agentia = bizAgentiaService.selectBizAgentiaById(agentiaId);
+		String agentiaName =agentia.getAgentiaName();
+		String agentiaNo =agentia.getAgentiaNo();
+
+		BizAgentia Groupagentia = new BizAgentia();
+		Groupagentia.setAgentiaNo(agentiaNo);
+		Groupagentia.setAgentiaName(agentiaName);
+		Groupagentia.setAgentiaBelong(receiveId);
+		Groupagentia.setAgentiaType("2");
+		List<BizAgentia> GroupagentiaList = bizAgentiaService.selectBizAgentiaList(Groupagentia);
+		if(GroupagentiaList.size()==1){
+			BizAgentia agentiaOld = GroupagentiaList.get(0);
+			float oldremain = agentiaOld.getAgentiaRemain();
+			oldremain = oldremain + sendtotal;
+			agentiaOld.setAgentiaRemain(oldremain);
+			bizAgentiaService.updateBizAgentia(agentiaOld);
+		}else{
+			Groupagentia.setAgentiaTotal((float)0);
+			Groupagentia.setAgentiaRemain(sendtotal);
+			Groupagentia.setAgentiaAlert((float)0);
+			bizAgentiaService.insertBizAgentia(Groupagentia);
+		}
+
+		bizAgentiaSend.setRecordStatus("1");
+		return toAjax(bizAgentiaSendService.updateBizAgentiaSend(bizAgentiaSend));
+	}
+
+	/**
+	 * 拒绝平台药剂下发
+	 */
+	@RequiresPermissions("system:bizAgentiaGroup:dist")
+	@Log(title = "拒绝平台药剂下发", businessType = BusinessType.UPDATE)
+	@PostMapping( "/refuseGroupDist")
+	@ResponseBody
+	public AjaxResult refuseGroupDist(long recordId)
+	{
+		BizAgentiaSend bizAgentiaSend = bizAgentiaSendService.selectBizAgentiaSendById(recordId);
+		long agentiaId = bizAgentiaSend.getAgentiaId();
+		BizAgentia agentia = bizAgentiaService.selectBizAgentiaById(agentiaId);
+
+		float distTotal =bizAgentiaSend.getSendTotal();
+		float remain = agentia.getAgentiaRemain();
+		float total = agentia.getAgentiaTotal();
+		total = total - distTotal;
+		remain = remain + distTotal;
+		agentia.setAgentiaRemain(remain);
+		agentia.setAgentiaTotal(total);
+		//更新药剂变更
+		bizAgentiaService.updateBizAgentia(agentia);
+		bizAgentiaSend.setRecordStatus("2");
+
+		return toAjax(bizAgentiaSendService.updateBizAgentiaSend(bizAgentiaSend));
+	}
+
+
+
+
+	@RequiresPermissions("system:bizAgentiaWork:dist")
+	@GetMapping("/workDist")
+	public String workDist()
+	{
+		return prefixWork + "/workDist";
+	}
+
+
+	/**
+	 * 查询集团药剂接发
+	 */
+	@RequiresPermissions("system:bizAgentiaWork:dist")
+	@PostMapping("/workDistlist")
+	@ResponseBody
+	public TableDataInfo workDistlist(BizAgentiaSend bizAgentiaSend)
+	{
+		startPage();
+		StringBuilder sqlString = new StringBuilder();
+		SysRole role = ShiroUtils.getSysUser().getRole();
+		long worksId = ShiroUtils.getSysUser().getWorksId();
+		String dataScope = role.getDataScope();
+		if ("1".equals(dataScope))
+		{
+			sqlString.append(" OR  a.send_type ='2'  ");
+		} else  if ("2".equals(dataScope)){
+			sqlString.append(" OR (a.send_type ='2' and a.send_works ="+worksId+") ");
+		} else  if ("3".equals(dataScope)){
+			sqlString.append(" OR (a.send_type ='2' and a.receive_works ="+worksId+") ");
+		}
+		if (StringUtils.isNotBlank(sqlString.toString()))
+		{
+			bizAgentiaSend.getParams().put("dataScope", " AND (" + sqlString.substring(4) + ")");
+		}
+		List<BizAgentiaSend>  list = bizAgentiaSendService.selectBizAgentiaSendList(bizAgentiaSend);
+		return getDataTable(list);
+	}
+
+
+	/**
+	 * 水厂接收下发
+	 */
+	@RequiresPermissions("system:bizAgentiaWork:dist")
+	@Log(title = "接收药剂下发", businessType = BusinessType.UPDATE)
+	@PostMapping( "/sureWorkDist")
+	@ResponseBody
+	public AjaxResult sureWorkDist(long recordId)
+	{
+		BizAgentiaSend bizAgentiaSend = bizAgentiaSendService.selectBizAgentiaSendById(recordId);
+		long agentiaId = bizAgentiaSend.getAgentiaId();
+		long receiveId = bizAgentiaSend.getReceiveWorks();
+		float sendtotal = bizAgentiaSend.getSendTotal();
+		BizAgentia agentia = bizAgentiaService.selectBizAgentiaById(agentiaId);
+		String agentiaName =agentia.getAgentiaName();
+		String agentiaNo =agentia.getAgentiaNo();
+
+		BizAgentia Workagentia = new BizAgentia();
+		Workagentia.setAgentiaNo(agentiaNo);
+		Workagentia.setAgentiaName(agentiaName);
+		Workagentia.setAgentiaBelong(receiveId);
+		Workagentia.setAgentiaType("3");
+		List<BizAgentia> GroupagentiaList = bizAgentiaService.selectBizAgentiaList(Workagentia);
+		if(GroupagentiaList.size()==1){
+			BizAgentia agentiaOld = GroupagentiaList.get(0);
+			float oldremain = agentiaOld.getAgentiaRemain();
+			oldremain = oldremain + sendtotal;
+			agentiaOld.setAgentiaRemain(oldremain);
+			bizAgentiaService.updateBizAgentia(agentiaOld);
+		}else{
+			Workagentia.setAgentiaTotal((float)0);
+			Workagentia.setAgentiaRemain(sendtotal);
+			Workagentia.setAgentiaAlert((float)0);
+			bizAgentiaService.insertBizAgentia(Workagentia);
+		}
+
+		bizAgentiaSend.setRecordStatus("1");
+		return toAjax(bizAgentiaSendService.updateBizAgentiaSend(bizAgentiaSend));
+	}
+
+	/**
+	 * 拒绝集团药剂下发
+	 */
+	@RequiresPermissions("system:bizAgentiaWork:dist")
+	@Log(title = "拒绝集团药剂下发", businessType = BusinessType.UPDATE)
+	@PostMapping( "/refuseWorkDist")
+	@ResponseBody
+	public AjaxResult refuseWorkDist(long recordId)
+	{
+		BizAgentiaSend bizAgentiaSend = bizAgentiaSendService.selectBizAgentiaSendById(recordId);
+		long agentiaId = bizAgentiaSend.getAgentiaId();
+		BizAgentia agentia = bizAgentiaService.selectBizAgentiaById(agentiaId);
+
+		float distTotal =bizAgentiaSend.getSendTotal();
+		float remain = agentia.getAgentiaRemain();
+		float total = agentia.getAgentiaTotal();
+		total = total - distTotal;
+		remain = remain + distTotal;
+		agentia.setAgentiaRemain(remain);
+		agentia.setAgentiaTotal(total);
+		//更新药剂变更
+		bizAgentiaService.updateBizAgentia(agentia);
+		bizAgentiaSend.setRecordStatus("2");
+
+		return toAjax(bizAgentiaSendService.updateBizAgentiaSend(bizAgentiaSend));
 	}
 
 }

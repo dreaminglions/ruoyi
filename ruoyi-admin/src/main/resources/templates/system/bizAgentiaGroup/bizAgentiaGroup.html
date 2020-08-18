@@ -162,6 +162,12 @@
             $.modal.open("药剂记录", url);
         }
 
+        /* 添加下发*/
+        function addDistribute() {
+            var url = prefix + '/addGroupDist';
+            $.modal.open("添加下发计划", url);
+        }
+
         /* 下发记录*/
         function distList() {
             var url = prefix + '/groupDist';

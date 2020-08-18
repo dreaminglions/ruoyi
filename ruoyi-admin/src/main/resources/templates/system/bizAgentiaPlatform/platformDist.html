@@ -12,7 +12,16 @@
                 <div class="select-list">
                     <ul>
                         <li>
-                            药剂名称：<input type="text" name="agentiaName"/>
+                            下发药剂：
+                            <select name="agentiaId"  th:with="type=${@bizAgentia.getAgentiaByType(1)}">
+                                <option value="">所有</option>
+                                <option th:each="bizAgentia : ${type}" th:text="${bizAgentia.agentiaName}" th:value="${bizAgentia.agentiaId}"></option>
+                            </select>
+                        </li>
+
+                        <li class="select-time">
+                            <label>下发日期： </label>
+                            <input type="text" class="time-input" id="recordDate" placeholder="下发日期" name="recordDate"/>
                         </li>
 
                         <li>
@@ -33,7 +42,7 @@
 </div>
 <div th:include="include :: footer"></div>
 <script th:inline="javascript">
-    var editFlag = [[${@permission.hasPermi('system:bizAgentiaPlatform:view')}]];
+    var editFlag = [[${@permission.hasPermi('system:bizAgentiaPlatform:dist')}]];
     var prefix = ctx + "system/bizAgentia";
 
     $(function() {
@@ -74,11 +83,6 @@
                     }
                 },
                 {
-                    field : 'recordStatus',
-                    title : '下发状态',
-                    sortable: true
-                },
-                {
                     field : 'sendTotal',
                     title : '下发剂量',
                     sortable: true
@@ -87,6 +91,25 @@
                     field : 'recordDate',
                     title : '下发时间',
                     sortable: true
+                },
+                {
+                    field : 'recordStatus',
+                    title : '下发状态',
+                    sortable: true,
+                    formatter: function(value, item, index) {
+                        var recordStatus=item.recordStatus;
+                        if(recordStatus==0){
+                            return '<span class="label label-primary">待接收</span>';
+                        }else if(recordStatus==1){
+                            return '<span class="label label-success">下发成功</span>';
+                        }else if(recordStatus==2){
+                            return '<span class="label label-danger">拒绝接收</span>';
+                        }else if(recordStatus==3){
+                            return '<span class="label label-warning">取消下发</span>';
+                        }else{
+                            return '';
+                        }
+                    }
                 },
                 {
                     title: '操作',
@@ -108,7 +131,7 @@
         $.ajax({
             cache : true,
             type : "POST",
-            url : prefix + "/cancelDist",
+            url : prefix + "/cancelPlatformDist",
             data : {
                 "recordId": recordId
             },
@@ -119,6 +142,7 @@
             success : function(data) {
                 $.modal.alertSuccess("取消下发成功");
                 $.form.reset()
+                $.table.search()
             }
         });
     }

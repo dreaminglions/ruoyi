@@ -1,0 +1,72 @@
+ <!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <th:block th:include="include :: header('平台药剂下发')" />
+</head>
+<body class = "white-bg">
+<div class="wrapper wrapper-content animated fadeInRight ibox-content">
+    <form class="form-horizontal m" id="form-bizDistribute-Add">
+        <input  id="sendType" name="sendType"  value="2" class="form-control required" type="hidden">
+        <input  id="recordStatus" name="recordStatus"  value="0" class="form-control required" type="hidden">
+        <fieldset>
+            <div class="form-group">
+                <label class="col-sm-3 control-label">下发集团：</label>
+                <div class="col-sm-6">
+                    <select name="sendWorks" class="form-control required" th:with="type=${@bizWorks.getOnlyGroup()}">
+                        <option value="">所有</option>
+                        <option th:each="bizWorks : ${type}" th:text="${bizWorks.worksName}" th:value="${bizWorks.worksId}"></option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-sm-3 control-label">下发药剂：</label>
+                <div class="col-sm-6">
+                    <select name="agentiaId" class="form-control required" th:with="type=${@bizAgentia.getAgentiaByType(2)}">
+                        <option value="">所有</option>
+                        <option th:each="bizAgentia : ${type}" th:text="${bizAgentia.agentiaName}" th:value="${bizAgentia.agentiaId}"></option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-sm-3 control-label">下发机构：</label>
+                <div class="col-sm-6">
+                    <select id="receiveWorks" name="receiveWorks" class="form-control required"  th:with="type=${@bizWorks.getOnlyWorks()}" >
+                        <option value="">请选择</option>
+                        <option th:each="bizWorks : ${type}" th:text="${bizWorks.worksName}" th:value="${bizWorks.worksId}"></option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-sm-3 control-label">下发药剂量：</label>
+                <div class="col-sm-6">
+                    <input  id="sendTotal" name="sendTotal" class="form-control required" type="text">
+                </div>
+            </div>
+
+
+        </fieldset>
+
+    </form>
+</div>
+<div th:include="include::footer"></div><script type="text/javascript">
+    var prefix = ctx + "system/bizAgentia"
+    $("#form-bizAgentia-add").validate({
+        rules:{
+            xxxx:{
+                required:true,
+            },
+        },
+        focusCleanup: true
+    });
+
+    function submitHandler() {
+        if ($.validate.form()) {
+            $.operate.save(prefix + "/addGroupDist", $('#form-bizDistribute-Add').serialize());
+        }
+    }
+</script>
+</body>
+</html>

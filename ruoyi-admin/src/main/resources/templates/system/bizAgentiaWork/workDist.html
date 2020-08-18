@@ -33,13 +33,13 @@
 </div>
 <div th:include="include :: footer"></div>
 <script th:inline="javascript">
-    var editFlag = [[${@permission.hasPermi('system:bizAgentiaGroup:dist')}]];
+    var editFlag = [[${@permission.hasPermi('system:bizAgentiaWork:dist')}]];
 
     var prefix = ctx + "system/bizAgentia";
 
     $(function() {
         var options = {
-            url: prefix + "/groupDistlist",
+            url: prefix + "/workDistlist",
             modalName: "药剂下发记录",
             showExport: true,
             columns: [{
@@ -121,11 +121,9 @@
                     formatter: function(value, row, index) {
                         var actions = [];
                         if(row.recordStatus==0){
-                            if(row.sendType==1){
+                            if(row.sendType==2){
                                 actions.push('<a class="btn btn-primary btn-xs ' + editFlag + '" href="#" onclick="sureDist(\'' + row.recordId + '\')"><i class="fa fa-edit"></i>接收下发</a> ');
                                 actions.push('<a class="btn btn-danger btn-xs ' + editFlag + '" href="#" onclick="refuseDist(\'' + row.recordId + '\')"><i class="fa fa-edit"></i>拒绝接收</a> ');
-                            }else if(row.sendType==2){
-                                actions.push('<a class="btn btn-warning btn-xs ' + editFlag + '" href="#" onclick="cancelDist(\'' + row.recordId + '\')"><i class="fa fa-edit"></i>取消下发</a> ');
                             }
                         }
                         return actions.join('');
@@ -161,7 +159,7 @@
         $.ajax({
             cache : true,
             type : "POST",
-            url : prefix + "/sureGroupDist",
+            url : prefix + "/sureWorkDist",
             data : {
                 "recordId": recordId
             },
@@ -181,7 +179,7 @@
         $.ajax({
             cache : true,
             type : "POST",
-            url : prefix + "/refuseGroupDist",
+            url : prefix + "/refuseWorkDist",
             data : {
                 "recordId": recordId
             },
