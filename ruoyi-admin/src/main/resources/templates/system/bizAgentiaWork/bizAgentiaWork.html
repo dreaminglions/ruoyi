@@ -42,7 +42,10 @@
 				</a>
 
 				<a class="btn btn-primary" onclick="addDistribute()" shiro:hasPermission="system:bizAgentiaWork:add">
-					<i class="fa fa-plus"></i> 药剂分配
+					<i class="fa fa-plus"></i> 药剂配制
+				</a>
+				<a class="btn btn-primary" onclick="makeList()" shiro:hasPermission="system:bizAgentiaWork:add">
+					<i class="fa fa-plus"></i> 药剂配制记录
 				</a>
 				<a class="btn btn-warning" onclick="distList()" shiro:hasPermission="system:bizAgentiaWork:add">
 					<i class="fa fa-plus"></i> 药剂接收记录
@@ -170,9 +173,19 @@
             var url = prefix + '/changeWorkAgentia/' + agentiaId;
             $.modal.open("药剂记录", url);
         }
+        /* 添加下发*/
+        function addDistribute() {
+            var url = prefix + '/addWorkMake';
+            $.modal.open("添加配制计划", url);
+        }
 
+        /* 配制记录*/
+        function makeList() {
+            var url = prefix + '/workMake';
+            $.modal.openTab("配制记录", url);
+        }
 
-        /* 下发记录*/
+        /* 接收记录*/
         function distList() {
             var url = prefix + '/workDist';
             $.modal.openTab("接收记录", url);

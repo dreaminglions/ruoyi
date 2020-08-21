@@ -8,11 +8,10 @@ import com.ruoyi.common.enums.BusinessType;
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.common.utils.poi.ExcelUtil;
 import com.ruoyi.framework.util.ShiroUtils;
-import com.ruoyi.system.domain.BizAgentia;
-import com.ruoyi.system.domain.BizDeviceAgentia;
-import com.ruoyi.system.domain.BizAgentiaRecord;
-import com.ruoyi.system.domain.SysRole;
+import com.ruoyi.system.domain.*;
+import com.ruoyi.system.service.IBizAgentiaMakeService;
 import com.ruoyi.system.service.IBizAgentiaRecordService;
+import com.ruoyi.system.service.IBizAgentiaService;
 import com.ruoyi.system.service.IBizDeviceAgentiaService;
 import net.sf.json.JSONObject;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
@@ -37,16 +36,17 @@ import java.util.List;
 public class BizDeviceAgentiaController extends BaseController
 {
     private String prefix = "system/bizAgentia";
-	private String prefixGroup = "system/bizAgentiaGroup";
-	private String prefixWork = "system/bizAgentiaWork";
 	private String prefixDevice = "system/bizAgentiaDevice";
-	private String prefixPlatform = "system/bizAgentiaPlatform";
 
 
 	@Autowired
 	private IBizDeviceAgentiaService bizDeviceAgentiaService;
 	@Autowired
 	private IBizAgentiaRecordService bizAgentiaRecordService;
+	@Autowired
+	private IBizAgentiaMakeService bizAgentiaMakeService;
+	@Autowired
+	private IBizAgentiaService bizAgentiaService;
 
 
 	@RequiresPermissions("system:bizAgentiaDevice:view")
@@ -245,6 +245,105 @@ public class BizDeviceAgentiaController extends BaseController
 		bizAgentiaRecord.setAgentiaChange(agentiaChange);
 
 		return toAjax(bizAgentiaRecordService.insertBizAgentiaRecord(bizAgentiaRecord));
+	}
+
+
+
+	@RequiresPermissions("system:bizAgentiaDevice:make")
+	@GetMapping("/deviceMake")
+	public String deviceMake()
+	{
+		return prefixDevice + "/deviceMake";
+	}
+
+
+	/**
+	 * 查询集团药剂接发
+	 */
+	@RequiresPermissions("system:bizAgentiaDevice:make")
+	@PostMapping("/deviceMakelist")
+	@ResponseBody
+	public TableDataInfo deviceMakelist(BizAgentiaMake bizAgentiaMake)
+	{
+		startPage();
+		StringBuilder sqlString = new StringBuilder();
+		SysRole role = ShiroUtils.getSysUser().getRole();
+		long worksId = ShiroUtils.getSysUser().getWorksId();
+		String dataScope = role.getDataScope();
+		if ("3".equals(dataScope)){
+			sqlString.append(" OR  a.send_works ="+worksId+" ");
+		}
+		if (StringUtils.isNotBlank(sqlString.toString()))
+		{
+			bizAgentiaMake.getParams().put("dataScope", " AND (" + sqlString.substring(4) + ")");
+		}
+		List<BizAgentiaMake>  list = bizAgentiaMakeService.selectBizAgentiaMakeList(bizAgentiaMake);
+		return getDataTable(list);
+	}
+
+	/**
+	 * 设备接收配制
+	 */
+	@RequiresPermissions("system:bizAgentiaDevice:make")
+	@Log(title = "接收水厂药剂配制", businessType = BusinessType.UPDATE)
+	@PostMapping( "/sureDeviceMake")
+	@ResponseBody
+	public AjaxResult sureDeviceMake(long recordId)
+	{
+		BizAgentiaMake bizAgentiaMake = bizAgentiaMakeService.selectBizAgentiaMakeById(recordId);
+		long receiveId = bizAgentiaMake.getReceiveDevice();
+		float sendtotal = bizAgentiaMake.getSendTotal();
+		String agentiaName =bizAgentiaMake.getRecAgentiaName();
+		String agentiaNo =bizAgentiaMake.getRecAgentiaNo();
+
+		BizDeviceAgentia deviceAgentia = new BizDeviceAgentia();
+		deviceAgentia.setAgentiaNo(agentiaNo);
+		deviceAgentia.setAgentiaName(agentiaName);
+		deviceAgentia.setAgentiaDevice(receiveId);
+		deviceAgentia.setAgentiaType("4");
+		List<BizDeviceAgentia> GroupagentiaList = bizDeviceAgentiaService.selectDeviceAgentiaList(deviceAgentia);
+		if(GroupagentiaList.size()==1){
+			BizDeviceAgentia agentiaOld = GroupagentiaList.get(0);
+			float oldremain = agentiaOld.getAgentiaRemain();
+			oldremain = oldremain + sendtotal;
+			agentiaOld.setAgentiaRemain(oldremain);
+			bizDeviceAgentiaService.updateBizAgentia(agentiaOld);
+		}else{
+			deviceAgentia.setAgentiaTotal((float)0);
+			deviceAgentia.setAgentiaRemain(sendtotal);
+			deviceAgentia.setAgentiaAlert((float)0);
+			bizDeviceAgentiaService.insertBizDeviceAgentia(deviceAgentia);
+		}
+
+		bizAgentiaMake.setRecordStatus("1");
+		return toAjax(bizAgentiaMakeService.updateBizAgentiaMake(bizAgentiaMake));
+	}
+
+	/**
+	 * 拒绝水厂药剂配制
+	 */
+	@RequiresPermissions("system:bizAgentiaDevice:make")
+	@Log(title = "拒绝水厂药剂配制", businessType = BusinessType.UPDATE)
+	@PostMapping( "/refuseDeviceMake")
+	@ResponseBody
+	public AjaxResult refuseDeviceMake(long recordId)
+	{
+		BizAgentiaMake bizAgentiaMake = bizAgentiaMakeService.selectBizAgentiaMakeById(recordId);
+		long agentiaId = bizAgentiaMake.getAgentiaId();
+		BizAgentia agentia = bizAgentiaService.selectBizAgentiaById(agentiaId);
+
+		float distTotal =bizAgentiaMake.getSendTotal();
+		float remain = agentia.getAgentiaRemain();
+		float total = agentia.getAgentiaTotal();
+		total = total - distTotal;
+		remain = remain + distTotal;
+		agentia.setAgentiaRemain(remain);
+		agentia.setAgentiaTotal(total);
+		//更新药剂变更
+		bizAgentiaService.updateBizAgentia(agentia);
+		bizAgentiaMake.setRecordStatus("2");
+
+		return toAjax(bizAgentiaMakeService.updateBizAgentiaMake(bizAgentiaMake));
 	}
 
 }

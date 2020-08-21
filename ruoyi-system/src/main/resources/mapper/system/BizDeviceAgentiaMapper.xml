@@ -67,7 +67,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
         <if test="agentiaNo != null  and agentiaNo != '' "> and a.agentia_no = #{agentiaNo}</if>
         <if test="agentiaName != null  and agentiaName != '' "> and a.agentia_name = #{agentiaName}</if>
-        <if test="agentiaDevice != null "> and a.agentiaDevice = #{agentiaDevice}</if>
+        <if test="agentiaDevice != null "> and a.agentia_device = #{agentiaDevice}</if>
         <if test="agentiaTotal != null "> and a.agentia_total = #{agentiaTotal}</if>
         <if test="agentiaRemain != null "> and a.agentia_remain = #{agentiaRemain}</if>
         <if test="agentiaAlert != null "> and a.agentia_alert = #{agentiaAlert}</if>

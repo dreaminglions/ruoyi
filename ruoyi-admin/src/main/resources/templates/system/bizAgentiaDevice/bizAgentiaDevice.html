@@ -39,18 +39,10 @@
 				<a class="btn btn-success" onclick="$.operate.add()" shiro:hasPermission="system:bizAgentiaDevice:add">
 					<i class="fa fa-plus"></i> 添加
 				</a>
-				<!--<a class="btn btn-primary btn-edit disabled" onclick="$.operate.edit()" shiro:hasPermission="system:bizAgentia:edit">-->
-					<!--<i class="fa fa-edit"></i> 修改-->
-				<!--</a>-->
-				<!--<a class="btn btn-danger btn-del btn-del disabled" onclick="$.operate.removeAll()" shiro:hasPermission="system:bizAgentia:remove">-->
-					<!--<i class="fa fa-remove"></i> 删除-->
-				<!--</a>-->
-				<!--<a class="btn btn-warning" onclick="$.table.exportExcel()" shiro:hasPermission="system:bizAgentiaDevice:export">-->
-						<!--<i class="fa fa-download"></i> 导出-->
-				 <!--</a>-->
-				<!--<a class="btn btn-info" onclick="$.table.importExcel()" shiro:hasPermission="system:bizAgentiaDevice:import">-->
-					<!--<i class="fa fa-upload"></i> 打印-->
-				<!--</a>-->
+
+				<a class="btn btn-primary" onclick="makeList()" shiro:hasPermission="system:bizAgentiaWork:add">
+					<i class="fa fa-plus"></i> 药剂配制记录
+				</a>
 			</div>
 			<div class="col-sm-12 select-table table-striped">
 				<table id="bootstrap-table" data-mobile-responsive="true"></table>
@@ -201,6 +193,12 @@
         function changeAgentia(agentiaId) {
             var url = prefix + '/changeAgentia/' + agentiaId;
             $.modal.open("药剂记录", url);
+        }
+
+        /* 配制记录*/
+        function makeList() {
+            var url = prefix + '/deviceMake';
+            $.modal.openTab("配制记录", url);
         }
     </script>
 </body>

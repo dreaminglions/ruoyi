@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.BizAgentiaMakeMapper">
+    
+    <resultMap type="BizAgentiaMake" id="BizAgentiaMakeResult">
+        <result property="recordId"    column="record_id"    />
+        <result property="recordNo"    column="record_no"    />
+        <result property="recordName"    column="record_name"    />
+        <result property="agentiaId"    column="agentia_id"    />
+        <result property="agentiaId"    column="agentia_id"    />
+        <result property="recAgentiaNo"    column="rec_agentia_no"    />
+        <result property="recAgentiaName"    column="rec_agentia_name"    />
+        <result property="sendWorks"    column="send_works"    />
+        <result property="receiveDevice"    column="receive_device"    />
+        <result property="recordStatus"    column="record_status"    />
+        <result property="sendTotal"    column="send_total"    />
+        <result property="recordDate"    column="record_date"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <association property="bizAgentia"    column="agentia_id" javaType="BizAgentia" resultMap="bizAgentiaResult" />
+        <association property="sendWork"    column="send_works" javaType="BizWaterWork" resultMap="sendWorkResult" />
+        <association property="recDevice"    column="receive_device" javaType="BizDevice" resultMap="recDeviceResult" />
+    </resultMap>
+
+    <resultMap id="bizAgentiaResult" type="BizAgentia">
+        <result property="agentiaId"    column="agentia_id"    />
+        <result property="agentiaNo"    column="agentia_no"    />
+        <result property="agentiaName"    column="agentia_name"    />
+    </resultMap>
+
+    <resultMap id="sendWorkResult" type="BizWaterWork">
+        <result property="worksId"    column="works_id"    />
+        <result property="worksNo"    column="works_no"    />
+        <result property="worksName"    column="works_name"    />
+    </resultMap>
+
+    <resultMap id="recDeviceResult" type="BizDevice">
+        <result property="deviceId"    column="device_id"    />
+        <result property="deviceNo"    column="device_no"    />
+        <result property="deviceName"    column="device_name"    />
+    </resultMap>
+
+
+	<sql id="selectBizAgentiaMakeVo">
+        select a.record_id, a.record_no, a.record_name, a.agentia_id, a.send_works, a.receive_device, a.send_total, a.record_status, a.record_date,a.rec_agentia_no,a.rec_agentia_name,
+         a.create_time, a.create_by, a.update_time, a.update_by,
+         b.agentia_no, b.agentia_name,
+         s.works_id ,s.works_no ,s.works_name,
+         w.device_id,w.device_no,w.device_name
+         from biz_agentia_make a
+        LEFT JOIN biz_agentia b on a.agentia_id = b.agentia_id
+        LEFT JOIN biz_water_work s on a.send_works = s.works_id
+        LEFT JOIN biz_device w on a.receive_device = w.device_id
+    </sql>
+
+    <select id="selectBizAgentiaMakeList" parameterType="BizAgentiaMake" resultMap="BizAgentiaMakeResult">
+        <include refid="selectBizAgentiaMakeVo"/>
+        where 1=1
+            <if test="recordId != null "> and a.record_id = #{recordId}</if>
+             <if test="recordNo != null  and recordNo != '' "> and a.record_no = #{recordNo}</if>
+             <if test="recordName != null  and recordName != '' "> and a.record_name = #{recordName}</if>
+             <if test="agentiaId != null "> and a.agentia_id = #{agentiaId}</if>
+             <if test="recordStatus != null  and recordStatus != '' "> and a.record_status = #{recordStatus}</if>
+             <if test="recordDate != null  and recordDate != '' "> and a.record_date = #{recordDate}</if>
+
+        <!-- 数据范围过滤 -->
+        ${params.dataScope}
+
+    </select>
+
+    <select id="selectBizAgentiaMakeById" parameterType="Long" resultMap="BizAgentiaMakeResult">
+        <include refid="selectBizAgentiaMakeVo"/>
+        where a.record_id = #{recordId}
+    </select>
+
+    <insert id="insertBizAgentiaMake" parameterType="BizAgentiaMake" useGeneratedKeys="true" keyProperty="recordId">
+        insert into biz_agentia_make
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="recordNo != null  and recordNo != ''  ">record_no,</if>
+			<if test="recordName != null  and recordName != ''  ">record_name,</if>
+			<if test="agentiaId != null  ">agentia_id,</if>
+            <if test="sendWorks != null  and sendWorks != '' ">send_works,</if>
+            <if test="receiveDevice != null  and receiveDevice != '' "> receive_device,</if>
+			<if test="recordStatus != null  and recordStatus != ''  ">record_status,</if>
+			<if test="sendTotal != null  ">send_total,</if>
+			<if test="recordDate != null  and recordDate != ''  ">record_date,</if>
+			<if test="createBy != null  and createBy != ''  ">create_by,</if>
+            <if test="recAgentiaNo != null and recAgentiaNo != '' ">rec_agentia_no,</if>
+            <if test="recAgentiaName != null and recAgentiaName != '' ">rec_agentia_name,</if>
+            create_time
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="recordNo != null  and recordNo != ''  ">#{recordNo},</if>
+			<if test="recordName != null  and recordName != ''  ">#{recordName},</if>
+			<if test="agentiaId != null  ">#{agentiaId},</if>
+            <if test="sendWorks != null  and sendWorks != '' ">#{sendWorks},</if>
+            <if test="receiveDevice != null  and receiveDevice != '' "> #{receiveDevice},</if>
+            <if test="recordStatus != null  and recordStatus != ''  ">#{recordStatus},</if>
+            <if test="sendTotal != null  ">#{sendTotal},</if>
+			<if test="recordDate != null  and recordDate != ''  ">#{recordDate},</if>
+			<if test="createBy != null  and createBy != ''  ">#{createBy},</if>
+            <if test="recAgentiaNo != null and recAgentiaNo != '' ">#{recAgentiaNo},</if>
+            <if test="recAgentiaName != null and recAgentiaName != '' ">#{recAgentiaName},</if>
+            getdate()
+         </trim>
+    </insert>
+
+    <update id="updateBizAgentiaMake" parameterType="BizAgentiaMake">
+        update biz_agentia_make
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="recordNo != null  and recordNo != ''  ">record_no = #{recordNo},</if>
+            <if test="recordName != null  and recordName != ''  ">record_name = #{recordName},</if>
+            <if test="agentiaId != null  ">agentia_id = #{agentiaId},</if>
+            <if test="recAgentiaNo != null and recAgentiaNo != '' ">rec_agentia_no = #{recAgentiaNo},</if>
+            <if test="recAgentiaName != null and recAgentiaName != '' ">rec_agentia_name = #{recAgentiaName},</if>
+            <if test="sendWorks != null  and sendWorks != '' ">send_works = #{sendWorks},</if>
+            <if test="receiveDevice != null  and receiveDevice != '' "> receive_device = #{receiveDevice},</if>
+            <if test="recordStatus != null  and recordStatus != ''  ">record_status = #{recordStatus},</if>
+            <if test="sendTotal != null  ">send_total = #{sendTotal},</if>
+            <if test="recordDate != null  and recordDate != ''  ">record_date = #{recordDate},</if>
+            <if test="updateTime != null  ">update_time = #{updateTime},</if>
+            <if test="updateBy != null  and updateBy != ''  ">update_by = #{updateBy},</if>
+            update_time = getdate()
+        </trim>
+        where record_id = #{recordId}
+    </update>
+
+	<delete id="deleteBizAgentiaMakeById" parameterType="Long">
+        delete from biz_agentia_make where record_id = #{recordId}
+    </delete>
+
+    <delete id="deleteBizAgentiaMakeByIds" parameterType="String">
+        delete from biz_agentia_make where record_id in
+        <foreach item="recordId" collection="array" open="(" separator="," close=")">
+            #{recordId}
+        </foreach>
+    </delete>
+
+
+</mapper>

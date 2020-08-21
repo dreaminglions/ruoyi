@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="zh" xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
 <head>
-    <th:block th:include="include :: header('集团药剂收发列表')" />
+    <th:block th:include="include :: header('设备药剂收发列表')" />
 </head>
 <body class="gray-bg">
 
@@ -13,15 +13,6 @@
                     <ul>
                         <li>
                             药剂名称：<input type="text" name="agentiaName"/>
-                        </li>
-
-                        <li>
-                            下发类型：
-                            <select name="sendType">
-                                <option value="">所有</option>
-                                <option value="1">平台下发</option>
-                                <option value="2">集团下发</option>
-                            </select>
                         </li>
 
                         <li>
@@ -42,14 +33,14 @@
 </div>
 <div th:include="include :: footer"></div>
 <script th:inline="javascript">
-    var editFlag = [[${@permission.hasPermi('system:bizAgentiaGroup:dist')}]];
+    var editFlag = [[${@permission.hasPermi('system:bizAgentiaDevice:make')}]];
 
-    var prefix = ctx + "system/bizAgentia";
+    var prefix = ctx + "system/bizDeviceAgentia";
 
     $(function() {
         var options = {
-            url: prefix + "/groupDistlist",
-            modalName: "药剂下发记录",
+            url: prefix + "/deviceMakelist",
+            modalName: "药剂配制记录",
             showExport: true,
             columns: [{
                 checkbox: true
@@ -84,16 +75,26 @@
                     }
                 },
                 {
-                    field : 'receiveWork.worksName',
-                    title : '接收机构',
+                    field : 'recDevice.deviceName',
+                    title : '接收设备',
                     sortable: true,
                     formatter: function(value, item, index) {
-                        var worksname="";
-                        if(item.receiveWork!=null){
-                            worksname = item.receiveWork.worksName
+                        var deviceName="";
+                        if(item.recDevice!=null){
+                            deviceName = item.recDevice.deviceName
                         }
-                        return '<span class="label label-success">'+worksname+'</span>';
+                        return '<span class="label label-success">'+deviceName+'</span>';
                     }
+                },
+                {
+                    field : 'recAgentiaNo',
+                    title : '配制药剂编号',
+                    sortable: true
+                },
+                {
+                    field : 'recAgentiaName',
+                    title : '配制药剂名称',
+                    sortable: true
                 },
                 {
                     field : 'sendTotal',
@@ -114,11 +115,11 @@
                         if(recordStatus==0){
                             return '<span class="label label-primary">待接收</span>';
                         }else if(recordStatus==1){
-                            return '<span class="label label-success">下发成功</span>';
+                            return '<span class="label label-success">配制成功</span>';
                         }else if(recordStatus==2){
-                            return '<span class="label label-danger">拒绝接收</span>';
+                            return '<span class="label label-danger">拒绝配制</span>';
                         }else if(recordStatus==3){
-                            return '<span class="label label-warning">取消下发</span>';
+                            return '<span class="label label-warning">取消配制</span>';
                         }else{
                             return '';
                         }
@@ -130,12 +131,8 @@
                     formatter: function(value, row, index) {
                         var actions = [];
                         if(row.recordStatus==0){
-                            if(row.sendType==1){
-                                actions.push('<a class="btn btn-primary btn-xs ' + editFlag + '" href="#" onclick="sureDist(\'' + row.recordId + '\')"><i class="fa fa-edit"></i>接收下发</a> ');
-                                actions.push('<a class="btn btn-danger btn-xs ' + editFlag + '" href="#" onclick="refuseDist(\'' + row.recordId + '\')"><i class="fa fa-edit"></i>拒绝接收</a> ');
-                            }else if(row.sendType==2){
-                                actions.push('<a class="btn btn-warning btn-xs ' + editFlag + '" href="#" onclick="cancelDist(\'' + row.recordId + '\')"><i class="fa fa-edit"></i>取消下发</a> ');
-                            }
+                            actions.push('<a class="btn btn-primary btn-xs ' + editFlag + '" href="#" onclick="sureMake(\'' + row.recordId + '\')"><i class="fa fa-edit"></i>接收配制</a> ');
+                            actions.push('<a class="btn btn-danger btn-xs ' + editFlag + '" href="#" onclick="refuseMake(\'' + row.recordId + '\')"><i class="fa fa-edit"></i>拒绝配制</a> ');
                         }
                         return actions.join('');
                     }
@@ -144,33 +141,11 @@
         $.table.init(options);
     });
 
-    /*  取消集团下发 */
-    function cancelDist(recordId) {
+    function sureMake(recordId) {
         $.ajax({
             cache : true,
             type : "POST",
-            url : prefix + "/cancelGroupDist",
-            data : {
-                "recordId": recordId
-            },
-            async : false,
-            error : function(request) {
-                $.modal.alertError("系统错误");
-            },
-            success : function(data) {
-                $.modal.alertSuccess("取消下发成功");
-                $.form.reset()
-                $.table.search()
-            }
-        });
-    }
-
-
-    function sureDist(recordId) {
-        $.ajax({
-            cache : true,
-            type : "POST",
-            url : prefix + "/sureGroupDist",
+            url : prefix + "/sureDeviceMake",
             data : {
                 "recordId": recordId
             },
@@ -186,11 +161,11 @@
         });
     }
 
-    function refuseDist(recordId) {
+    function refuseMake(recordId) {
         $.ajax({
             cache : true,
             type : "POST",
-            url : prefix + "/refuseGroupDist",
+            url : prefix + "/refuseDeviceMake",
             data : {
                 "recordId": recordId
             },

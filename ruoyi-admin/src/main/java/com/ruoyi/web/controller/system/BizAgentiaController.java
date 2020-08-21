@@ -9,6 +9,7 @@ import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.framework.util.ShiroUtils;
 import com.ruoyi.framework.web.domain.server.Sys;
 import com.ruoyi.system.domain.*;
+import com.ruoyi.system.service.IBizAgentiaMakeService;
 import com.ruoyi.system.service.IBizAgentiaRecordService;
 import com.ruoyi.system.service.IBizAgentiaSendService;
 import net.sf.json.JSONObject;
@@ -48,6 +49,8 @@ public class BizAgentiaController extends BaseController
 	private IBizAgentiaRecordService bizAgentiaRecordService;
 	@Autowired
 	private IBizAgentiaSendService bizAgentiaSendService;
+	@Autowired
+	private IBizAgentiaMakeService bizAgentiaMakeService;
 
 	@RequiresPermissions("system:bizAgentia:view")
 	@GetMapping()
@@ -998,6 +1001,105 @@ public class BizAgentiaController extends BaseController
 		bizAgentiaSend.setRecordStatus("2");
 
 		return toAjax(bizAgentiaSendService.updateBizAgentiaSend(bizAgentiaSend));
+	}
+
+
+
+	/**
+	 * 水厂药剂下发
+	 */
+	@GetMapping("/addWorkMake")
+	public String addWorkMake(ModelMap mmap)
+	{
+
+		return prefixWork + "/addWorkMake";
+	}
+
+	/**
+	 * 修改保存水厂药剂配制
+	 */
+	@RequiresPermissions("system:bizAgentiaWork:dist")
+	@Log(title = "水厂药剂配制", businessType = BusinessType.UPDATE)
+	@PostMapping("/addWorkMake")
+	@ResponseBody
+	public AjaxResult WorkDistSave(BizAgentiaMake bizAgentiaMake)
+	{
+		long agentiaId = bizAgentiaMake.getAgentiaId();
+		BizAgentia agentia = bizAgentiaService.selectBizAgentiaById(agentiaId);
+		float remain = agentia.getAgentiaRemain();
+		float total = agentia.getAgentiaTotal();
+		float distTotal =bizAgentiaMake.getSendTotal();
+		total = total + distTotal;
+		remain = remain - distTotal;
+		agentia.setAgentiaRemain(remain);
+		agentia.setAgentiaTotal(total);
+		//更新药剂变更
+		bizAgentiaService.updateBizAgentia(agentia);
+
+		SimpleDateFormat format_date = new SimpleDateFormat("yyyy-MM-dd");
+		bizAgentiaMake.setRecordDate(format_date.format(new Date()));
+		return toAjax(bizAgentiaMakeService.insertBizAgentiaMake(bizAgentiaMake));
+	}
+
+
+	@RequiresPermissions("system:bizAgentiaWork:dist")
+	@GetMapping("/workMake")
+	public String workMake()
+	{
+		return prefixWork + "/workMake";
+	}
+
+
+	/**
+	 * 查询集团药剂接发
+	 */
+	@RequiresPermissions("system:bizAgentiaWork:dist")
+	@PostMapping("/workMakelist")
+	@ResponseBody
+	public TableDataInfo workMakelist(BizAgentiaMake bizAgentiaMake)
+	{
+		startPage();
+		StringBuilder sqlString = new StringBuilder();
+		SysRole role = ShiroUtils.getSysUser().getRole();
+		long worksId = ShiroUtils.getSysUser().getWorksId();
+		String dataScope = role.getDataScope();
+		if ("3".equals(dataScope)){
+			sqlString.append(" OR  a.send_works ="+worksId+" ");
+		}
+		if (StringUtils.isNotBlank(sqlString.toString()))
+		{
+			bizAgentiaMake.getParams().put("dataScope", " AND (" + sqlString.substring(4) + ")");
+		}
+		List<BizAgentiaMake>  list = bizAgentiaMakeService.selectBizAgentiaMakeList(bizAgentiaMake);
+		return getDataTable(list);
+	}
+
+
+	/**
+	 * 取消药剂配制
+	 */
+	@RequiresPermissions("system:bizAgentiaWork:dist")
+	@Log(title = "取消药剂配制", businessType = BusinessType.UPDATE)
+	@PostMapping( "/cancelWorkMake")
+	@ResponseBody
+	public AjaxResult cancelWorkMake(long recordId)
+	{
+		BizAgentiaMake bizAgentiaMake = bizAgentiaMakeService.selectBizAgentiaMakeById(recordId);
+		long agentiaId = bizAgentiaMake.getAgentiaId();
+		BizAgentia agentia = bizAgentiaService.selectBizAgentiaById(agentiaId);
+
+		float distTotal =bizAgentiaMake.getSendTotal();
+		float remain = agentia.getAgentiaRemain();
+		float total = agentia.getAgentiaTotal();
+		total = total - distTotal;
+		remain = remain + distTotal;
+		agentia.setAgentiaRemain(remain);
+		agentia.setAgentiaTotal(total);
+		//更新药剂变更
+		bizAgentiaService.updateBizAgentia(agentia);
+		bizAgentiaMake.setRecordStatus("3");
+
+		return toAjax(bizAgentiaMakeService.updateBizAgentiaMake(bizAgentiaMake));
 	}
 
 }
