@@ -9,9 +9,7 @@ import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.framework.util.ShiroUtils;
 import com.ruoyi.framework.web.domain.server.Sys;
 import com.ruoyi.system.domain.*;
-import com.ruoyi.system.service.IBizAgentiaMakeService;
-import com.ruoyi.system.service.IBizAgentiaRecordService;
-import com.ruoyi.system.service.IBizAgentiaSendService;
+import com.ruoyi.system.service.*;
 import net.sf.json.JSONObject;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +18,6 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 import com.ruoyi.common.annotation.Log;
 import com.ruoyi.common.enums.BusinessType;
-import com.ruoyi.system.service.IBizAgentiaService;
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.page.TableDataInfo;
 import com.ruoyi.common.core.domain.AjaxResult;
@@ -51,6 +48,8 @@ public class BizAgentiaController extends BaseController
 	private IBizAgentiaSendService bizAgentiaSendService;
 	@Autowired
 	private IBizAgentiaMakeService bizAgentiaMakeService;
+	@Autowired
+	private IBizDeviceAgentiaService bizDeviceAgentiaService;
 
 	@RequiresPermissions("system:bizAgentia:view")
 	@GetMapping()
@@ -95,45 +94,28 @@ public class BizAgentiaController extends BaseController
 	@RequiresPermissions("system:bizAgentia:list")
 	@PostMapping("/list")
 	@ResponseBody
-	public TableDataInfo list(BizAgentia bizAgentia)
+	public TableDataInfo list(BizDeviceAgentia bizAgentia)
 	{
 		startPage();
+		bizAgentia.setAgentiaType("4");
 		StringBuilder sqlString = new StringBuilder();
 		SysRole role = ShiroUtils.getSysUser().getRole();
 		String dataScope = role.getDataScope();
-//		if ("1".equals(dataScope))
-//		{
-//			sqlString = new StringBuilder();
-//		}
-//		else if ("2".equals(dataScope))
-//		{
-//			sqlString.append(StringUtils.format(
-//					" OR {}.works_id IN ( SELECT works_id FROM sys_role_work WHERE role_id = {} ) ", "w",
-//					role.getRoleId()));
-//		}
-//		if (StringUtils.isNotBlank(sqlString.toString()))
-//		{
-//			bizAgentia.getParams().put("dataScope", " AND (" + sqlString.substring(4) + ")");
-//		}
-
-
-		String bizAgentiaType="";
-		List<BizAgentia> list = new ArrayList<BizAgentia>();
-		if(bizAgentia!=null){
-			bizAgentiaType = bizAgentia.getAgentiaType();
+		if ("1".equals(dataScope))
+		{
+			sqlString = new StringBuilder();
 		}
-		if("0".equals(bizAgentiaType)){
-			if("1".equals(dataScope)){
-				list = bizAgentiaService.selectBizAgentiaList(bizAgentia);
-			}
-		} else if("1".equals(bizAgentiaType)){
-			list = bizAgentiaService.selectBizAgentiaList(bizAgentia);
-		}else if("2".equals(bizAgentiaType)){
-			list = bizAgentiaService.selectDeviceAgentiaList(bizAgentia);
-		}else {
-			bizAgentia.setAgentiaType("2");
-			list = bizAgentiaService.selectDeviceAgentiaList(bizAgentia);
+		else if ("2".equals(dataScope))
+		{
+			sqlString.append(StringUtils.format(
+					" OR {}.works_id IN ( SELECT works_id FROM sys_role_work WHERE role_id = {} ) ", "w",
+					role.getRoleId()));
 		}
+		if (StringUtils.isNotBlank(sqlString.toString()))
+		{
+			bizAgentia.getParams().put("dataScope", " AND (" + sqlString.substring(4) + ")");
+		}
+		List<BizDeviceAgentia> list = bizDeviceAgentiaService.selectDeviceAgentiaList(bizAgentia);
 		return getDataTable(list);
 	}
 
@@ -534,7 +516,7 @@ public class BizAgentiaController extends BaseController
 	@GetMapping("/getRecord/{agentiaId}")
 	public String getRecord(@PathVariable("agentiaId") Long agentiaId, ModelMap mmap)
 	{
-		mmap.put("bizAgentia", bizAgentiaService.selectDeviceAgentiaById(agentiaId));
+		mmap.put("bizAgentia",  bizDeviceAgentiaService.selectDeviceAgentiaById(agentiaId));
 		return prefix + "/agentiaRecord";
 	}
 

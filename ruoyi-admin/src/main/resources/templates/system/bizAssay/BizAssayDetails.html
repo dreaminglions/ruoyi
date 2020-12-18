@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<head>
+	<th:block th:include="include :: header('化验结果列表')" />
+</head>
+<body class="gray-bg">
+
+    <div class="container-div">
+        <div class="row">
+            <div class="col-sm-12 search-collapse">
+                <form id="formId">
+                    <input id="assayNo" name="assayNo"  type="hidden" th:value="*{assayNo}" />
+                    <div class="select-list">
+
+                        <li>
+                            化验项目：<select id="assayItem" name="assayItem">
+                                        <option  text="请选择" value="" >请选择</option>
+                                        <option th:each="item : ${itemList}" th:text="${item.itemName}" th:value="${item.assayItem}" ></option>
+                                    </select>
+                        </li>
+                        <ul>
+                            <li>
+                                <a class="btn btn-primary btn-rounded btn-sm" onclick="searchItem()"><i class="fa fa-search"></i>&nbsp;搜索</a>
+                            </li>
+                        </ul>
+
+                        <li>
+                            <a id="Docx_button" class="btn btn-primary" onclick="Docx()" shiro:hasPermission="system:bizAssay:export" style="display:none">
+                                <i class="fa fa-download"></i> 导出分析项目原始记录
+                            </a>
+
+                        </li>
+                    </div>
+                </form>
+            </div>
+
+            <div class="col-sm-12 select-table table-striped" id="assayDetails">
+                <div id="cod_div">
+                    <table id="0-table" data-mobile-responsive="true" class="table table-hover">
+                        <thead><tr>
+                            <th style="" tabindex="0"><div class="th-inner sortable both">编号：[[${assayNo}]]</div><div class="fht-cell"></div></th>
+                            <th style="" tabindex="0"><div class="th-inner sortable both">日期：[[${assayDate}]]</div><div class="fht-cell"></div></th>
+                            <th style="" tabindex="0"><div class="th-inner sortable both">检测地点：[[${worksName}]]</div><div class="fht-cell"></div></th>
+                        </tr></thead>
+                    </table>
+
+                    <form  th:object="${bizAssayMethod}">
+                        <table id="1-table" data-mobile-responsive="true" class="table table-hover">
+                            <thead><tr>
+                                <th style="" tabindex="0"><div class="th-inner sortable both">方法依据</div><div class="fht-cell"></div></th>
+                                <th style="" tabindex="0"><div class="th-inner sortable both" id="methodname">[[${bizAssayMethod?.codName}]]</div><div class="fht-cell"></div></th>
+                                <th style="" tabindex="0"><div class="th-inner sortable both" id="wave1">测定波长[[${bizAssayMethod?.codWave1}]]nm（高量程）</div><div class="fht-cell"></div></th>
+                                <th style="" tabindex="0" id="th_wave2"><div class="th-inner sortable both" id="wave2">测定波长[[${bizAssayMethod?.codWave2}]]nm（低量程）</div><div class="fht-cell"></div></th>
+                                <th style="" tabindex="0"><div class="th-inner sortable both">光程[[${bizAssayMethod?.codOptical}]]mm</div><div class="fht-cell"></div></th>
+                            </tr></thead>
+                        </table>
+                    </form>
+
+                    <form  th:object="${CODparameter}">
+                        <table id="3-table" data-mobile-responsive="true" class="table">
+                            <thead><tr>
+                                <th style="" tabindex="0"><div class="th-inner sortable both">序号</div><div class="fht-cell"></div></th>
+                                <th style="" tabindex="0"><div class="th-inner sortable both">1</div><div class="fht-cell"></div></th>
+                                <th style="" tabindex="0"><div class="th-inner sortable both">2</div><div class="fht-cell"></div></th>
+                                <th style="" tabindex="0"><div class="th-inner sortable both">3</div><div class="fht-cell"></div></th>
+                                <th style="" tabindex="0"><div class="th-inner sortable both">4</div><div class="fht-cell"></div></th>
+                                <th style="" tabindex="0"><div class="th-inner sortable both">5</div><div class="fht-cell"></div></th>
+                                <th style="" tabindex="0"><div class="th-inner sortable both">6</div><div class="fht-cell"></div></th>
+                                <th style="" tabindex="0"><div class="th-inner sortable both">7</div><div class="fht-cell"></div></th>
+                            </tr></thead>
+                            <tbody>
+                            <tr data-index="0">
+                                <td style="">质量（ug）</td><td id="CurveCon1"></td><td id="CurveCon2"></td><td id="CurveCon3"></td><td id="CurveCon4"></td><td id="CurveCon5"></td><td id="CurveCon6"></td><td id="CurveCon7"></td>
+                            </tr>
+                            <tr data-index="0">
+                                <td style="">吸光度</td><td id="curveAbs1"></td><td id="curveAbs2"></td><td id="curveAbs3"></td><td id="curveAbs4"></td><td id="curveAbs5"></td><td id="curveAbs6"></td><td id="curveAbs7"></td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </form>
+
+                    <form  th:object="${CODparameter}">
+                        <table id="4-table" data-mobile-responsive="true" class="table">
+                            <thead><tr>
+                                <th style="" tabindex="0"><div class="th-inner sortable both">校准曲线Y=bX+a</div><div class="fht-cell"></div></th>
+                                <th style="" tabindex="0"><div class="th-inner sortable both" id="curve_b">b=[[${CODparameter?.curveK0}]]</div><div class="fht-cell"></div></th>
+                                <th style="" tabindex="0"><div class="th-inner sortable both" id="curve_a">a=[[${CODparameter?.curveK1}]]</div><div class="fht-cell"></div></th>
+                                <th style="" tabindex="0"><div class="th-inner sortable both" id="curve_r">r=[[${CODparameter?.curveR}]]</div><div class="fht-cell"></div></th>
+                            </tr></thead>
+                        </table>
+                    </form>
+
+                    <table id="5-table" data-mobile-responsive="true" class="table">
+                        <thead><tr>
+                            <th style="" tabindex="0"><div class="th-inner sortable both">序号</div><div class="fht-cell"></div></th>
+                            <th style="" tabindex="0"><div class="th-inner sortable both">样品名称</div><div class="fht-cell"></div></th>
+                            <th style="" tabindex="0"><div class="th-inner sortable both">取样体积v（mL)</div><div class="fht-cell"></div></th>
+                            <th style="" tabindex="0"><div class="th-inner sortable both">吸光度(As-Ab)</div><div class="fht-cell"></div></th>
+                            <th style="" tabindex="0"><div class="th-inner sortable both">测定结果(mg/L)</div><div class="fht-cell"></div></th>
+                            <th style="" tabindex="0"><div class="th-inner sortable both">报出结果(mg/L)</div><div class="fht-cell"></div></th>
+                        </tr></thead>
+                        <tbody>
+                        <tr data-index="0">
+                            <td style="">1</td><td style="">空白</td><td >1</td><td >0.000</td><td >-</td><td >-</td>
+                        </tr>
+                        <tr data-index="0">
+                            <td style="">2</td><td style="">标准物质</td><td >1</td><td id="sta_abs">0.000</td><td  id="sta_value">-</td><td  id="sta_valueR">-</td>
+                        </tr>
+
+                        <tr data-index="0" class="cod">
+                            <td style="">3</td><td style="">[[${Sname}]]进水</td><td >1</td><td id="inabs">[[${inCod_As}]]</td><td id="invalue">[[${inCod}]]</td><td id="invalueR">[[${inCod}]]</td>
+                        </tr>
+                        <tr data-index="0" class="cod">
+                            <td style="">4</td><td style="">[[${Sname}]]出水</td><td >2</td><td id="outabs1">[[${outCod_As}]]</td><td id="outvalue">[[${outCod}]]</td><td id="outvalueR">[[${outCod}]]</td>
+                        </tr>
+                        <tr data-index="0">
+                            <td style=""> </td><td style=""> </td><td >—</td><td>—</td><td>—</td><td>—</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div th:include="include :: footer"></div>
+
+	 <script th:src="@{/water/view02/js/echarts-all.js}"></script>
+
+    <script th:inline="javascript">
+        var prefix = ctx + "system/bizAssay";
+
+        var assayNo = [[${assayNo}]];
+
+
+        //初始化页面数据
+        $(function() {
+
+        });
+
+        function searchItem(){
+            var assayNo = $("#assayNo").val();
+            var assayItem = $("#assayItem").val();
+//            alert(assayNo);
+//            alert(assayItem);
+
+            var d = {};
+            d.assayNo = assayNo;
+            d.assayItem = assayItem;
+
+            $.ajax({
+                url: prefix + "/getAssayByItem",
+                data: JSON.stringify(d),
+                type: "POST",
+                cache: false,
+                contentType: "application/json;charset=utf-8",
+                processData: false,
+//            dataType: 'json',
+                success: function(result) {
+
+                    var itemData = eval('('+result.itemData+')');
+                    var curveData = eval('('+result.curveData+')');
+                    var methodData = eval('('+result.methodData+')');
+                    var trHtml="";
+                    $.each(itemData, function(key, value){
+                        trHtml+="<tr data-index=\"0\" class=\"cod\">\n" +
+                            "                            <td style=\"\">3</td><td style=\"\">进水</td><td >1</td><td id=\"inabs\">"+value.resultAbs+"</td><td id=\"invalue\">"+value.resultConcentration+"</td><td id=\"invalueR\">"+value.resultConcentration+"</td>\n" +
+                            "                        </tr>"
+                    });
+
+                    $("#CurveCon1").html(curveData.curveCon1);
+                    $("#CurveCon2").html(curveData.curveCon2);
+                    $("#CurveCon3").html(curveData.curveCon3);
+                    $("#CurveCon4").html(curveData.curveCon4);
+                    $("#CurveCon5").html(curveData.curveCon5);
+                    $("#CurveCon6").html(curveData.curveCon6);
+                    $("#CurveCon7").html(curveData.curveCon7);
+
+                    $("#curveAbs1").html(curveData.curveAbs1);
+                    $("#curveAbs2").html(curveData.curveAbs2);
+                    $("#curveAbs3").html(curveData.curveAbs3);
+                    $("#curveAbs4").html(curveData.curveAbs4);
+                    $("#curveAbs5").html(curveData.curveAbs5);
+                    $("#curveAbs6").html(curveData.curveAbs6);
+                    $("#curveAbs7").html(curveData.curveAbs7);
+
+                    $("#curve_b").html("b= "+curveData.curveK0);
+                    $("#curve_a").html("a= "+curveData.curveK1);
+                    $("#curve_r").html("r= "+curveData.curveR);
+
+                    $("#methodname").html(methodData);
+
+                    $(".cod").each(function(){
+                        $(this).remove();
+                    });
+
+                    var row=2;
+                    var tab="5-table";
+                    addTr(tab, row, trHtml);
+
+                    if(assayItem!=""){
+                        $("#Docx_button").css('display','');
+                    }else{
+                        $("#Docx_button").css('display','none');
+                    }
+                },
+                error: function(error) {
+                    alert("化验编号: "+NoValue+" 无化验数据");
+                    $(".cod").each(function(){
+                        $(this).remove();
+                    });
+                }
+            })
+
+        }
+
+        function addTr(tab, row, trHtml){
+            //获取table最后一行 $("#tab tr:last")
+            //获取table第一行 $("#tab tr").eq(0)
+            //获取table倒数第二行 $("#tab tr").eq(-2)
+            var $tr=$("#"+tab+" tr").eq(row);
+            if($tr.size()==0){
+                alert("指定的table id或行数不存在！");
+                return;
+            }
+            $tr.after(trHtml);
+        }
+
+
+
+        function Docx(){
+            var obj = $("#assayItem").val();
+            window.location.href = prefix + "/getAllDoc/"+assayNo+"/"+obj;
+        }
+    </script>
+</body>
+</html>

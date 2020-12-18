@@ -69,16 +69,6 @@
     }
     ];
 
-    var markDataHLJ = [{
-        "name": "文昌处理厂",
-        "coord": [
-            126.5, 45.80
-        ],
-        "runConut": '537',
-        "num": '234'
-    }
-    ];
-
     var markDataJL = [{
         "name": "明城处理厂",
         "coord": [
@@ -240,8 +230,8 @@
     var provnameArr = ['上海', '河北', '山西', '内蒙古', '辽宁', '吉林', '黑龙江', '江苏', '浙江', '安徽', '福建', '江西', '山东', '河南', '湖北', '湖南', '广东', '广西', '海南', '四川', '贵州', '云南', '西藏', '陕西', '甘肃', '青海', '宁夏', '新疆', '北京', '天津', '重庆', '香港', '澳门', '台湾', '南海诸岛'];//获取的省份，有可能是从后台获取
     var provArr = [{name: '上海', value: 0}, {name: '河北', value: 0}, {name: '山西', value: 0}, {name: '内蒙古', value: 0},
         {name: '辽宁', value: 0},
-        {name: '吉林', value: 4},
-        {name: '黑龙江', value: 2},
+        {name: '吉林', value: 3},
+        {name: '黑龙江', value: 4},
         {name: '江苏', value: 0},
         {name: '浙江', value: 0},
         {name: '安徽', value: 0}, {name: '福建', value: 0}, {name: '江西', value: 0}, {name: '山东', value: 0},
@@ -251,13 +241,13 @@
         {name: '四川', value: 0}, {name: '贵州', value: 0}, {name: '云南', value: 0}, {name: '西藏', value: 0}, {name: '陕西', value: 0}, {name: '甘肃', value: 0},
         {name: '青海', value: 0}, {name: '宁夏', value: 0}, {name: '新疆', value: 0}, {name: '北京', value: 0},
         {name: '天津', value: 0}, {name: '重庆', value: 0}, {name: '香港', value: 0}, {name: '澳门', value: 0}, {name: '台湾', value: 0}, {name: '南海诸岛', value: 0}];
-    var HLJArr = [{name: '哈尔滨市', value: 1}, {name: '牡丹江市', value: 0}, {name: '绥化市', value: 0}, {name: '大庆市', value: 0},
-        {name: '大兴安岭地区', value: 0}, {name: '黑河市', value: 1}, {name: '齐齐哈尔市', value: 0}, {name: '鹤岗市', value: 0}, {name: '佳木斯市', value: 0},
+    var HLJArr = [{name: '哈尔滨市', value: 1}, {name: '牡丹江市', value: 0}, {name: '绥化市', value: 1}, {name: '大庆市', value: 0},
+        {name: '大兴安岭地区', value: 0}, {name: '黑河市', value: 1}, {name: '齐齐哈尔市', value: 0}, {name: '鹤岗市', value: 0}, {name: '佳木斯市', value: 1},
         {name: '双鸭山市', value: 0},{name: '鸡西市', value: 0},{name: '七台河市', value: 0},{name: '伊春市', value: 0}];
     var LNArr =[{name: '葫芦岛市', value: 0},{name: '大连市', value: 0},{name: '营口市', value: 0},{name: '锦州市', value: 0},{name: '盘锦市', value: 0},
         {name: '阜新市', value: 0},{name: '铁岭市', value: 0},{name: '抚顺市', value: 0},{name: '本溪市', value: 0},{name: '丹东市', value: 0},
         {name: '鞍山市', value: 0},{name: '辽阳市', value: 0},{name: '朝阳市', value: 0},{name: '沈阳市', value: 0}];
-    var JLArr =[{name: '白城市', value: 0},{name: '松原市', value: 0},{name: '长春市', value: 3},{name: '四平市', value: 0},{name: '吉林市', value: 1},{name: '辽源市', value: 0},            {name: '通化市', value: 0},{name: '白山市', value: 0},{name: '延边朝鲜族自治州', value: 0}];
+    var JLArr =[{name: '白城市', value: 0},{name: '松原市', value: 0},{name: '长春市', value: 2},{name: '四平市', value: 0},{name: '吉林市', value: 1},{name: '辽源市', value: 0},            {name: '通化市', value: 0},{name: '白山市', value: 0},{name: '延边朝鲜族自治州', value: 0}];
     var NMGArr  =[{name: '阿拉善盟', value: 0},{name: '乌海市', value: 0},{name: '巴彦淖尔市', value: 0},{name: '包头市', value: 0},{name: '呼和浩特市', value: 1},
         {name: '乌兰察布市', value: 0},{name: '锡林郭勒盟', value: 0},{name: '赤峰市', value: 1},{name: '通辽市', value: 0},{name: '兴安盟', value: 0},{name: '呼伦贝尔市', value: 1},{name: '鄂尔多斯市', value: 0}];
     option.series[0].data=provArr;//将拼接好的数组赋给参数集合

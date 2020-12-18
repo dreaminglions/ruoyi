@@ -1,8 +1,12 @@
 package com.ruoyi.web.controller.system;
 
+import com.deepoove.poi.XWPFTemplate;
+import com.deepoove.poi.config.Configure;
 import com.deepoove.poi.data.MiniTableRenderData;
 import com.deepoove.poi.data.RowRenderData;
 import com.deepoove.poi.data.TextRenderData;
+import com.deepoove.poi.policy.DynamicTableRenderPolicy;
+import com.google.gson.Gson;
 import com.ruoyi.common.annotation.Log;
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.AjaxResult;
@@ -13,17 +17,22 @@ import com.ruoyi.common.utils.poi.DocUtil;
 import com.ruoyi.common.utils.poi.ExcelUtil;
 import com.ruoyi.framework.util.ShiroUtils;
 import com.ruoyi.system.domain.*;
+import com.ruoyi.system.model.AssayData;
+import com.ruoyi.system.model.AssayTablePolicy;
+import com.ruoyi.system.model.AssayTotalData;
 import com.ruoyi.system.service.*;
 import net.sf.json.JSONObject;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
+import org.springframework.util.ClassUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
+import java.io.*;
+import java.net.URLEncoder;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -480,6 +489,191 @@ public class BizAssayController extends BaseController
 			docxName = "氨氮分析项目原始记录.docx";
 		}
 		DocUtil.download(request,response,docxName,docName, map);
+		return prefix + "/getdoc";
+	}
+
+
+	/**
+	 * 查询化验明细
+	 */
+	@RequiresPermissions("system:bizAssay:list")
+	@GetMapping("/detail/{assayNo}")
+	public String detail(@PathVariable("assayNo") String assayNo, ModelMap mmap)
+	{
+
+		BizAssay assay = bizAssayService.selectBizAssayByAssayNo(assayNo);
+		if(assay!=null){
+			mmap.put("assayDate",assay.getAssayDate());
+			BizWaterWork work = waterWorkService.selectBizWaterWorkById(assay.getDevice().getDeviceWorks());
+			if(work!=null){
+				mmap.put("worksName",work.getWorksName());
+				mmap.put("Sname", "");
+			}
+		}
+		List<AssayItem> resultList = assayResultService.selectItemByAssayNo(assayNo);
+
+		mmap.put("itemList", resultList);
+		mmap.put("assayNo", assayNo);
+		return prefix + "/BizAssayDetails";
+	}
+
+	@PostMapping("/getAssayByItem")
+	@ResponseBody
+	public AjaxResult getAssayByItem(@RequestBody JSONObject params) {
+
+		String  assayNo = params.getString("assayNo");
+		String  assayItem = params.getString("assayItem");
+
+		AssayResult assay = new AssayResult();
+		assay.setAssayNo(assayNo);
+		assay.setAssayItem(assayItem);
+		List<AssayResult> assayResult = assayResultService.selectAssayResultList(assay);
+		AssayCurve curve_item = assayCurveService.selectAssayCurveByCurveNo(assayItem);
+
+		String assaymethod= "";
+		if("3".equals(assayItem)||"4".equals(assayItem)){
+			assaymethod = "HJ399-2007化学需氧量的测定 快速消解分光光度法";
+		}else if("5".equals(assayItem)){
+			assaymethod = "GB11893-1989水质总磷的测定钼酸铵分光光度法";
+		}else if("1".equals(assayItem)){
+			assaymethod = "HJ636-2012水质总氮的测定碱性过硫酸钾消解紫外分光光度法";
+		}else if("2".equals(assayItem)){
+			assaymethod = "HJ535-2009水质氨氮的测定纳氏试剂分光光度法";
+		}
+
+		Gson gson = new Gson();
+		String itemData = gson.toJson(assayResult);
+		String curveData = gson.toJson(curve_item);
+		String methodData = gson.toJson(assaymethod);
+
+		AjaxResult ajax = AjaxResult.success();
+		ajax.put("itemData", itemData);
+		ajax.put("curveData", curveData);
+		ajax.put("methodData", methodData);
+		return ajax;
+	}
+
+
+	@GetMapping("/getAllDoc/{assayNo}/{obj}")
+	@ResponseBody
+	public String  getAllDoc(@PathVariable("assayNo") String assayNo,@PathVariable("obj") String obj,HttpServletRequest request, HttpServletResponse response) throws IOException {
+//		List<Map<String,Object>> mapList =  new ArrayList<>();
+
+		BizAssay assay = bizAssayService.selectBizAssayByAssayNo(assayNo);
+
+		AssayResult assayResult  = new AssayResult();
+		assayResult.setAssayNo(assayNo);
+		assayResult.setAssayItem(obj);
+		List<AssayResult> resultList = assayResultService.selectAssayResultList(assayResult);
+		AssayCurve curve_item = assayCurveService.selectAssayCurveByCurveNo(obj);
+
+
+		String docName = "";
+
+		docName = "报表记录测试2.doc";
+		String assaymethod= "";
+		if("3".equals(obj)||"4".equals(obj)){
+			 docName = "COD分析项目原始记录.doc";
+			assaymethod = "HJ399-2007化学需氧量的测定 快速消解分光光度法";
+		}else if("5".equals(obj)){
+			docName = "总磷分析项目原始记录.doc";
+			assaymethod = "GB11893-1989水质总磷的测定钼酸铵分光光度法";
+		}else if(("1".equals(obj))){
+			docName = "总氮分析项目原始记录.doc";
+			assaymethod = "HJ636-2012水质总氮的测定碱性过硫酸钾消解紫外分光光度法";
+		}else if(("2".equals(obj))){
+			docName = "氨氮分析项目原始记录.doc";
+			assaymethod = "HJ535-2009水质氨氮的测定纳氏试剂分光光度法";
+		}
+
+
+		AssayTotalData data = new AssayTotalData();
+		AssayData assayData = new AssayData();
+
+		List<RowRenderData> assayList = new ArrayList<RowRenderData>();
+		int i=0;
+		for(AssayResult result : resultList){
+			RowRenderData assayRow = RowRenderData.build(i+"", "样品", result.getSampleVolume()+"", result.getResultAbs()+"", result.getResultConcentration()+"", result.getResultConcentration()+"");
+			assayList.add(assayRow);
+			i++;
+		}
+		assayData.setAssayResult(assayList);
+		data.setAssayTable(assayData);
+		data.setOrderno(assay.getAssayNo());
+
+		data.setAssaymethod(assaymethod);
+		data.setUg1(curve_item.getCurveCon1()+"");
+		data.setUg2(curve_item.getCurveCon2()+"");
+		data.setUg3(curve_item.getCurveCon3()+"");
+		data.setUg4(curve_item.getCurveCon4()+"");
+		data.setUg5(curve_item.getCurveCon5()+"");
+		data.setUg6(curve_item.getCurveCon6()+"");
+		data.setUg7(curve_item.getCurveCon7()+"");
+
+		data.setOD1(curve_item.getCurveAbs1()+"");
+		data.setOD2(curve_item.getCurveAbs2()+"");
+		data.setOD3(curve_item.getCurveAbs3()+"");
+		data.setOD4(curve_item.getCurveAbs4()+"");
+		data.setOD5(curve_item.getCurveAbs5()+"");
+		data.setOD6(curve_item.getCurveAbs6()+"");
+		data.setOD7(curve_item.getCurveAbs7()+"");
+
+		data.setB(curve_item.getCurveK0()+"");
+		data.setA(curve_item.getCurveK1()+"");
+		data.setR(curve_item.getCurveR()+"");
+
+		String path = ClassUtils.getDefaultClassLoader().getResource("").getPath();
+		String resource = path+"static/docx/报表记录测试2.docx";
+		Configure config = Configure.newBuilder().customPolicy("detail_table", new AssayTablePolicy()).build();
+		XWPFTemplate template = XWPFTemplate.compile(resource, config).render(data);
+
+		OutputStream out = null;
+		try {
+			out = new FileOutputStream("out_template.docx");
+			template.write(out);
+			out.flush();
+			out.close();
+			template.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		InputStream fis = null;
+		OutputStream toClient = null;
+		File file = new File("out_template.docx");
+		try {
+			fis = new BufferedInputStream(new FileInputStream(file));
+			byte[] buffer = new byte[fis.available()];
+			fis.read(buffer);
+			fis.close();
+			// 清空response
+			response.reset();
+			// 设置response的Header
+			String newWordName = URLEncoder.encode(docName, "utf-8"); //这里要用URLEncoder转下才能正确显示中文名称
+			response.addHeader("Content-Disposition", "attachment;filename=" + newWordName+"");
+			response.addHeader("Content-Length", "" + file.length());
+			toClient = new BufferedOutputStream(response.getOutputStream());
+			response.setContentType("application/octet-stream");
+			toClient.write(buffer);
+			toClient.flush();
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally{
+			try {
+				if(fis!=null){
+					fis.close();
+				}
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			try {
+				if(toClient!=null){
+					toClient.close();
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+
 		return prefix + "/getdoc";
 	}
 

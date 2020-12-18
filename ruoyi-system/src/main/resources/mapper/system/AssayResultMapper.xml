@@ -61,6 +61,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
              <if test="assayNo != null  and assayNo != '' ">
                  AND r.assay_no = #{assayNo}</if>
              <if test="deviceNo != null and deviceNo != ''"> and r.device_no = #{deviceNo}</if>
+              <if test="assayItem != null and assayItem != ''"> and r.assay_item = #{assayItem}</if>
              <if test="resultDate != null  and resultDate != '' "> and r.result_date = #{resultDate}</if>
             <if test="params.beginTime != null and params.beginTime != ''"><!-- 开始时间检索 -->
                 AND datediff(dd,#{params.beginTime},r.result_time) &gt;=0
@@ -175,6 +176,17 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         and t.result_date BETWEEN #{startTime} and #{endTime}
         ) z
     </select>
+
+
+    <select id="selectItemByAssayNo"  resultType="AssayItem">
+        SELECT t.assay_item assayItem, t.item_name itemName FROM sys_assay_item t
+        where t.assay_item in (
+        SELECT DISTINCT z.assay_item from z_assay_result z
+        where z.assay_no = #{assayNo}
+        )
+    </select>
+
+
 
 
 </mapper>

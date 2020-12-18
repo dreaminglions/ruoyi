@@ -68,10 +68,12 @@
                         <div class="dataAllBorder02">
                             <div class="data_tit2">化验状态信息</div>
 
-                            <div style="height:25%;">
+                            <div style="height:45%;">
                                 <table class="table_data01">
                                     <tr ><td class="font07">当前化验状态</td><td colspan="2"class="font04" id="valrt_1"></td></tr>
-                                    <tr ><td class="font6">当前化验节点：</td><td class="font04" id="valrt_2"></td><td class="font04" id="valrt_3"></td></tr>
+                                    <tr id="node_v1"><td class="font6">当前化验节点：</td><td class="font04" id="valrt_2"></td><td class="font04" id="valrt_3"></td></tr>
+                                    <tr id="node_v2" style="display: none"><td class="font6">当前化验步进：</td><td class="font04" id="step_total"></td><td class="font04" id="step_now"></td></tr>
+                                    <tr id="node_v3" style="display: none"><td class="font04" id="step_info1"></td><td class="font04" id="step_info2"></td><td class="font04" id="step_info3"></td></tr>
                                     <tr ><td class="font6">当前告警状态：</td><td colspan="2"class="font03" id="valrt_4"></td></tr>
                                     <tr ><td class="font6">当前故障状态：</td><td colspan="2"class="font04" id="valrt_5"></td></tr>
                                 </table>
@@ -88,7 +90,7 @@
 
                             <!--<div class="data_tit3" style="margin-top:1%">化验故障 </div>-->
 
-                            <div style="width: 90%;height:45%;position: relative;margin: 0 auto;">
+                            <div style="width: 90%;height:25%;position: relative;margin: 0 auto;">
                                 <div class="message-box" >
                                     <div class="scrollNews ">
 
@@ -126,7 +128,7 @@
                             </div>
                             <div class="data_tit3" style="margin-top:2%">化验参数对比 </div>
 
-                            <div style="height:27%">
+                            <div style="height:27%;display: none">
                                 <table class="table_data01">
                                     <tr>
                                         <td></td><td class="font04">COD</td><td class="font04">NH3</td><td class="font04">TP</td><td class="font04">TN</td>
@@ -136,7 +138,31 @@
                                     <tr><td>出水</td><td class="font6" id="tval09"></td><td class="font6" id="tval10"></td><td class="font6" id="tval11"></td><td class="font6" id="tval12"></td></tr>
                                 </table>
                             </div>
-                            <div style="height:1%"></div>
+                            <div style="height:4%">
+                            <span class="chose_tltle">请选择化验项目：</span>
+                            <select class="water_chose" id="assayItem"  onchange="assayitem_change()">
+                                <option value="" class="water_option" selected>请选择</option>
+                                <option value="1" class="water_option" >总氮</option>
+                                <option value="2" class="water_option" >氨氮</option>
+                                <option value="3" class="water_option" >高COD</option>
+                                <option value="4" class="water_option" >低COD</option>
+                                <option value="5" class="water_option" >总磷</option>
+                            </select>
+                            </div>
+
+                            <div style="width: 90%;height:27%;position: relative;margin: 0 auto;">
+                                <div class="message-box" >
+                                    <div class="scrollAssay ">
+
+                                        <ul id="assayInfo" class="faultNews"></ul>
+                                        <!--<div id="p2" class="faultNews">-->
+                                        <!--</div>-->
+                                    </div>
+
+                                </div>
+                            </div>
+
+                            <div style="height:4%"></div>
                             <div style="height:5%">
                                 <span class="chose_tltle">请选择化验曲线：</span>
                                 <select class="time_chose" id="curveValue" onchange="chage_curve(this.value)" style="width: 140px;">
@@ -1044,6 +1070,7 @@
         getAssayAll(NoValue);
     }
 
+    var AssayJson="";
     function getAssayAll(NoValue){
         var d = {};
         d.NoValue = NoValue;
@@ -1059,6 +1086,22 @@
             success: function(result) {
 
                 select_tip = 1;
+
+                var all_jsonData = eval('('+result.all_jsonData+')');
+                AssayJson = all_jsonData;
+                $("#assayInfo").html("");
+                var assayitem = $("#assayItem").val();
+                $.each(AssayJson, function(key, value){
+                    if(assayitem==0){
+                        var  con = Math.round(parseFloat(value.resultConcentration)*1000)/1000;
+                        $("#assayInfo").append("<li>&nbsp <a> 化验项目：</a><a style='color:#FFFFFF;'>"+value.itemName+"</a>&nbsp <a>批次: </a><a style='color:#FFFFFF;'>&nbsp"+value.resultNo+"</a>&nbsp <a>浓度值:</a> <a style='color:#FFFFFF;'>"+ con +"&nbsp  </a></li>");
+                    }else{
+                        if(value.assayItem == assayitem){
+                            var  con = Math.round(parseFloat(value.resultConcentration)*1000)/1000;
+                            $("#assayInfo").append("<li>&nbsp <a> 化验项目：</a><a style='color:#FFFFFF;'>"+value.itemName+"</a>&nbsp <a>批次: </a><a style='color:#FFFFFF;'>&nbsp"+value.resultNo+"</a>&nbsp <a>浓度值:</a> <a style='color:#FFFFFF;'>"+ con +"&nbsp  </a></li>");
+                        }
+                    }
+                });
 
                 var assayData = eval('('+result.assayData+')');
                 var nodeData = eval('('+result.nodeData+')');
@@ -1087,9 +1130,33 @@
                 if(nodeData !=''&& nodeData != null&& nodeData !== 'undefined'){
                     $("#val02").html(nodeData.devicename);
                     $("#val03").html(nodeData.repairBy);
-                    $("#valrt_1").html(nodeData.node);
-                    $("#valrt_2").html("大流程"+nodeData.bigprocess);
-                    $("#valrt_3").html(nodeData.smallprocess+" 化验步骤");
+
+                    if(nodeData.version=="2"){
+
+                        $("#node_v1").css('display','none');
+
+                        $("#step_total").html("总步进:"+nodeData.stepTotal);
+                        $("#step_now").html("当前步进:"+nodeData.stepNow);
+
+
+                        $("#step_info1").html("信息1:"+nodeData.stepInfo1);
+                        $("#step_info2").html("信息2:"+nodeData.stepInfo2);
+                        $("#step_info3").html("信息3:"+nodeData.stepInfo3);
+
+                        $("#node_v2").css('display','');
+                        $("#node_v3").css('display','');
+                    }else{
+
+                        $("#node_v2").css('display','none');
+                        $("#node_v3").css('display','none');
+
+                        $("#valrt_1").html(nodeData.node);
+                        $("#valrt_2").html("大流程"+nodeData.bigprocess);
+                        $("#valrt_3").html(nodeData.smallprocess+" 化验步骤");
+
+                        $("#node_v1").css('display','');
+                    }
+
                     $("#valrt_4").html("无告警");
                     $("#valrt_5").html(nodeData.fault);
                     if(nodeData.fault=='有故障'){
@@ -1149,6 +1216,23 @@
             }
         })
     }
+
+    function assayitem_change() {
+        var assayitem = $("#assayItem").val();
+        $("#assayInfo").html("");
+        $.each(AssayJson, function(key, value){
+            if(assayitem==0){
+                var  con = Math.round(parseFloat(value.resultConcentration)*1000)/1000;
+                $("#assayInfo").append("<li>&nbsp <a> 化验项目：</a><a style='color:#FFFFFF;'>"+value.itemName+"</a>&nbsp <a>批次: </a><a style='color:#FFFFFF;'>&nbsp"+value.resultNo+"</a>&nbsp <a>浓度值:</a> <a style='color:#FFFFFF;'>"+ con +"&nbsp  </a></li>");
+            }else{
+                if(value.assayItem == assayitem){
+                    var  con = Math.round(parseFloat(value.resultConcentration)*1000)/1000;
+                    $("#assayInfo").append("<li>&nbsp <a> 化验项目：</a><a style='color:#FFFFFF;'>"+value.itemName+"</a>&nbsp <a>批次: </a><a style='color:#FFFFFF;'>&nbsp"+value.resultNo+"</a>&nbsp <a>浓度值:</a> <a style='color:#FFFFFF;'>"+ con +"&nbsp  </a></li>");
+                }
+            }
+
+        });
+    }
     
     function relieve_alert() {
         var waterValue = $("#waterValue").val();
@@ -1198,6 +1282,28 @@
             }, 5000);
         }).trigger("mouseleave");
         function scrollNews(obj) {
+            var $self = obj.find("ul");
+            var lineHeight = $self.find("li:first").height();
+            $self.animate({
+                "marginTop": -lineHeight + "px"
+            }, 500, function () {
+                $self.css({
+                    marginTop: 0
+                }).find("li:first").appendTo($self);
+            })
+        }
+
+
+        var $thisA = $(".scrollAssay");
+        var scrollTimerA;
+        $thisA.hover(function () {
+            clearInterval(scrollTimerA);
+        }, function () {
+            scrollTimerA = setInterval(function () {
+                scrollNewsA($thisA);
+            }, 2000);
+        }).trigger("mouseleave");
+        function scrollNewsA(obj) {
             var $self = obj.find("ul");
             var lineHeight = $self.find("li:first").height();
             $self.animate({

@@ -8,8 +8,8 @@ import java.util.Map;
 
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.framework.util.ShiroUtils;
-import com.ruoyi.system.domain.BizAssayResult;
-import com.ruoyi.system.domain.SysRole;
+import com.ruoyi.system.domain.*;
+import com.ruoyi.system.service.IBizWasteRecordService;
 import net.sf.json.JSONObject;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +18,6 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 import com.ruoyi.common.annotation.Log;
 import com.ruoyi.common.enums.BusinessType;
-import com.ruoyi.system.domain.BizWaste;
 import com.ruoyi.system.service.IBizWasteService;
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.page.TableDataInfo;
@@ -39,6 +38,10 @@ public class BizWasteController extends BaseController
 	
 	@Autowired
 	private IBizWasteService bizWasteService;
+
+	@Autowired
+	private IBizWasteRecordService bizWasteRecordService;
+
 	
 	@RequiresPermissions("system:bizWaste:view")
 	@GetMapping()
@@ -204,6 +207,30 @@ public class BizWasteController extends BaseController
 		ajax.put("resultdata", jsonData);
 		return ajax;
 
+	}
+
+
+	/**
+	 * 查询废液记录
+	 */
+	@GetMapping("/getRecord/{wasteId}")
+	public String getRecord(@PathVariable("wasteId") Long wasteId, ModelMap mmap)
+	{
+		mmap.put("bizWaste",  bizWasteService.selectBizWasteById(wasteId));
+		return prefix + "/wasteRecord";
+	}
+
+	/**
+	 * 查询废液记录列表
+	 */
+	@RequiresPermissions("system:bizWaste:list")
+	@PostMapping("/recordlist")
+	@ResponseBody
+	public TableDataInfo recordlist(BizWasteRecord bizWasteRecord)
+	{
+		startPage();
+		List<BizWasteRecord> list = bizWasteRecordService.selectBizWasteRecordList(bizWasteRecord);
+		return getDataTable(list);
 	}
 	
 }

@@ -1,5 +1,6 @@
 package com.ruoyi.system.service;
 
+import com.ruoyi.system.domain.AssayItem;
 import com.ruoyi.system.domain.AssayResult;
 import com.ruoyi.system.domain.BizAssay;
 import com.ruoyi.system.domain.OutDataEnity;
@@ -57,5 +58,7 @@ public interface IAssayResultService
 	public int deleteAssayResultByIds(String resultIds);
 
 	public OutDataEnity getOuaData(Long workId, String startTime, String endTime);
+
+	public List<AssayItem> selectItemByAssayNo(String assayNo);
 
 }

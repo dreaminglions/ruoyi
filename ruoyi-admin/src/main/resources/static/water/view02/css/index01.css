@@ -175,14 +175,14 @@
 
 .data_left02{
     float: left;
-    width: 37%;
+    width: 30%;
     height: 99%;
     margin-left: 0.5%;
 
 }
 .data_left03{
     float: left;
-    width: 37%;
+    width: 44%;
     height: 99%;
     margin-left: 0.5%;
 
@@ -430,6 +430,22 @@
 
 
 .message-box>.scrollNews>li>a {
+    color:#E77953;
+}
+
+
+
+.message-box>.scrollAssay {
+    height: 90%;
+    top: 20%;
+    position: relative;
+    OVERFLOW: hidden;
+    font-size: 20px;
+    color:#E92B23;
+}
+
+
+.message-box>.scrollAssay>li>a {
     color:#E77953;
 }
 

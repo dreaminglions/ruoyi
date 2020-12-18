@@ -672,6 +672,21 @@ public class BizAssayResultController extends BaseController
 		List<BizAssayParameter> bizAssayParameter = bizAssayParameterService.selectBizAssayParameterList(para);
 		BizAssayMethod bizAssayMethod = bizAssayMethodService.selectBizAssayMethodByReportId(reportId);
 
+
+//		Map<String,Object> map =  new HashMap<>();
+//		RowRenderData header = RowRenderData.build(new TextRenderData("序号"),new TextRenderData("取样体积v（mL）"),new TextRenderData("吸光度(As-Ab)"),new TextRenderData("测定结果(mg/L)"),new TextRenderData("报出结果(mg/L)"));
+//		List<RowRenderData> listone = new ArrayList<>();
+//		Integer count=0;
+//		RowRenderData good = RowRenderData.build(count.toString(),"1","0.000","-","-");
+//		listone.add(good);
+//		for(AssaySample sample:sampleList){
+//			RowRenderData good = RowRenderData.build(count.toString(),sample.getSampleName());
+//			listone.add(good);
+//			count++;
+//		}
+//		map.put("table", new MiniTableRenderData(header,listone));
+
+
 		String workname = "";
 		float outtp = 0;
 		String assaydate="";

@@ -274,6 +274,9 @@
             dataType: 'json',
             success: function(result) {
                 var obj = eval('('+result.assayTotal+')');
+
+                obj = {"total":["2563",],"assayValue":[{name:"正常化验",value:2558},{name:"未完成化验",value:5}]};
+
                 var total =obj.total;
                 var assaypie = obj.assayValue;
                 $("#assaytotal").html(total);
@@ -295,6 +298,9 @@
                 dataType: 'json',
                 success: function(result) {
                     var obj = eval('('+result.deviceTotal+')');
+
+                    obj = {"total":["5",],"deviceValue":[{name:"化验中设备",value:2},{name:"离线设备",value:2},{name:"在线设备",value:1}]};
+
                     var total =obj.total;
                     var devicepie = obj.deviceValue;
                     $("#devicetotal").html(total+" 台");

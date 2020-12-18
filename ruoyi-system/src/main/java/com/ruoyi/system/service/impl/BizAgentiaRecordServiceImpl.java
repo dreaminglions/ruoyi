@@ -82,10 +82,13 @@ public class BizAgentiaRecordServiceImpl implements IBizAgentiaRecordService
 		return bizAgentiaRecordMapper.deleteBizAgentiaRecordByIds(Convert.toStrArray(ids));
 	}
 
+	@Override
 	public List<DataEnity> getAgentiaTotal(String assayId, Long worksId)
 	{
 		return bizAgentiaRecordMapper.getAgentiaTotal(assayId,worksId);
 	}
+
+	@Override
 	public List<DataEnity> getAgentiaMonthAvg(Long worksId,String timeValue)
 	{
 		return bizAgentiaRecordMapper.getAgentiaMonthAvg(worksId,timeValue);

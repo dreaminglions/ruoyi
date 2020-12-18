@@ -19,6 +19,14 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="updateTime"    column="update_time"    />
         <result property="updateBy"    column="update_by"    />
         <result property="assayBy"    column="assay_by"    />
+
+        <result property="version"    column="version"    />
+        <result property="stepName"    column="step_name"    />
+        <result property="stepTotal"    column="step_total"    />
+        <result property="stepNow"    column="step_now"    />
+        <result property="stepInfo1"    column="step_info1"    />
+        <result property="stepInfo2"    column="step_info2"    />
+        <result property="stepInfo3"    column="step_info3"    />
         <association property="device"    column="device_no" javaType="BizDevice" resultMap="deviceResult" />
     </resultMap>
 
@@ -33,7 +41,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
     <sql id="selectBizAssayVo">
         select r.assay_id,r.assay_no,r.device_no,r.assay_type,r.assay_bigprocess,r.assay_smallprocess,
-        r.begin_time,r.end_time,r.assay_date,r.assay_by,
+        r.begin_time,r.end_time,r.assay_date,r.assay_by,r.version,r.step_name,r.step_total,r.step_now,r.step_info1,r.step_info2,r.step_info3,
         r.create_time, r.create_by, r.update_time, r.update_by,
                 d.device_id,d.device_name,d.device_status,d.device_works
 		from z_assay r
@@ -57,7 +65,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
                 AND datediff(dd,#{params.beginTime},r.begin_time) &gt;=0
             </if>
             <if test="params.endTime != null and params.endTime != ''"><!-- 结束时间检索 -->
-                AND datediff(dd,r.end_time,#{params.endTime}) &gt;=0
+                AND datediff(dd,r.begin_time,#{params.endTime}) &gt;=0
+            </if>
+            <if test="params.Works != null and params.Works != ''"><!-- 结束时间检索 -->
+                AND d.device_works=#{params.Works}
             </if>
 
         <!-- 数据范围过滤 -->

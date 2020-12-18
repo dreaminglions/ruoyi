@@ -92,8 +92,14 @@
                         var devicename="";
                         if(item.device!=null){
                             devicename = item.device.deviceName
-                        }
-                        return '<span class="label label-success">'+devicename+'</span>';
+							if(devicename!=null&&devicename!="null"){
+                                return '<span class="label label-success">'+devicename+'</span>';
+							}else{
+                                return "";
+							}
+                        }else{
+                            return "";
+						}
                     }
 				},
 				{
@@ -144,7 +150,8 @@
 
         /*  化验详情参数查询 */
         function assayDetails(assayNo) {
-            var url = prefix + '/assayDetails/' + assayNo;
+            var url = prefix + '/detail/' + assayNo;
+//            var url = prefix + '/assayDetails/' + assayNo;
             $.modal.openTab("化验报告", url);
         }
 

@@ -1,6 +1,7 @@
 package com.ruoyi.system.service.impl;
 
 import com.ruoyi.common.core.text.Convert;
+import com.ruoyi.system.domain.AssayItem;
 import com.ruoyi.system.domain.AssayResult;
 import com.ruoyi.system.domain.BizAssay;
 import com.ruoyi.system.domain.OutDataEnity;
@@ -96,4 +97,9 @@ public class AssayResultServiceImpl implements IAssayResultService
 	public OutDataEnity getOuaData(Long workId, String startTime, String endTime){
 		return assayResultMapper.getOuaData( workId, startTime, endTime);
 	};
+
+	@Override
+	public List<AssayItem> selectItemByAssayNo(String assayNo){
+		return assayResultMapper.selectItemByAssayNo(assayNo);
+	}
 }

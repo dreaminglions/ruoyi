@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<head>
+	<th:block th:include="include :: header('化验废液记录列表')" />
+</head>
+<body class="gray-bg">
+    
+     <div class="container-div">
+		<div class="row">
+			<div class="col-sm-12 search-collapse">
+				<form id="formId">
+					<input type="hidden" id="wasteId" name="wasteId" th:field="*{bizWaste.wasteId}">
+					<div class="select-list">
+						<ul>
+
+							<li class="select-time">
+								<label>更新日期： </label>
+								<input type="text" class="time-input" id="recordDate" placeholder="更新日期" name="recordDate"/>
+							</li>
+
+							<li>
+								<a class="btn btn-primary btn-rounded btn-sm" onclick="$.table.search()"><i class="fa fa-search"></i>&nbsp;搜索</a>
+								<a class="btn btn-warning btn-rounded btn-sm" onclick="$.form.reset()"><i class="fa fa-refresh"></i>&nbsp;重置</a>
+							</li>
+						</ul>
+					</div>
+				</form>
+			</div>
+			
+	        <div class="btn-group-sm" id="toolbar" role="group">
+			</div>
+			<div class="col-sm-12 select-table table-striped">
+				<table id="bootstrap-table" data-mobile-responsive="true"></table>
+			</div>
+		</div>
+	</div>
+    <div th:include="include :: footer"></div>
+    <script th:inline="javascript">
+        var editFlag = [[${@permission.hasPermi('system:bizWaste:edit')}]];
+        var removeFlag = [[${@permission.hasPermi('system:bizWaste:remove')}]];
+        var prefix = ctx + "system/bizWaste";
+
+        $(function() {
+            var options = {
+                url: prefix + "/recordlist",
+                createUrl: prefix + "/add",
+                updateUrl: prefix + "/edit/{id}",
+                removeUrl: prefix + "/remove",
+				exportUrl: prefix + "/export",
+                queryParams: queryParams,
+                modalName: "化验废液记录",
+		        showExport: true,
+                columns: [{
+		            checkbox: true
+		        },
+				{
+					field : 'recordId', 
+					title : '记录ID',
+					visible: false
+				},
+//				{
+//					field : 'recordNo',
+//					title : '记录编号',
+//					sortable: true
+//				},
+				{
+					field : 'recordName', 
+					title : '记录名称',
+					sortable: true
+				},
+				{
+					field : 'bizWaste.wasteName',
+					title : '所属废液',
+					sortable: true,
+                    formatter: function(value, item, index) {
+                        var wasteName="";
+                        if(item.bizWaste!=null){
+                            wasteName = item.bizWaste.wasteName
+                        }
+                        return '<span class="label label-success">'+wasteName+'</span>';
+                    }
+				},
+				{
+					field : 'recordType', 
+					title : '记录类型',
+					sortable: true,
+                    formatter: function (value, row, index) {
+                        if (row.recordType == 0) {
+                            return '<i class=\"btn btn-success btn-xs\" >添加废液</i> ';
+                        } else if (row.recordType == 1){
+                            return '<i class=\"btn btn-danger btn-xs\" >删减废液</i> ';
+                        } else if (row.recordType == 2){
+                            return '<i class=\"btn btn-warning btn-xs\" >化验废液</i> ';
+                        }else{
+                            return ' ';
+						}
+                    }
+				},
+				{
+					field : 'recordStatus',
+					title : '记录状态',
+					sortable: true,
+					formatter: function (value, row, index) {
+						if (row.recordStatus == 0) {
+							return '<i class=\"btn btn-success btn-xs\" >正常</i> ';
+						} else {
+							return '<i class=\"btn btn-danger btn-xs\" >无效</i> ';
+						}
+					}
+				},
+				{
+					field : 'beforeTotal',
+					title : '废液累计变化',
+					sortable: true,
+                    formatter: function (value, row, index) {
+                        return row.beforeTotal+'&nbsp<i class=\"btn btn-success btn-xs\" >--></i>&nbsp '+row.afterTotal;
+                    }
+				},
+				{
+					field : 'beforeRemain',
+					title : '废液剩余变化',
+					sortable: true,
+                    formatter: function (value, row, index) {
+                        return row.beforeRemain+'&nbsp<i class=\"btn btn-success btn-xs\" >--></i> &nbsp'+row.afterRemain;
+                    }
+				},
+				{
+					field : 'wasteChange',
+					title : '废液变化量',
+					sortable: true,
+                    formatter: function (value, row, index) {
+                        return '<i class=\"btn btn-warning btn-xs\" >'+row.wasteChange+'</i> ';
+                    }
+				},
+				{
+					field : 'recordDate',
+					title : '记录时间',
+					sortable: true
+				},
+		        ]
+            };
+            $.table.init(options);
+        });
+
+        function queryParams(params) {
+            var search = $.table.queryParams(params);
+            search.wasteId = $("#wasteId").val();
+            return search;
+        }
+    </script>
+</body>
+</html>

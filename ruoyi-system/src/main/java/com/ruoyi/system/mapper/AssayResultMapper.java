@@ -1,5 +1,6 @@
 package com.ruoyi.system.mapper;
 
+import com.ruoyi.system.domain.AssayItem;
 import com.ruoyi.system.domain.AssayResult;
 import com.ruoyi.system.domain.BizAssay;
 import com.ruoyi.system.domain.OutDataEnity;
@@ -67,4 +68,6 @@ public interface AssayResultMapper
 	public int deleteAssayResultByIds(String[] resultIds);
 
 	public OutDataEnity getOuaData(@Param(value="workId") Long workId, @Param(value="startTime") String startTime, @Param(value="endTime") String endTime);
+
+	public List<AssayItem> selectItemByAssayNo(String assayNo);
 }

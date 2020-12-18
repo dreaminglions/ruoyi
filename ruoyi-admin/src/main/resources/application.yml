@@ -9,7 +9,7 @@ ruoyi:
   # 文件路径
   profile: static/water/profile/
   # 获取ip地址开关
-  addressEnabled: true
+  addressEnabled: false
 
 # 开发环境配置
 server:

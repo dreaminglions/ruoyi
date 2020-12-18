@@ -34,6 +34,20 @@ public class BizAssay extends BaseEntity
 	private String assaySmallprocess;
 	/** 化验人员 */
 	private String assayBy;
+	/** 版本名称 */
+	private String version;
+	/** 步进名称 */
+	private String stepName;
+	/** 总步进 */
+	private String stepTotal;
+	/** 当前步进 */
+	private String stepNow;
+	/** 步进信息1 */
+	private String stepInfo1;
+	/** 步进信息2 */
+	private String stepInfo2;
+	/** 步进信息3 */
+	private String stepInfo3;
 
 	private BizDevice device;
 
@@ -123,6 +137,62 @@ public class BizAssay extends BaseEntity
 
 	public void setDevice(BizDevice device) {
 		this.device = device;
+	}
+
+	public String getVersion() {
+		return version;
+	}
+
+	public void setVersion(String version) {
+		this.version = version;
+	}
+
+	public String getStepName() {
+		return stepName;
+	}
+
+	public void setStepName(String stepName) {
+		this.stepName = stepName;
+	}
+
+	public String getStepTotal() {
+		return stepTotal;
+	}
+
+	public void setStepTotal(String stepTotal) {
+		this.stepTotal = stepTotal;
+	}
+
+	public String getStepNow() {
+		return stepNow;
+	}
+
+	public void setStepNow(String stepNow) {
+		this.stepNow = stepNow;
+	}
+
+	public String getStepInfo1() {
+		return stepInfo1;
+	}
+
+	public void setStepInfo1(String stepInfo1) {
+		this.stepInfo1 = stepInfo1;
+	}
+
+	public String getStepInfo2() {
+		return stepInfo2;
+	}
+
+	public void setStepInfo2(String stepInfo2) {
+		this.stepInfo2 = stepInfo2;
+	}
+
+	public String getStepInfo3() {
+		return stepInfo3;
+	}
+
+	public void setStepInfo3(String stepInfo3) {
+		this.stepInfo3 = stepInfo3;
 	}
 
 	public String toString() {

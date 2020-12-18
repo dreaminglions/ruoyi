@@ -262,6 +262,14 @@ public class SysIndexController extends BaseController
                 nodemap.put("node","化验中");
             }
 
+            nodemap.put("version",assay.getVersion());
+            nodemap.put("stepName",assay.getStepName());
+            nodemap.put("stepTotal",assay.getStepTotal());
+            nodemap.put("stepNow",assay.getStepNow());
+            nodemap.put("stepInfo1",assay.getStepInfo1());
+            nodemap.put("stepInfo2",assay.getStepInfo2());
+            nodemap.put("stepInfo3",assay.getStepInfo3());
+
         }
 
         if(assayFault!=null){
@@ -392,11 +400,15 @@ public class SysIndexController extends BaseController
         Gson gson = new Gson();
         String jsonData = gson.toJson(map);
         String node_jsonData = gson.toJson(nodemap);
+
+        String all_jsonData = gson.toJson(assayResult);
+
         AjaxResult ajax = AjaxResult.success();
         ajax.put("assayData", jsonData);
         ajax.put("nodeData", node_jsonData);
         ajax.put("curveData", curveData);
         ajax.put("datesign", datesign);
+        ajax.put("all_jsonData", all_jsonData);
         return ajax;
     }
 
@@ -433,7 +445,7 @@ public class SysIndexController extends BaseController
         Map<String, Object> data_params = new HashMap<>();
         data_params.put("beginTime",startTime);
         data_params.put("endTime",endTime);
-        assay.getParams().put("dataScope", " AND d.device_works="+waterValue+"");
+        data_params.put("Works",waterValue);
         assay.setParams(data_params);
 
         List<BizAssay> assayList = assayService.selectBizAssayList(assay);
@@ -454,8 +466,9 @@ public class SysIndexController extends BaseController
             for(BizAssay object:assayList){
                 String assayno = object.getAssayNo();
                 List<AssayResult> assayResult = assayResultService.selectAssayResultByAssayNo(assayno);
-
-                resultdata +="'"+object.getAssayDate()+"',";
+                if(assayResult!=null&&assayResult.size()>0){
+                    resultdata +="'"+object.getAssayDate()+"',";
+                }
                 for(AssayResult result: assayResult){
                     String r_no= result.getResultNo();
                     String item= result.getAssayItem();
@@ -827,7 +840,7 @@ public class SysIndexController extends BaseController
         String  area = params.getString("area");
         BizWaterWork work = new BizWaterWork();
         work.setWorksProvince(area);
-        work.setWorksType("1");
+
         List<BizWaterWork> worksList = bizWaterWorkService.selectBizWaterWorkList(work);
 
         String key1 = "area";
