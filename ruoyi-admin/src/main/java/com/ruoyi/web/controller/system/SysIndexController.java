@@ -637,38 +637,38 @@ public class SysIndexController extends BaseController
         Long  waterValue = params.getLong("waterValue");
         String timeValue = params.getString("timeValue");
         List<DataEnity> totalList = bizAgentiaRecordService.getAgentiaTotal(NoValue,waterValue);
-        List<DataEnity> avgList = bizAgentiaRecordService.getAgentiaMonthAvg(waterValue,timeValue);
+//        List<DataEnity> avgList = bizAgentiaRecordService.getAgentiaMonthAvg(waterValue,timeValue);
 
         String key1 = "agentia";
         String key2 = "total";
-        String key3 = "avg";
+//        String key3 = "avg";
 
         String agentia = "\""+key1+"\":[";
         String total = "\""+key2+"\":[";
-        String avg = "\""+key3+"\":[";
+//        String avg = "\""+key3+"\":[";
 
-        if(totalList!=null&&avgList!=null){
+        if(totalList!=null){
             for(DataEnity obj:totalList){
                 agentia +="\""+obj.getKey()+"\",";
                 total += obj.getValue()+",";
             }
-            for(DataEnity obj:avgList){
-                avg += obj.getValue()+",";
-            }
+//            for(DataEnity obj:avgList){
+//                avg += obj.getValue()+",";
+//            }
             if(totalList.size()>0){
                 agentia = agentia.substring(0,agentia.length()-1);
                 total = total.substring(0,total.length()-1);
 
             }
-            if(avgList.size()>0){
-                avg = avg.substring(0,avg.length()-1);
-            }
+//            if(avgList.size()>0){
+//                avg = avg.substring(0,avg.length()-1);
+//            }
         }
 
         agentia += "],";
-        total += "],";
-        avg += "]";
-        jsonData += agentia+total+avg;
+        total += "]";
+//        avg += "]";
+        jsonData += agentia+total;
         jsonData += "}";
         AjaxResult ajax = AjaxResult.success();
         ajax.put("agentiaTotal", jsonData);

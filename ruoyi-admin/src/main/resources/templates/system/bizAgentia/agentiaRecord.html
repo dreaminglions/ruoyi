@@ -76,22 +76,27 @@
 //					sortable: true
 //				},
 				{
-					field : 'recordName', 
+					field : 'recordName',
 					title : '记录名称',
 					sortable: true
 				},
 				{
-					field : 'bizAgentia.agentiaName',
-					title : '所属药剂',
-					sortable: true,
-                    formatter: function(value, item, index) {
-                        var agentiaName="";
-                        if(item.bizAgentia!=null){
-                            agentiaName = item.bizAgentia.agentiaName
-                        }
-                        return '<span class="label label-success">'+agentiaName+'</span>';
-                    }
+					field : 'assayId',
+					title : '化验编号',
+					sortable: true
 				},
+//				{
+//					field : 'bizAgentia.agentiaName',
+//					title : '所属药剂',
+//					sortable: true,
+//                    formatter: function(value, item, index) {
+//                        var agentiaName="";
+//                        if(item.bizAgentia!=null){
+//                            agentiaName = item.bizAgentia.agentiaName
+//                        }
+//                        return '<span class="label label-success">'+agentiaName+'</span>';
+//                    }
+//				},
 				{
 					field : 'recordType', 
 					title : '记录类型',

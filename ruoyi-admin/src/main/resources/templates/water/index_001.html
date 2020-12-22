@@ -704,7 +704,7 @@
 </script>
 
 <script th:inline="javascript">
-    function inityaoji(obj1,obj2,obj3){
+    function inityaoji(obj1,obj2){
         var myChart = echarts.init($("#bookBmonth")[0]);
         option = {
             tooltip: {   //提示框，鼠标悬浮交互时的信息提示
@@ -768,21 +768,7 @@
                             }
                         },
                     }
-                },
-                {
-                    name: '当月均值',
-                    type: 'bar',
-                    data:obj3,//[randomNum(900,1200),randomNum(700,1100),randomNum(1100,1300),randomNum(500,1200)],
-                    barWidth:20,
-                    itemStyle: {
-                        normal: {
-                            color: function(params) {
-                                var colorList = ['#58D5FF','#EFB09A','#FFE374','#EEBB54'];
-                                return colorList[params.dataIndex];
-                            }
-                        },
-                    }
-                },
+                }
             ]
         };
 
@@ -1330,16 +1316,15 @@
 //            dataType: 'json',
             success: function(result) {
                 var agentiaTotal = eval('('+result.agentiaTotal+')');
+                alert(result.agentiaTotal);
                 if(agentiaTotal !=''&& agentiaTotal != null&& agentiaTotal !== 'undefined'){
                     var agentia = agentiaTotal.agentia;
                     var total = agentiaTotal.total;
-                    var avg = agentiaTotal.avg;
-                    if(agentia='[]'){
+                    if(agentia=='[]'){
                         agentia = ['-'];
                         total = ['-'];
-                        avg = ['-'];
                     }
-                    inityaoji(agentia,total,avg);
+                    inityaoji(agentia,total);
                 }
             },
             error: function(error) {

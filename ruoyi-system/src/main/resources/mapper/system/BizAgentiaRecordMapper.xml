@@ -143,12 +143,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </delete>
 
     <select id="getAgentiaTotal" resultType="DataEnity">
-    SELECT a.agentia_name as 'key',t.agentia_change as 'value' FROM biz_agentia_record t
-    left join biz_agentia a on t.agentia_id = a.agentia_id
+
+SELECT a.agentia_name as 'key',sum(t.agentia_change) as 'value' FROM biz_agentia_record t
+    left join biz_device_agentia a on t.agentia_id = a.agentia_id
     where t.record_type = '2'
     and t.assay_id = #{assayId}
-    and t.record_works = #{worksId}
-    GROUP BY t.agentia_id,t.agentia_change,a.agentia_name
+    GROUP BY a.agentia_name
 
     </select>
 

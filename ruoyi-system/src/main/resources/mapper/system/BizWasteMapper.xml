@@ -147,17 +147,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
 
     <select id="getWasteBar" resultType="DataEnity">
-        SELECT '本次' as 'key',t.waste_total as 'value' FROM biz_waste t
-            where t.assay_id = #{assayId}
-            and t.waste_works = #{worksId}
-        union
-        SELECT '平均' as 'key',CAST(AVG(t.waste_total) AS DECIMAL(10,2)) as 'value' FROM biz_waste t
-                where t.waste_works= #{worksId}
-				and datediff(m,t.repair_time,#{month} ) = 0
-        union
-        SELECT '总值' as 'key',sum(t.waste_total ) as 'value' FROM biz_waste t
-                where t.waste_works= #{worksId}
-				and datediff(m,t.repair_time,#{month} ) = 0
+
+            SELECT w.waste_name as 'key',SUM(t.waste_change) as 'value' FROM biz_waste_record t
+            LEFT JOIN biz_waste w on t.waste_id = w.waste_id
+              where t.assay_id =  #{assayId}
+			  GROUP BY w.waste_name
+
     </select>
     
 </mapper>
