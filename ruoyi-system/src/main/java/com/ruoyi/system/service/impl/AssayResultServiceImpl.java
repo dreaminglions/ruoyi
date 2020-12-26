@@ -102,4 +102,9 @@ public class AssayResultServiceImpl implements IAssayResultService
 	public List<AssayItem> selectItemByAssayNo(String assayNo){
 		return assayResultMapper.selectItemByAssayNo(assayNo);
 	}
+
+	@Override
+	public List<String> selectTypeByAssayNo(String assayNo) {
+		return assayResultMapper.selectTypeByAssayNo(assayNo);
+	}
 }

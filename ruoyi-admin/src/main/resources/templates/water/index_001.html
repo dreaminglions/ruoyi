@@ -74,8 +74,8 @@
                                     <tr id="node_v1"><td class="font6">当前化验节点：</td><td class="font04" id="valrt_2"></td><td class="font04" id="valrt_3"></td></tr>
                                     <tr id="node_v2" style="display: none"><td class="font6">当前化验步进：</td><td class="font04" id="step_total"></td><td class="font04" id="step_now"></td></tr>
                                     <tr id="node_v3" style="display: none"><td class="font04" id="step_info1"></td><td class="font04" id="step_info2"></td><td class="font04" id="step_info3"></td></tr>
-                                    <tr ><td class="font6">当前告警状态：</td><td colspan="2"class="font03" id="valrt_4"></td></tr>
-                                    <tr ><td class="font6">当前故障状态：</td><td colspan="2"class="font04" id="valrt_5"></td></tr>
+                                    <!--<tr ><td class="font6">当前告警状态：</td><td colspan="2"class="font03" id="valrt_4"></td></tr>-->
+                                    <tr ><td class="font6">当前设备状态：</td><td colspan="2"class="font04" id="valrt_5"></td></tr>
                                 </table>
                             </div>
 
@@ -128,17 +128,16 @@
                             </div>
                             <div class="data_tit3" style="margin-top:2%">化验参数对比 </div>
 
-                            <div style="height:27%;display: none">
-                                <table class="table_data01">
+                            <div style="height:60%;position: relative;margin: 0 auto;overflow:auto;">
+                                <table class="table_data_center" id="assayTable">
                                     <tr>
-                                        <td></td><td class="font04">COD</td><td class="font04">NH3</td><td class="font04">TP</td><td class="font04">TN</td>
+                                        <td>样品名称</td><td colspan="2" class="font04">化学需氧量</td><td class="font04">氨氮</td><td class="font04">总氮</td><td class="font04">总磷</td>
                                     </tr>
-                                    <!-- <tr><td>范围值</td><td class="font6" id="tval01">10</td><td class="font6" id="tval02">6</td><td class="font6" id="tval03">15</td><td class="font6" id="tval04">5</td></tr> -->
-                                    <tr><td>入水</td><td class="font08" id="tval05"></td><td class="font08" id="tval06"></td><td class="font08" id="tval07"></td><td class="font08" id="tval08"></td></tr>
-                                    <tr><td>出水</td><td class="font6" id="tval09"></td><td class="font6" id="tval10"></td><td class="font6" id="tval11"></td><td class="font6" id="tval12"></td></tr>
                                 </table>
                             </div>
-                            <div style="height:4%">
+
+
+                            <div style="height:4%;display: none">
                             <span class="chose_tltle">请选择化验项目：</span>
                             <select class="water_chose" id="assayItem"  onchange="assayitem_change()">
                                 <option value="" class="water_option" selected>请选择</option>
@@ -150,7 +149,7 @@
                             </select>
                             </div>
 
-                            <div style="width: 90%;height:27%;position: relative;margin: 0 auto;">
+                            <div style="width: 90%;height:27%;position: relative;margin: 0 auto;display: none">
                                 <div class="message-box" >
                                     <div class="scrollAssay ">
 
@@ -163,7 +162,7 @@
                             </div>
 
                             <div style="height:4%"></div>
-                            <div style="height:5%">
+                            <div style="height:5%;display: none">
                                 <span class="chose_tltle">请选择化验曲线：</span>
                                 <select class="time_chose" id="curveValue" onchange="chage_curve(this.value)" style="width: 140px;">
                                     <option value="1" class="water_option" selected>入水COD曲线参数</option>
@@ -175,7 +174,7 @@
 
                             </div>
 
-                            <div style="height:30%">
+                            <div style="height:30%;display: none">
                                 <!--<table class="table_data01" id="curve_table" >-->
                                     <!--<tr>-->
                                         <!--<td class="font04" id="wave1_name">入水COD波长1</td><td class="font04" id="wave2_name">入水COD波长2	</td><td class="font04" id="k_name">入水COD曲线k</td><td class="font04" id="b_name">入水COD曲线B</td>-->
@@ -191,19 +190,19 @@
             </div>
 
             <div class="data_left04">
-                <div class="dataAll">
-                    <div class="dataAllBorder01">
-                        <div class="dataAllBorder02">
-                            <div class="data_tit1">设备工作累计</div>
-                            <p class="data_chart" id="actionBook"></p>
-                        </div>
-                    </div>
-                </div>
+                <!--<div class="dataAll">-->
+                    <!--<div class="dataAllBorder01">-->
+                        <!--<div class="dataAllBorder02">-->
+                            <!--<div class="data_tit1">设备工作累计</div>-->
+                            <!--<p class="data_chart" id="actionBook"></p>-->
+                        <!--</div>-->
+                    <!--</div>-->
+                <!--</div>-->
 
-                <div class="dataAll">
+                <div class="dataAll_top">
                     <div class="dataAllBorder01">
                         <div class="dataAllBorder02">
-                            <div class="data_tit1">化验项目情况</div>
+                            <div class="data_tit1">化验药剂情况</div>
                             <p class="data_chart" id="bookBmonth"></p>
                         </div>
                     </div>
@@ -1056,7 +1055,22 @@
         getAssayAll(NoValue);
     }
 
+        function addTr(tab, row, trHtml){
+            //获取table最后一行 $("#tab tr:last")
+            //获取table第一行 $("#tab tr").eq(0)
+            //获取table倒数第二行 $("#tab tr").eq(-2)
+            var $tr=$("#"+tab+" tr").eq(row);
+            if($tr.size()==0){
+                alert("指定的table id或行数不存在！");
+                return;
+            }
+            $tr.after(trHtml);
+        }
+
+
     var AssayJson="";
+    var AssayTableJson="";
+
     function getAssayAll(NoValue){
         var d = {};
         d.NoValue = NoValue;
@@ -1089,7 +1103,30 @@
                     }
                 });
 
-                var assayData = eval('('+result.assayData+')');
+                var assay_tableData = eval('('+result.assay_tableData+')');
+                AssayTableJson = assay_tableData;
+                var trHtml="";
+                $.each(AssayTableJson, function(key, value){
+                    if(value.assayType=="质控样"){
+                        trHtml+="<tr class=\"assayclass\">\n" +
+                            "<td>"+value.assayType+"</td><td class=\"font08\" >"+value.hCod+"</td><td class=\"font08\" >"+value.lCod+"</td><td class=\"font08\" >"+value.nh+"</td><td class=\"font08\" >"+value.tp+"</td><td class=\"font08\" >"+value.tn+"</td>\n" +
+                            "</tr>";
+                    }else{
+                        trHtml+="<tr class=\"assayclass\">\n" +
+                            "<td>"+value.assayType+"</td><td class=\"font08\" colspan=\"2\" >"+value.lCod+"</td><td class=\"font08\" >"+value.nh+"</td><td class=\"font08\" >"+value.tp+"</td><td class=\"font08\" >"+value.tn+"</td>\n" +
+                            "</tr>";
+                    }
+                });
+
+                $(".assayclass").each(function(){
+                    $(this).remove();
+                });
+
+                var row=0;
+                var tab="assayTable";
+                addTr(tab, row, trHtml);
+
+
                 var nodeData = eval('('+result.nodeData+')');
                 var curveData = eval('('+result.curveData+')');
 
@@ -1100,18 +1137,7 @@
 
 
                 $("#val01").html(NoValue);
-                if(assayData !=''&& assayData != null&& assayData !== 'undefined'){
-                    $("#tval05").html(assayData.in_cod);
-                    $("#tval06").html(assayData.in_nh);
-                    $("#tval07").html(assayData.in_tp);
-                    $("#tval08").html(assayData.in_tn);
-                    $("#tval09").html(assayData.out_cod);
-                    $("#tval10").html(assayData.out_nh);
-                    $("#tval11").html(assayData.out_tp);
-                    $("#tval12").html(assayData.out_tn);
-                }else{
-                    alert("化验编号: "+NoValue+" 无具体数据");
-                }
+
 
                 if(nodeData !=''&& nodeData != null&& nodeData !== 'undefined'){
                     $("#val02").html(nodeData.devicename);
@@ -1121,20 +1147,21 @@
 
                         $("#node_v1").css('display','none');
 
+                        $("#valrt_1").html(nodeData.node);
                         $("#step_total").html("总步进:"+nodeData.stepTotal);
                         $("#step_now").html("当前步进:"+nodeData.stepNow);
 
 
-                        $("#step_info1").html("信息1:"+nodeData.stepInfo1);
-                        $("#step_info2").html("信息2:"+nodeData.stepInfo2);
-                        $("#step_info3").html("信息3:"+nodeData.stepInfo3);
+//                        $("#step_info1").html("信息1:"+nodeData.stepInfo1);
+//                        $("#step_info2").html("信息2:"+nodeData.stepInfo2);
+//                        $("#step_info3").html("信息3:"+nodeData.stepInfo3);
 
                         $("#node_v2").css('display','');
-                        $("#node_v3").css('display','');
+//                        $("#node_v3").css('display','');
                     }else{
 
                         $("#node_v2").css('display','none');
-                        $("#node_v3").css('display','none');
+//                        $("#node_v3").css('display','none');
 
                         $("#valrt_1").html(nodeData.node);
                         $("#valrt_2").html("大流程"+nodeData.bigprocess);
@@ -1143,7 +1170,7 @@
                         $("#node_v1").css('display','');
                     }
 
-                    $("#valrt_4").html("无告警");
+//                    $("#valrt_4").html("无告警");
                     $("#valrt_5").html(nodeData.fault);
                     if(nodeData.fault=='有故障'){
                         $("#valrt_5").attr("class","font05");
@@ -1316,11 +1343,10 @@
 //            dataType: 'json',
             success: function(result) {
                 var agentiaTotal = eval('('+result.agentiaTotal+')');
-                alert(result.agentiaTotal);
                 if(agentiaTotal !=''&& agentiaTotal != null&& agentiaTotal !== 'undefined'){
                     var agentia = agentiaTotal.agentia;
                     var total = agentiaTotal.total;
-                    if(agentia=='[]'){
+                    if(agentia==''){
                         agentia = ['-'];
                         total = ['-'];
                     }
@@ -1351,6 +1377,10 @@
                 if(wasteTotal !=''&& wasteTotal != null&& wasteTotal !== 'undefined'){
                     var wasteName = wasteTotal.wasteName;
                     var wasteValue = wasteTotal.wasteValue;
+                    if(wasteName==''){
+                        wasteName = ['-'];
+                        wasteValue = ['-'];
+                    }
                     initfeiye(wasteName,wasteValue);
                 }
             },

@@ -593,7 +593,11 @@ public class BizAssayController extends BaseController
 		List<RowRenderData> assayList = new ArrayList<RowRenderData>();
 		int i=0;
 		for(AssayResult result : resultList){
-			RowRenderData assayRow = RowRenderData.build(i+"", "样品", result.getSampleVolume()+"", result.getResultAbs()+"", result.getResultConcentration()+"", result.getResultConcentration()+"");
+			String assayType="样品";
+			if(result.getAssayType()!=null){
+				assayType=result.getAssayType();
+			}
+			RowRenderData assayRow = RowRenderData.build(i+"", assayType, result.getSampleVolume()+"", result.getResultAbs()+"", result.getResultConcentration()+"", result.getResultConcentration()+"");
 			assayList.add(assayRow);
 			i++;
 		}

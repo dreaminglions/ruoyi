@@ -61,4 +61,6 @@ public interface IAssayResultService
 
 	public List<AssayItem> selectItemByAssayNo(String assayNo);
 
+	public List<String> selectTypeByAssayNo(String assayNo);
+
 }

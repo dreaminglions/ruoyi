@@ -24,6 +24,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="updateTime"    column="update_time"    />
         <result property="updateBy"    column="update_by"    />
         <result property="assayBy"    column="assay_by"    />
+        <result property="assayType"    column="assay_type"    />
+
         <association property="assaySample"    column="sample_no" javaType="AssaySample" resultMap="sampleResult" />
     </resultMap>
 
@@ -44,7 +46,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
 
     <sql id="selectAssayResultVo">
-        select r.result_id, r.assay_no, r.result_no, r.sample_no, r.sample_volume, r.device_no, r.assay_item, r.result_concentration, r.result_abs, r.result_date, r.result_time, r.curve_k0, r.curve_k1, r.curve_id, r.create_by, r.create_time, r.update_by, r.update_time,
+        select r.result_id, r.assay_no, r.result_no, r.sample_no, r.sample_volume, r.device_no, r.assay_item, Round(r.result_concentration,3)  result_concentration, r.result_abs, r.result_date, r.result_time, r.curve_k0, r.curve_k1, r.curve_id, r.create_by, r.create_time, r.update_by, r.update_time,r.assay_type,
         t.item_name,
         s.sample_id,s.sample_name,
         w.works_id,w.works_name,w.works_no
@@ -102,6 +104,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="curveK0 != null  and curveK0 != ''  ">curve_k0,</if>
             <if test="curveK1 != null  and curveK1 != ''  ">curve_k1,</if>
             <if test="curveId != null  and curveId != ''  ">curve_id,</if>
+            <if test="assayType != null  and assayType != ''  ">assay_type,</if>
 			<if test="createBy != null  and createBy != ''  ">create_by,</if>
             create_time
          </trim>
@@ -119,6 +122,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="curveK0 != null  and curveK0 != ''  ">#{curveK0},</if>
             <if test="curveK1 != null  and curveK1 != ''  ">#{curveK1},</if>
             <if test="curveId != null  and curveId != ''  ">#{curveId},</if>
+            <if test="assayType != null  and assayType != ''  ">#{assayType},</if>
 			<if test="createBy != null  and createBy != ''  ">#{createBy},</if>
             getdate()
          </trim>
@@ -140,6 +144,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="curveK0 != null  and curveK0 != ''  ">curve_k0 = #{curveK0},</if>
             <if test="curveK1 != null  and curveK1 != ''  ">curve_k1 = #{curveK1},</if>
             <if test="curveId != null  and curveId != ''  ">curve_id = #{curveId},</if>
+            <if test="assayType != null  and assayType != ''  ">assay_type = #{assayType},</if>
             <if test="updateBy != null  and updateBy != ''  ">update_by = #{updateBy},</if>
             update_time = getdate()
         </trim>
@@ -184,6 +189,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         SELECT DISTINCT z.assay_item from z_assay_result z
         where z.assay_no = #{assayNo}
         )
+    </select>
+
+    <select id="selectTypeByAssayNo" parameterType="String" resultType="String">
+        SELECT DISTINCT z.assay_type from z_assay_result z
+        where z.assay_no = #{assayNo} and z.assay_type is not null
     </select>
 
 

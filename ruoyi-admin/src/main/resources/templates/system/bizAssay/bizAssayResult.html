@@ -66,54 +66,64 @@
 					sortable: true
 				},
 				{
-					field : 'assaySample.sampleName',
+					field : 'assayType',
 					title : '化验样品',
-					sortable: true,
-                    formatter: function(value, item, index) {
-                        var sampleName="";
-                        if(item.assaySample!=null){
-                            if(item.assaySample.sampleName!=null){
-                                sampleName = item.assaySample.sampleName
-							}
-                        }
-                        return '<span class="label label-success">'+sampleName+'</span>';
-                    }
+					sortable: true
 				},
-				{
-					field : 'assaySample.work.worksName',
-					title : '样品水厂',
-					sortable: true,
-					formatter: function(value, item, index) {
-						var worksName="";
-						if(item.assaySample!=null){
-							if(item.assaySample.work!=null){
-                                if(item.assaySample.work.worksName!=null){
-                                    worksName = item.assaySample.work.worksName
-								}
-							}
-						}
-						return '<span class="label label-success">'+worksName+'</span>';
-					}
-				},
-				{
-					field : 'resultNo',
-					title : '进出水',
-					sortable: true,
-                    formatter: function(value, item, index) {
-                        var resultNo = item.resultNo;
-						if(resultNo=="001"||resultNo=="003"||resultNo=="005"||resultNo=="007"){
-                            return '<span class="label label-success">进水</span>';
-						}else{
-                            return '<span class="label label-warning">出水</span>';
-						}
-                    }
-				},
+//				{
+//					field : 'assaySample.sampleName',
+//					title : '化验样品',
+//					sortable: true,
+//                    formatter: function(value, item, index) {
+//                        var sampleName="";
+//                        if(item.assaySample!=null){
+//                            if(item.assaySample.sampleName!=null){
+//                                sampleName = item.assaySample.sampleName
+//							}
+//                        }
+//                        return '<span class="label label-success">'+sampleName+'</span>';
+//                    }
+//				},
+//				{
+//					field : 'assaySample.work.worksName',
+//					title : '样品水厂',
+//					sortable: true,
+//					formatter: function(value, item, index) {
+//						var worksName="";
+//						if(item.assaySample!=null){
+//							if(item.assaySample.work!=null){
+//                                if(item.assaySample.work.worksName!=null){
+//                                    worksName = item.assaySample.work.worksName
+//								}
+//							}
+//						}
+//						return '<span class="label label-success">'+worksName+'</span>';
+//					}
+//				},
+//				{
+//					field : 'resultNo',
+//					title : '进出水',
+//					sortable: true,
+//                    formatter: function(value, item, index) {
+//                        var resultNo = item.resultNo;
+//						if(resultNo=="001"||resultNo=="003"||resultNo=="005"||resultNo=="007"){
+//                            return '<span class="label label-success">进水</span>';
+//						}else{
+//                            return '<span class="label label-warning">出水</span>';
+//						}
+//                    }
+//				},
 				{
 					field : 'itemName',
 					title : '化验项目',
 					sortable: true,
                     formatter: function(value, item, index) {
-                        return '<span class="label label-primary">'+item.itemName+'</span>';
+					    var itemName = item.itemName;
+                        if(itemName==""||itemName==null||itemName=="null"){
+                            return '';
+                        }else{
+                            return '<span class="label label-primary">'+itemName+'</span>';
+                        }
 					}
 				},
 				{

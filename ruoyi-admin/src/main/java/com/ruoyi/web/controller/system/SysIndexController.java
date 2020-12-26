@@ -1,20 +1,10 @@
 package com.ruoyi.web.controller.system;
 
-import java.io.BufferedReader;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
-import com.alibaba.fastjson.JSON;
 import com.google.gson.Gson;
 import com.ruoyi.common.core.domain.AjaxResult;
-import com.ruoyi.system.mapper.BizWaterWorkMapper;
 import com.ruoyi.system.service.*;
 import net.sf.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -227,13 +217,14 @@ public class SysIndexController extends BaseController
     public AjaxResult getAssayByNo(@RequestBody JSONObject params) {
 
         String  NoValue = params.getString("NoValue");
-        Map<String, Float> map = new HashMap<>();
 
         Map<String, String> nodemap = new HashMap<>();
+        List<AssayEnity> assayTable = new ArrayList<AssayEnity>();
 
         BizAssay assay = assayService.selectBizAssayByAssayNo(NoValue);
         List<AssayResult> assayResult = assayResultService.selectAssayResultByAssayNo(NoValue);
         List<AssayFault> assayFault = assayFaultService.selectAssayFaultByAssayNo(NoValue);
+        List<String> assayTypes = assayResultService.selectTypeByAssayNo(NoValue);
 
         String datesign="0";
 
@@ -282,11 +273,11 @@ public class SysIndexController extends BaseController
                 }
             }
             if(fault_status > 0){
-                nodemap.put("fault","有故障");
+                nodemap.put("fault","故障");
                 nodemap.put("node","化验故障");
                 nodemap.put("alertCon",alertCon);
             }else{
-                nodemap.put("fault","无故障");
+                nodemap.put("fault","正常");
                 nodemap.put("alertCon","");
             }
         }else{
@@ -306,55 +297,32 @@ public class SysIndexController extends BaseController
         String nh_abs="[";
 
         if(assayResult!=null){
-            int tn_sign=0;float Intn=0;float OutTn=0;
-            int tp_sign=0;float InTp=0;float OutTp=0;
-            int nh_sign=0;float InNh=0;float OutNh=0;
-            float InCod=0;float OutCod=0;
 
-            for(AssayResult result :assayResult){
-                String item= result.getAssayItem();
-                String resultno = result.getResultNo();
-                int r_no= Integer.valueOf(resultno);
-                float c_value = result.getResultConcentration();
+            for(String assayType:assayTypes){
+                AssayEnity enity = new AssayEnity();
+                enity.setAssayType(assayType);
 
-                if("1".equals(item)){
-                    if(r_no>tn_sign){
-                        tn_sign = r_no;
-                        Intn = OutTn;
-                        OutTn = c_value;
-                    }else{
-                        Intn = c_value;
+                for(AssayResult result :assayResult){
+                    if(assayType.equals(result.getAssayType())){
+                        String item = result.getAssayItem();
+                        float c_value = result.getResultConcentration();
+                        if("1".equals(item)){
+                            enity.setTn(c_value);
+                        }else if("2".equals(item)){
+                            enity.setNh(c_value);
+                        }else if("3".equals(item)){
+                            enity.sethCod(c_value);
+                        }else if("4".equals(item)){
+                            enity.setlCod(c_value);
+                        }else if("5".equals(item)){
+                            enity.setTp(c_value);
+                        }
                     }
-                } else if("2".equals(item)){
-                    if(r_no>nh_sign){
-                        nh_sign = r_no;
-                        InNh = OutNh;
-                        OutNh = c_value;
-                    }else{
-                        InNh = c_value;
-                    }
-                } else if("3".equals(item)){
-                    InCod = c_value;
-                } else if("4".equals(item)){
-                    OutCod = c_value;
-                } else if("5".equals(item)){
-                    if(r_no>tp_sign){
-                        tp_sign = r_no;
-                        InTp = OutTp;
-                        OutTp = c_value;
-                    }else{
-                        InTp = c_value;
-                    }
+
                 }
+                assayTable.add(enity);
             }
-            map.put("in_cod",InCod);
-            map.put("out_cod",OutCod);
-            map.put("in_tp",InTp);
-            map.put("out_tp",OutTp);
-            map.put("in_tn",Intn);
-            map.put("out_tn",OutTn);
-            map.put("in_nh",InNh);
-            map.put("out_nh",OutNh);
+
 
 
             AssayCurve curve = assayCurveService.selectAssayCurveByCurveNo("1");
@@ -398,17 +366,18 @@ public class SysIndexController extends BaseController
                 ",nh_con:"+nh_con+",nh_abs:"+nh_abs+"}";
 
         Gson gson = new Gson();
-        String jsonData = gson.toJson(map);
         String node_jsonData = gson.toJson(nodemap);
 
         String all_jsonData = gson.toJson(assayResult);
 
+        String assay_tableData = gson.toJson(assayTable);
+
         AjaxResult ajax = AjaxResult.success();
-        ajax.put("assayData", jsonData);
         ajax.put("nodeData", node_jsonData);
         ajax.put("curveData", curveData);
         ajax.put("datesign", datesign);
         ajax.put("all_jsonData", all_jsonData);
+        ajax.put("assay_tableData", assay_tableData);
         return ajax;
     }
 

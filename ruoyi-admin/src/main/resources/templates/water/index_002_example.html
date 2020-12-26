@@ -1,0 +1,2968 @@
+﻿<!DOCTYPE html>
+<html  lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <link th:href="@{/water/view02/css/BigData.css}" rel="stylesheet" type="text/css" />
+    <link th:href="@{/water/view02/css/index.css}" rel="stylesheet" type="text/css" />
+    <link th:href="@{/water/view02/css/index02.css}" rel="stylesheet" type="text/css" />
+    <script th:src="@{/water/view02/js/jquery.js}"></script>
+    <link th:href="@{/water/view02/js/bstable/css/bootstrap.min.css}" rel="stylesheet" type="text/css" />
+    <link th:href="@{/water/view02/js/bstable/css/bootstrap-table.css}" rel="stylesheet" type="text/css" />
+    <link th:href="@{/water/view02/css/Security_operation.css}" rel="stylesheet" type="text/css" />
+    <link th:href="@{/water/view02/js/artDialog/skins/default.css}" rel="stylesheet" type="text/css"/>
+    <script th:src="@{/water/view02/js/laydate.js}"></script>
+    <script th:src="@{/water/view02/js/Home_page.js}"></script>
+    <script th:src="@{/water/system/js/assayData_02.js}" ></script>
+
+    <script language="javascript" th:src="@{/water/view02/jqprint/jquery-1.4.4.min.js}"></script>
+    <script language="javascript" th:src="@{/water/view02/jqprint/jquery.jqprint-0.3.js}"></script>
+
+
+    <meta charset="UTF-8">
+    <title>化验单据信息</title>
+
+</head>
+<body >
+<div class="data_bodey">
+
+
+    <div class="index_top" style="margin: 0 auto;">
+    <a class="back-png" >
+            <!--<img id="weatherImg1" th:src="@{/water/view01/images/back.png}" alt="" height="40" width="40" onclick="click1()">-->
+            <img id="weatherImg2" th:src="@{/water/view01/images/Home.png}" alt="" height="40" width="40" onclick="click2()">
+            <!--<img id="weatherImg3" th:src="@{/water/view01/images/back2.png}" alt="" height="40" width="40" onclick="click3()">-->
+        </a>
+        <div style="height: 50%; margin-bottom: 0px;">
+            <div class="data_tit001">化验趋势分析</div>
+        </div>
+        <div style="height: 50%; margin-bottom: 0px;;margin-top:10px">
+            <span class="chose_tltle">请选择现场：</span>
+            <select class="water_chose" id="waterValue" onchange="changewaterid()">
+                <option class="water_option" value="0">肇东污水处理厂</option>
+                <option class="water_option" value="1">磐石污水处理厂</option>
+                <option class="water_option" value="2">卡伦污水处理厂</option>
+                <option class="water_option" value="3">营城污水处理厂</option>
+                <option class="water_option" value="4">文昌污水处理厂</option>
+                <option class="water_option" value="5">五大连池处理厂</option>
+                <option class="water_option" value="6">平房污水处理厂</option>
+            </select>
+            <span class="chose_tltle">请选择化验月份：</span>
+            <select class="time_chose" id="timeValue" >
+                <!--                 <option class="water_option" value="1">2019-11</option>
+                                <option class="water_option" value="2">2019-12</option> -->
+                <!--<option class="water_option" value="6">2018-10</option>-->
+                <!--<option class="water_option" value="7">2018-11</option>-->
+                <!--<option class="water_option" value="8">2018-12</option>-->
+                <!--<option class="water_option" value="9">2019-01</option>-->
+                <!--<option class="water_option" value="10">2019-02</option>-->
+                <!-- <option class="water_option" value="11">2019-03</option>
+                <option class="water_option" value="12">2019-04</option>
+                <option class="water_option" value="13">2019-05</option>
+                <option class="water_option" value="14">2019-06</option>
+                <option class="water_option" value="15">2019-07</option>
+                <option class="water_option" value="16">2019-08</option>
+                <option class="water_option" value="17">2019-09</option>
+                <option class="water_option" value="18">2019-10</option>
+                <option class="water_option" value="19">2019-11</option>
+                <option class="water_option" value="20">2019-12</option> -->
+
+                <option class="water_option" value="3">2020-01</option>
+                <option class="water_option" value="4">2020-02</option>
+                <option class="water_option" value="5">2020-03</option>
+                <option class="water_option" value="21">2020-04</option>
+                <option class="water_option" value="22">2020-05</option>
+                <option class="water_option" value="23">2020-06</option>
+                <option class="water_option" value="24">2020-07</option>
+                <option class="water_option" value="25">2020-08</option>
+                <option class="water_option" value="26">2020-09</option>
+                <option class="water_option" value="27">2020-10</option>
+                <option class="water_option" value="28">2020-11</option>
+                <option class="water_option" value="29">2020-12</option>
+            </select>
+            <button class="chose_enter" onclick="change_water()">确定</button>
+        </div>
+        <div class="clear"></div>
+    </div>
+
+    <div class="index_tabs" >
+        <div class="inner"  >
+
+
+            <div class="data_left01">
+                <div class="dataAll maginS">
+                    <div class="dataAllBorder01">
+                        <div class="dataAllBorder02">
+                            <div class="data_tit1">化验现场分析</div>
+                            <div id="four_linechart" style="width:100%;height:90%;"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="dataAll">
+                    <div class="dataAllBorder01">
+                        <div class="dataAllBorder02">
+                            <div class="data_tit1">风力影响</div>
+                            <!-- <p class="data_chart" id="Package01"></p> -->
+                            <div class="data_chart" id="buyTime"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="dataAll">
+                    <div class="dataAllBorder01">
+                        <div class="dataAllBorder02">
+                            <div class="data_tit1">气温影响</div>
+                            <!-- <p class="data_chart" id="bookAret"></p> -->
+                            <p class="data_chart" id="rodeAbook"></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="data_right01">
+                <div class="data_right">
+                    <div class="dataAllBorder01">
+                        <div class="dataAllBorder02">
+                            <div class="data_tit11">入水COD趋势</div>
+                            <div class="data_chart" id="in_cod_line"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="data_right">
+                    <div class="dataAllBorder01">
+                        <div class="dataAllBorder02">
+                            <div class="data_tit11">出水COD趋势</div>
+                            <!-- <p class="data_chart" id="Package01"></p> -->
+                            <div class="data_chart" id="out_cod_line" ></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="data_right01">
+                <div class="data_right">
+                    <div class="dataAllBorder01">
+                        <div class="dataAllBorder02">
+                            <div class="data_tit11">入水NH3趋势</div>
+                            <div class="data_chart" id="in_NH_line"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="data_right">
+                    <div class="dataAllBorder01">
+                        <div class="dataAllBorder02">
+                            <div class="data_tit11">出水NH3趋势</div>
+                            <!-- <p class="data_chart" id="Package01"></p> -->
+                            <div class="data_chart" id="out_NH_line" ></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="data_right01">
+                <div class="data_right">
+                    <div class="dataAllBorder01">
+                        <div class="dataAllBorder02">
+                            <div class="data_tit11">入水TP趋势</div>
+                            <div class="data_chart" id="in_TP_line" ></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="data_right">
+                    <div class="dataAllBorder01">
+                        <div class="dataAllBorder02">
+                            <div class="data_tit11">出水TP趋势</div>
+                            <!-- <p class="data_chart" id="Package01"></p> -->
+                            <div class="data_chart" id="out_TP_line" ></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="data_right01">
+                <div class="data_right">
+                    <div class="dataAllBorder01">
+                        <div class="dataAllBorder02">
+                            <div class="data_tit11">入水TN趋势</div>
+                            <div class="data_chart" id="in_TN_line" ></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="data_right">
+                    <div class="dataAllBorder01">
+                        <div class="dataAllBorder02">
+                            <div class="data_tit11">出水TN趋势</div>
+                            <!-- <p class="data_chart" id="Package01"></p> -->
+                            <div class="data_chart" id="out_TN_line" ></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script th:src="@{/water/view02/js/echarts-all.js}"></script>
+    <!-- <script src="js/index.js"></script> -->
+    <script th:src="@{/water/view02/js/bstable/js/bootstrap.min.js}"></script>
+    <script th:src="@{/water/view02/js/bstable/js/bootstrap-table.js}"></script>
+    <script th:src="@{/water/view02/js/jquery.pagination.js}"></script>
+    <script th:src="@{/water/view02/js/bstable/js/bootstrap-table-zh-CN.min.js}"></script>
+    <script th:src="@{/water/view02/js/Home_page.js}"></script>
+    <script th:src="@{/water/view02/js/artDialog/artDialog.js}"></script>
+    <script th:src="@{/water/view02/js/artDialog/plugins/iframeTools.source.js}"></script>
+
+    <script th:inline="javascript">
+        var number;
+        $(function() {
+            if (window.screen.height <= 768) {
+                number = 4;
+            } else if (window.screen.height > 768 && window.screen.height <= 900) {
+                number = 6
+            } else if (window.screen.height > 1080) {
+                number = 8
+            }
+        });
+
+
+        //    翻页模块
+        $(".tcdPageCode").createPage({
+            pageCount:5,
+            current:1,
+            backFn:function(p){}
+        });
+        $(".chemistry_tcdPageCode").createPage({
+            pageCount:4,
+            current:1,
+            backFn:function(p){}
+        });
+        $(".enterprise_tcdPageCode").createPage({
+            pageCount:4,
+            current:1,
+            backFn:function(p){}
+        });
+        $(".car_tcdPageCode").createPage({
+            pageCount:4,
+            current:1,
+            backFn:function(p){}
+        });
+
+        $(function () {
+            $(".tit02Diva a").each(function (index) {
+                $(this).on("click",function () {
+                    $(".data_map").eq(index).fadeIn().siblings(".data_map").stop().hide();
+                    $(this).prev('i').removeClass('i_crlieAction');
+                    $(this).siblings('a').prev('i').addClass('i_crlieAction');
+
+                })
+            });
+            BootstrapTable();
+            // Echarts();
+            $("#fresh_tool").click(function(event){
+                event.stopPropagation();
+                cancel();
+            })
+
+        });
+        function EventClick(){
+            $(".check_increase").removeClass("check_increase_act");
+            $("#over_hide1").show().siblings().hide();
+            $(".check_decrease").show();
+            $("#cage_cl").hide();
+            $("#map_title_innerbox").hide();
+            $("#cage_cl1").show();
+//        $("#over_hide").show();
+            $("#map_title_innerbox1").show();
+            $(".addition_check_in").hide();
+            $("#car_check_in").hide();
+            BootstrapTable();
+        }
+        function cancel(e){
+            $(".check_increase").removeClass("check_increase_act");
+            $("#over_hide").show().siblings().hide();
+            $(".check_decrease").show();
+            $("#cage_cl").show();
+            $("#cage_cl1").hide();
+//        $("#cage_cl").show();
+//        $("#over_hide1").show();
+//        $("#map_title_innerbox").show();
+            BootstrapTable();
+        }
+
+        //    地址检索
+        $(".addition_check_btn").click(function () {
+            $(".check_increase").addClass("check_increase_act");
+            $(".check_decrease").hide()
+            $(".addition_check_in").show().siblings().hide()
+        });
+
+        //    危化品检索
+        function chemistryCheck() {
+            $(".check_increase").addClass("check_increase_act");
+            $(".check_decrease").hide()
+            $("#chemistry_check_in").show().siblings().hide()
+        }
+
+        //    企业检索
+        function enterpriseCheck() {
+            $(".check_increase").addClass("check_increase_act");
+            $(".check_decrease").hide()
+            $("#enterprise_check_in").show().siblings().hide()
+        }
+
+        //    车辆检索
+        function carCheck() {
+            $(".check_increase").addClass("check_increase_act");
+            $(".check_decrease").hide()
+            $("#car_check_in").show().siblings().hide()
+        }
+
+        function BootstrapTable() {
+            $('#table').bootstrapTable({
+                method: "get",
+                striped: true,
+                singleSelect: false,
+                url: "json/DGCar.json",
+                dataType: "json",
+                pagination: true, //分页
+                pageSize: number,
+                pageNumber: 1,
+                search: false, //显示搜索框
+                contentType: "application/x-www-form-urlencoded",
+                queryParams: null,
+                columns: [
+//                {
+//                    title: "车辆编号",
+//                    field: 'id',
+//                    width:80,
+//                    align: 'center',
+//                    valign: 'middle'
+//                },
+                    {
+                        title: '车牌号',
+                        field: 'carno',
+                        width:80,
+                        align: 'center',
+                        valign: 'middle'
+                    },
+                    {
+                        title: '所属企业',
+                        field: 'company',
+                        align: 'center',
+                        valign: 'middle'
+                    },
+
+                    {
+                        title: '运输内容',
+                        field: 'content',
+                        align: 'center'
+                    },
+
+                    {
+                        title: '行驶速度',
+                        field: 'speed',
+                        width:80,
+                        align: 'center'
+                    },
+                    {
+                        title: '车辆载重',
+                        field: 'load',
+                        width:80,
+                        align: 'center'
+                    },
+                    {
+                        title: '操作',
+                        field: 'load',
+                        align: 'center',
+                        formatter: function (value, row) {
+                            var e = '<a  href="javascript:void(0)" title="" onclick="showCarDetai()">查看详情</a> ';
+                            var d = '<a  href="javascript:void(0)" title="" onclick="analiysis(\'' + row.id + '\')">车辆定位</a> ';
+                            return e + d;
+                        }
+                    }
+
+                ]
+            });
+            $('#table1').bootstrapTable({
+                method: "get",
+                striped: true,
+                singleSelect: false,
+                url: "json/note1.json",
+                dataType: "json",
+                pagination: true, //分页
+                pageSize: number,
+                pageNumber: 1,
+                search: false, //显示搜索框
+                contentType: "application/x-www-form-urlencoded",
+                queryParams: null,
+                columns: [
+                    {
+                        title: "威胁源",
+                        field: 'id',
+                        align: 'center',
+                        valign: 'middle'
+                    },
+                    {
+                        title: '辐射距离',
+                        field: 'title',
+                        align: 'center',
+                        valign: 'middle'
+                    },
+                    {
+                        title: '威胁范围',
+                        field: 'type',
+                        align: 'center',
+                        valign: 'middle'
+                    },
+
+                    {
+                        title: '危害类型',
+                        field: 'person',
+                        align: 'center'
+                    }
+
+                ]
+            });
+            $('#table2').bootstrapTable({
+                method: "get",
+                striped: true,
+                singleSelect: false,
+                url: "json/note2.json",
+                dataType: "json",
+                pagination: true, //分页
+                pageSize: number,
+                pageNumber: 1,
+                search: false, //显示搜索框
+                contentType: "application/x-www-form-urlencoded",
+                queryParams: null,
+                columns: [
+                    {
+                        title: "威胁源",
+                        field: 'id',
+                        align: 'center',
+                        valign: 'middle'
+                    },
+                    {
+                        title: '辐射距离',
+                        field: 'title',
+                        align: 'center',
+                        valign: 'middle'
+                    },
+                    {
+                        title: '威胁范围',
+                        field: 'type',
+                        align: 'center',
+                        valign: 'middle'
+                    },
+
+                    {
+                        title: '危害类型',
+                        field: 'person',
+                        align: 'center'
+                    }
+
+                ]
+            });
+        }
+
+        function Echarts() {
+            var myChart = echarts.init($("#container_huan")[0]);
+            var option = {
+                tooltip: {
+                    trigger: 'item',
+                    formatter: "{a} <br/>{b}: {c} ({d}%)"
+                },
+                legend: {
+                    orient: 'vertical',
+                    x: 'left',
+                    data:['民用爆炸','射钉器材','危化品','寄递物流','旅店'],
+                    textStyle:{
+                        color:"#e9ebee"
+                    }
+                },
+                series: [
+                    {
+                        name:'行业数据',
+                        type:'pie',
+                        center:['80%','50%'],
+                        radius: ['50%', '80%'],
+                        avoidLabelOverlap: false,
+                        label: {
+                            normal: {
+                                show: false,
+                                position: 'center'
+                            },
+                            emphasis: {
+                                show: true,
+                                textStyle: {
+                                    fontSize: '30',
+                                    fontWeight: 'bold'
+                                }
+                            }
+                        },
+                        itemStyle: {
+                            normal: {
+                                label: {
+                                    show: false
+                                },
+                                labelLine: {
+                                    show: false
+                                }
+                            }
+                        },
+                        data:[
+                            {value:335, name:'民用爆炸'},
+                            {value:310, name:'射钉器材'},
+                            {value:234, name:'危化品'},
+                            {value:135, name:'寄递物流'},
+                            {value:1548, name:'旅店'}
+                        ]
+                    }
+                ]
+            };
+            myChart.setOption(option);
+        }
+
+
+        function TimeControl(){
+            $(".message_scroll_box").animate({marginTop:96},800,
+                function(){
+                    $(".message_scroll_box").css({marginTop:0});    //把顶部的边界清零
+                    $(".message_scroll_box .message_scroll:first").before($(".message_scroll_box .message_scroll:last"));    //在第一个新闻后面插入最后一个新闻
+
+                });
+        }
+        var T=setInterval(TimeControl,2300);    //开始定时
+        $(".message_scroll_box").mouseenter(function(){
+            clearInterval(T);    //停止定时
+        })
+            .mouseleave(function(){
+                T=setInterval(TimeControl,2500);    //再次定时
+            })
+
+    </script>
+
+    <!--轨迹回放时间日期选择-->
+    <script th:inline="javascript">
+        !function(){
+            laydate.skin('danlan');//切换皮肤，请查看skins下面皮肤库
+            laydate({elem: '#demo'});
+            laydate({elem: '#demo1'});//绑定元素
+        }();
+        //日期范围限制
+        var start = {
+            elem: '#start',
+            format: 'YYYY-MM-DD',
+            min: laydate.now(), //设定最小日期为当前日期
+            max: '2099-06-16', //最大日期
+            istime: true,
+            istoday: false,
+            choose: function(datas){
+                end.min = datas; //开始日选好后，重置结束日的最小日期
+                end.start = datas //将结束日的初始值设定为开始日
+            }
+        };
+
+        var end = {
+            elem: '#end',
+            format: 'YYYY-MM-DD',
+            min: laydate.now(),
+            max: '2099-06-16',
+            istime: true,
+            istoday: false,
+            choose: function(datas){
+                start.max = datas; //结束日选好后，充值开始日的最大日期
+            }
+        };
+        laydate(start);
+        laydate(end);
+        function edit() {
+            layer.open({
+                type: 2,
+                title: '存储详情',
+                shade: 0.5,
+                skin: 'layui-layer-rim',
+                area: ['700px', '400px'],
+                shadeClose: true,
+                closeBtn: 1,
+                content: 'saveFindTail.html'
+            });
+        }
+    </script>
+
+    <script th:inline="javascript">
+
+        // function initgongyi(obj1,obj2,obj3){
+        //         var myChart = echarts.init($("#rodeAbook")[0]);
+        //         option = {
+        //             tooltip : {
+        //                 trigger: 'axis'
+        //             },
+        //             grid: {
+        //             x: 46,
+        //             y:30,
+        //             x2:30,
+        //             y2:40,
+        //                 borderWidth: 0
+        //             },
+
+        //             calculable : false,
+        //             legend: {
+        //                 show:false,
+        //                 data:['故障','维护','待维修'],
+        //                 textStyle:{
+        //                     color:"#e9ebee"
+
+        //                 }
+        //             },
+        //             xAxis : [
+        //                 {
+        //                     type : 'category',
+        //                     data : ['COD','NH3','TP','TN'],
+        //                     splitLine: {
+        //                         show: false
+        //                     },
+        //                     axisLabel: {
+        //                         show: true,
+        //                         textStyle: {
+        //                             color: '#a4a7ab',
+        //                             align: 'center'
+        //                         }
+        //                     }
+
+        //                 }
+        //             ],
+        //             yAxis : {
+        //                         type: 'value',
+        //                         name : '处理量',
+        //                         axisLabel : {
+        //                             formatter: '{value} ',
+        //                             textStyle: {
+        //                                 color: '#a4a7ab',
+        //                                 align: 'right'
+        //                             }
+        //                         },
+        //                         splitLine: {
+        //                             show: false
+        //                         },
+        //                     },
+        //             series : [
+
+        //                 {
+        //                     name:'故障',
+        //                     type:'bar',
+        //                     stack: '故障',
+        //                     data:obj1,
+        //                     itemStyle: {
+        //                         normal: {
+        //                             color:"#ffcb89"
+        //                         }
+        //                     }
+        //                 },
+        //                 {
+        //                     name:'维护',
+        //                     type:'bar',
+        //                     stack: '维护',
+        //                     data:obj2,
+        //                     itemStyle: {
+        //                         normal: {
+        //                             color:"#005ea1"
+        //                         }
+        //                     }
+        //                 },
+
+        //                 {
+        //                     name:'待维修',
+        //                     type:'bar',
+        //                     data:obj3,
+        //                     itemStyle: {
+        //                         normal: {
+        //                             color:"#0ad5ff"
+        //                         }
+        //                     }
+        //                 }
+        //             ]
+        //         };
+
+        //         myChart.setOption(option);
+        //     }
+        function initgongyi(date,obj_f){
+            var myChart = echarts.init($("#rodeAbook")[0]);
+            var option = {
+                tooltip: {   //提示框，鼠标悬浮交互时的信息提示
+                    show: true,
+                    trigger: 'axis'
+                },
+                grid: {
+                    x: 46,
+                    y:30,
+                    x2:30,
+                    y2:40,
+                    borderWidth: 0
+                },
+                legend: {
+                    data: ['气温'],
+                    orient: 'vertical',
+                    textStyle: { fontWeight: 'bold', color: '#a4a7ab' }
+                },
+                calculable: false,
+                xAxis: [
+                    {
+                        type: 'category',
+                        data: date,
+                        splitLine: {
+                            show: false
+                        },
+                        axisLabel: {
+                            show: true,
+                            textStyle: {
+                                color: '#a4a7ab',
+                                align: 'center'
+                            }
+                        }
+                    }
+
+                ],
+                yAxis: [
+                    {
+                        type: 'value',
+                        splitLine: {
+                            show: false
+                        },
+                        axisLabel : {
+                            formatter: '{value} ',
+                            textStyle: {
+                                color: '#a4a7ab',
+                                align: 'right'
+                            }
+                        }
+                    }
+                ],
+                series: [
+                    {
+                        name: '气温',
+                        type: 'line',
+                        stack: '气温',
+                        // data: obj_f,
+                        data: obj_f,
+                        barWidth:6,
+                        itemStyle: {
+                            normal: {
+                                color: '#02bcbc'
+                            }
+                        }
+                    }
+                ]
+            };
+
+            myChart.setOption(option);
+        }
+
+        function initfengli(date,obj_f){
+            var myChart = echarts.init($("#buyTime")[0]);
+            var option = {
+                tooltip: {   //提示框，鼠标悬浮交互时的信息提示
+                    show: true,
+                    trigger: 'axis'
+                },
+                grid: {
+                    x: 46,
+                    y:30,
+                    x2:30,
+                    y2:40,
+                    borderWidth: 0
+                },
+                legend: {
+                    data: ['风力指数'],
+                    orient: 'vertical',
+                    textStyle: { fontWeight: 'bold', color: '#a4a7ab' }
+                },
+                calculable: false,
+                xAxis: [
+                    {
+                        type: 'category',
+                        data: date,
+                        splitLine: {
+                            show: false
+                        },
+                        axisLabel: {
+                            show: true,
+                            textStyle: {
+                                color: '#a4a7ab',
+                                align: 'center'
+                            }
+                        }
+                    }
+
+                ],
+                yAxis: [
+                    {
+                        type: 'value',
+                        splitLine: {
+                            show: false
+                        },
+                        axisLabel : {
+                            formatter: '{value} ',
+                            textStyle: {
+                                color: '#a4a7ab',
+                                align: 'right'
+                            }
+                        }
+                    }
+                ],
+                series: [
+                    {
+                        name: '风力指数',
+                        type: 'bar',
+                        stack: '风力指数',
+                        // data: obj_f,
+                        data: obj_f,
+                        barWidth:6,
+                        itemStyle: {
+                            normal: {
+                                color: '#02bcbc'
+                            }
+                        }
+                    }
+                ]
+            };
+
+            myChart.setOption(option);
+        }
+
+
+
+
+
+
+        function initalert(obj_11,obj_22,obj_33,obj_44){
+            var myChart = echarts.init($("#sperceBook01")[0]);
+            option = {
+                tooltip: {
+                    show: true,
+                    trigger: 'axis'
+                },
+                legend: {
+                    show:false,
+                    data:['1','2','3','4','5']
+                },
+                grid: {
+                    x: 46,
+                    y:30,
+                    x2:30,
+                    y2:40,
+                    borderWidth: 0
+                },
+                calculable: false,
+                xAxis: {
+                    type: 'category',
+                    boundaryGap: false,
+                    data: ['周一','周二','周三','周四','周五','周六','周日'],
+                    splitLine: {
+                        show: false
+                    },
+                    axisLabel: {
+                        show: true,
+                        textStyle: {
+                            color: '#a4a7ab',
+                            align: 'center'
+                        }
+                    }
+                },
+                yAxis: [
+                    {
+                        type: 'value',
+                        splitLine: {
+                            show: false
+                        },
+                        axisLabel: {
+                            show: true,
+                            textStyle: {
+                                color: '#a4a7ab',
+                                align: 'right'
+                            }
+                        }
+                    }
+                ],
+                series: [
+                    {
+                        name:'设备告警',
+                        type:'line',
+                        stack: '总量',
+                        data:obj_11
+                    },
+                    {
+                        name:'化验告警',
+                        type:'line',
+                        stack: '总量',
+                        data:obj_22
+                    },
+                    {
+                        name:'流程警告',
+                        type:'line',
+                        stack: '总量',
+                        data:obj_33
+                    },
+                    {
+                        name:'药剂告警',
+                        type:'line',
+                        stack: '总量',
+                        data:obj_44
+                    }
+                ]
+            };
+
+
+            myChart.setOption(option);
+        }
+
+
+        function inityaoqi(o1){
+            var myChart = echarts.init($("#seaAbook01")[0]);
+            option = {
+
+
+                legend: {
+                    show:false,
+                    orient : 'vertical',
+                    x : 'left',
+                    data:['废液量','药剂一','药剂二','药剂三'], textStyle:{
+                        color:"#e9ebee"
+
+                    }
+                },
+                tooltip : {
+                    trigger: 'item',
+                    formatter: "{a} <br/>{b} : {d}%"
+                },
+                calculable : false,
+                series : [
+
+                    {
+                        name:'药剂占比',
+                        type:'pie',
+                        radius : '70%',
+                        center: ['50%', '60%'],
+                        splitLine:{show: false},
+                        roseType : 'area',
+                        x: '50%',               // for funnel
+                        max: 40,                // for funnel
+                        sort : 'ascending',     // for funnel
+                        data:[
+                            {value:o1[0], name:'废液量',
+                                itemStyle: {
+                                    normal: {
+                                        color:"#b17cff"
+                                    }
+                                }},
+                            {value:o1[1], name:'药剂一',
+                                itemStyle: {
+                                    normal: {
+                                        color:"#ffcb89"
+                                    }
+                                }},
+                            {value:o1[2], name:'药剂二',
+                                itemStyle: {
+                                    normal: {
+                                        color:"#ff7d0a"
+                                    }
+                                }},
+                            {value:o1[3], name:'药剂三',
+                                itemStyle: {
+                                    normal: {
+                                        color:"#0ad5ff"
+                                    }
+                                }}
+                        ]
+                    }
+                ]
+            };
+
+
+            myChart.setOption(option);
+        }
+
+
+        function initshuizhi(obj){
+            var myChart = echarts.init($("#rode01")[0]);
+            option = {
+
+
+                legend: {
+                    show:false,
+                    orient : 'vertical',
+                    x : 'left',
+                    data:['COD进水','COD出水','总磷进水','总磷出水','总氮进水','总氮出水','氨氮进水','氨氮出水'], textStyle:{
+                        color:"#e9ebee"
+
+                    }
+                },
+
+                calculable : false,
+                series : [
+
+                    {
+                        name:'水质化验指标',
+                        type:'pie',
+                        radius : '60%',
+                        center: ['50%', '60%'],
+                        roseType : 'area',
+                        x: '50%',               // for funnel
+                        max: 40,                // for funnel
+                        sort : 'ascending',     // for funnel
+                        data:[
+                            {value:obj[0], name:'COD进水',
+                                itemStyle: {
+                                    normal: {
+                                        color:"#45c0ff"
+                                    }
+                                }},
+                            {value:obj[1], name:'COD出水',
+                                itemStyle: {
+                                    normal: {
+                                        color:"#e15828"
+                                    }
+                                }},
+                            {value:obj[2], name:'总磷进水',
+                                itemStyle: {
+                                    normal: {
+                                        color:"#ff81cb"
+                                    }
+                                }},
+                            {value:obj[3], name:'总磷出水',
+                                itemStyle: {
+                                    normal: {
+                                        color:"#2e7cff"
+                                    }
+                                }},
+                            {value:obj[4], name:'总氮进水',
+                                itemStyle: {
+                                    normal: {
+                                        color:"#feb602"
+                                    }
+                                }},
+                            {value:obj[5], name:'总氮出水',
+                                itemStyle: {
+                                    normal: {
+                                        color:"#ff7d0a"
+                                    }
+                                }},
+                            {value:obj[6], name:'氨氮进水',
+                                itemStyle: {
+                                    normal: {
+                                        color:"#1afffd"
+                                    }
+                                }},
+                            {value:obj[7], name:'氨氮出水',
+                                itemStyle: {
+                                    normal: {
+                                        color:"#2e7cff"
+                                    }
+                                }}
+                        ]
+                    }
+                ]
+            };
+
+
+            myChart.setOption(option);
+        }
+
+
+        function initxiaohao(obj1,obj2){
+            var myChart = echarts.init($("#zhanbi02")[0]);
+            var option = {
+                title : {
+                    text: '化验消耗累计',
+                    textStyle:{
+                        color:"#e9ebee"
+
+                    },
+
+                    x:'center'
+                },
+                tooltip : {
+                    trigger: 'axis',
+                    axisPointer : {            // 坐标轴指示器，坐标轴触发有效
+                        type : 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
+                    },
+                    formatter: function (params) {
+                        var tar = params[0];
+                        return tar.name + '<br/>' + tar.seriesName + ' : ' + tar.value;
+                    }
+                },
+                grid:{
+                    borderWidth:0
+                },
+                xAxis : [
+                    {
+                        type : 'category',
+                        data : ['总消耗','物料','药剂','清洗','其他'],
+                        axisLabel : {
+                            formatter: '{value} ',
+                            textStyle: {
+                                color: '#a4a7ab',
+                                align: 'right'
+                            }
+                        },
+                        splitLine:{show: false}
+                    }
+                ],
+                yAxis : [
+                    {
+                        type : 'value',
+                        axisLabel : {
+                            formatter: '{value} ',
+                            textStyle: {
+                                color: '#a4a7ab',
+                                align: 'right'
+                            }
+                        },
+                        splitLine:{show: false}
+                    }
+                ],
+                series : [
+                    {
+                        name:'总收入',
+                        type:'bar',
+                        stack: '总量',
+                        itemStyle:{
+                            normal:{
+                                barBorderColor:'rgba(0,0,0,0)',
+                                color:'rgba(0,0,0,0)'
+                            },
+                            emphasis:{
+                                barBorderColor:'rgba(0,0,0,0)',
+                                color:'rgba(0,0,0,0)'
+                            }
+                        },
+                        data:obj1
+                    },
+                    {
+                        name:'消耗',
+                        type:'bar',
+                        stack: '总量',
+                        data:obj2,
+                        itemStyle: {
+                            normal: {
+                                color: '#02BCBC'
+                            }
+                        }
+                    }
+                ]
+            };
+
+
+            myChart.setOption(option);
+        }
+
+
+        function inityingxiang(obj){
+            var myChart = echarts.init($("#Package01")[0]);
+            option = {
+                legend: {
+                    orient : 'vertical',
+                    x : 'left',
+                    data:['降雨','气温','风力','雾霾','其他'], textStyle:{
+                        color:"#e9ebee"
+
+                    }
+                },
+                toolbox: {
+                    show : false,
+                    feature : {
+                        mark : {show: true},
+                        dataView : {show: true, readOnly: false},
+                        magicType : {
+                            show: true,
+                            type: ['pie', 'funnel'],
+                            option: {
+                                funnel: {
+                                    x: '25%',
+                                    width: '50%',
+                                    funnelAlign: 'left',
+                                    max: 1548
+                                }
+                            }
+                        },
+                        restore : {show: true},
+                        saveAsImage : {show: true}
+                    }
+                },
+                calculable : false,
+                series : [
+                    {
+                        name:'套餐',
+                        type:'pie',
+                        radius : '55%',
+                        center: ['50%', '60%'],
+                        data:[
+                            {value:obj[0], name:'降雨',
+                                itemStyle: {
+                                    normal: {
+                                        color:"#1afffd"
+                                    }
+                                }},
+                            {value:obj[1], name:'气温',
+                                itemStyle: {
+                                    normal: {
+                                        color:"#fe7c1f"
+                                    }
+                                }},
+                            {value:obj[2], name:'风力',
+                                itemStyle: {
+                                    normal: {
+                                        color:"#ffcb89"
+                                    }
+                                }},
+                            {value:obj[3], name:'雾霾',
+                                itemStyle: {
+                                    normal: {
+                                        color:"#0faea1"
+                                    }
+                                }},
+                            {value:obj[4], name:'其他',
+                                itemStyle: {
+                                    normal: {
+                                        color:"#0ad5ff"
+                                    }
+                                }}
+                        ]
+                    }
+                ]
+            };
+
+
+            myChart.setOption(option);
+        }
+
+        function initqvshi(obj1,obj2){
+            var myChart = echarts.init($("#bookAret")[0]);
+            option = {
+
+                tooltip : {
+                    trigger: 'axis'
+                },
+                grid: {
+                    x: 46,
+                    y:30,
+                    x2:30,
+                    y2:40,
+                    borderWidth: 0
+                },
+                legend: {
+                    data:['地表温度','气温'],
+                    textStyle:{
+                        color:"#e9ebee"
+
+                    }
+                },
+
+                calculable : false,
+                xAxis : [
+                    {
+                        type : 'category',
+                        data : ['1月','2月','3月','4月','5月','6月','7月','8月','9月','10月','11月','12月'],
+                        axisLabel: {
+                            show: true,
+                            textStyle: {
+                                color: '#a4a7ab',
+                                align: 'center'
+                            },
+                            splitLine: {
+                                show: false
+                            },
+                        }
+                    }
+
+                ],
+                yAxis : [
+                    {
+                        type : 'value',
+                        axisLabel: {
+                            show: true,
+                            textStyle: {
+                                color: '#a4a7ab',
+                                align: 'right'
+                            }
+                        },
+                        splitLine: {
+                            show: false
+                        },
+                    }
+                ],
+                series : [
+                    {
+                        name:'地表温度',
+                        type:'bar',
+                        data:obj1,
+                        // markPoint : {
+                        //     data : [
+                        //         {type : 'max', name: '最大值'},
+                        //         {type : 'min', name: '最小值'}
+                        //     ]
+                        // },
+                        markLine : {
+                            data : [
+                                {type : 'average', name: '平均值'}
+                            ]
+                        }
+                    },
+                    {
+                        name:'气温',
+                        type:'bar',
+                        data:obj2,
+                        // markPoint : {
+                        //     data : [
+                        //         {type : 'max', name: '最大值'},
+                        //         {type : 'min', name: '最小值'}
+                        //     ]
+                        // },
+                        markLine : {
+                            data : [
+                                {type : 'average', name : '平均值'}
+                            ]
+                        }
+                    }
+                ]
+            };
+
+
+            myChart.setOption(option);
+        }
+
+
+    </script>
+
+
+    <script th:inline="javascript">
+
+        $(function() {
+        });
+
+
+        function getdateByN(n){
+            var day1 = new Date();
+            day1.setTime(day1.getTime()-24*60*60*1000*n);
+            var s1 = day1.getFullYear()+"-" + (day1.getMonth()+1) + "-" + day1.getDate();
+            return s1;
+        }
+
+
+
+
+    </script>
+    <script>
+        //化验数据走势
+        function linechart(obj1,obj2) {
+            var linechart = echarts.init(document.getElementById('four_linechart'));
+            window.addEventListener('resize', function () {
+                linechart.resize();
+            });
+
+            //    设置背景阴影的参数，获取数据的最大值
+
+            var data = ['COD', 'NH3', 'TN', 'TP'];
+
+            option = {
+                tooltip : {
+                    trigger: 'axis'
+                },
+                grid: {
+                    x: 46,
+                    y:30,
+                    x2:30,
+                    y2:50,
+                    borderWidth: 0
+                },
+
+                calculable : false,
+                legend: {
+                    show:false,
+                    data:['正常','异常'],
+                    textStyle:{
+                        color:"#e9ebee"
+
+                    }
+                },
+                xAxis : [
+                    {
+                        type : 'category',
+                        data : ['COD','NH3','TP','TN'],
+                        splitLine: {
+                            show: false
+                        },
+                        axisLabel: {
+                            show: true,
+                            textStyle: {
+                                color: '#a4a7ab',
+                                align: 'center'
+                            }
+                        }
+
+                    }
+                ],
+                yAxis : {
+                    type: 'value',
+                    name : '(次)',
+                    axisLabel : {
+                        formatter: '{value} ',
+                        textStyle: {
+                            color: '#a4a7ab',
+                            align: 'right'
+                        }
+                    },
+                    splitLine: {
+                        show: false
+                    },
+                },
+                series : [
+
+                    {
+                        name:'正常',
+                        type:'bar',
+                        stack: '正常',
+                        data:obj1,
+                        itemStyle: {
+                            normal: {
+                                color:"#0FA2FF"
+                            }
+                        }
+                    },
+                    {
+                        name:'异常',
+                        type:'bar',
+                        stack: '异常',
+                        data:obj2,
+                        itemStyle: {
+                            normal: {
+                                color:"#D48265"
+                            }
+                        }
+                    },
+                ]
+            };
+            linechart.clear();
+            linechart.setOption(option);
+        }
+
+
+
+    </script>
+
+    <script th:inline="javascript">
+        //化验数据走势
+        function in_cod_linechart(data,obj) {
+            var linechart = echarts.init(document.getElementById('in_cod_line'));
+            window.addEventListener('resize', function () {
+                linechart.resize();
+            });
+
+            option = {
+                tooltip : {
+                    trigger: 'axis'
+                },
+                grid: {
+                    x: 46,
+                    y:30,
+                    x2:30,
+                    y2:80,
+                    borderWidth: 0
+                },
+
+                calculable : false,
+                xAxis : [
+                    {
+                        type : 'category',
+                        data : data,
+                        splitLine: {
+                            show: false
+                        },
+                        axisLabel: {
+                            show: true,
+                            textStyle: {
+                                color: '#a4a7ab',
+                                align: 'center'
+                            }
+                        }
+
+                    }
+                ],
+                yAxis : {
+                    type: 'value',
+                    name : '(值)',
+                    axisLabel : {
+                        formatter: '{value} ',
+                        textStyle: {
+                            color: '#a4a7ab',
+                            align: 'right'
+                        }
+                    },
+                    splitLine: {
+                        show: false
+                    },
+                },
+                series : [
+                    {
+                        name:'入水COD',
+                        type:'line',
+                        stack: '异常',
+                        data:obj,
+                        itemStyle: {
+                            normal: {
+                                color:"#F15D21"
+                            }
+                        }
+                    },
+                ]
+            };
+
+            linechart.clear();
+            linechart.setOption(option);
+        }
+
+        function out_cod_linechart(data,obj) {
+            var linechart = echarts.init(document.getElementById('out_cod_line'));
+            window.addEventListener('resize', function () {
+                linechart.resize();
+            });
+
+            option = {
+                tooltip : {
+                    trigger: 'axis'
+                },
+                grid: {
+                    x: 46,
+                    y:30,
+                    x2:30,
+                    y2:80,
+                    borderWidth: 0
+                },
+
+                calculable : false,
+                xAxis : [
+                    {
+                        type : 'category',
+                        data : data,
+                        splitLine: {
+                            show: false
+                        },
+                        axisLabel: {
+                            show: true,
+                            textStyle: {
+                                color: '#a4a7ab',
+                                align: 'center'
+                            }
+                        }
+
+                    }
+                ],
+                yAxis : {
+                    type: 'value',
+                    name : '(值)',
+                    axisLabel : {
+                        formatter: '{value} ',
+                        textStyle: {
+                            color: '#a4a7ab',
+                            align: 'right'
+                        }
+                    },
+                    splitLine: {
+                        show: false
+                    },
+                },
+                series : [
+                    {
+                        name:'出水COD',
+                        type:'line',
+                        stack: '异常',
+                        data:obj,
+                        itemStyle: {
+                            normal: {
+                                color:"#F65720"
+                            }
+                        }
+                    },
+                ]
+            };
+
+            linechart.clear();
+            linechart.setOption(option);
+        }
+
+        function in_NH_linechart(data,obj) {
+            var linechart = echarts.init(document.getElementById('in_NH_line'));
+            window.addEventListener('resize', function () {
+                linechart.resize();
+            });
+
+            option = {
+                tooltip : {
+                    trigger: 'axis'
+                },
+                grid: {
+                    x: 46,
+                    y:30,
+                    x2:30,
+                    y2:80,
+                    borderWidth: 0
+                },
+
+                calculable : false,
+                xAxis : [
+                    {
+                        type : 'category',
+                        data : data,
+                        splitLine: {
+                            show: false
+                        },
+                        axisLabel: {
+                            show: true,
+                            textStyle: {
+                                color: '#a4a7ab',
+                                align: 'center'
+                            }
+                        }
+
+                    }
+                ],
+                yAxis : {
+                    type: 'value',
+                    name : '(值)',
+                    axisLabel : {
+                        formatter: '{value} ',
+                        textStyle: {
+                            color: '#a4a7ab',
+                            align: 'right'
+                        }
+                    },
+                    splitLine: {
+                        show: false
+                    },
+                },
+                series : [
+                    {
+                        name:'入水NH3',
+                        type:'line',
+                        stack: '异常',
+                        data:obj,
+                        itemStyle: {
+                            normal: {
+                                color:"#286E9F"
+                            }
+                        }
+                    },
+                ]
+            };
+
+            linechart.clear();
+            linechart.setOption(option);
+        }
+
+        function out_NH_linechart(data,obj) {
+            var linechart = echarts.init(document.getElementById('out_NH_line'));
+            window.addEventListener('resize', function () {
+                linechart.resize();
+            });
+
+            option = {
+                tooltip : {
+                    trigger: 'axis'
+                },
+                grid: {
+                    x: 46,
+                    y:30,
+                    x2:30,
+                    y2:80,
+                    borderWidth: 0
+                },
+
+                calculable : false,
+                xAxis : [
+                    {
+                        type : 'category',
+                        data : data,
+                        splitLine: {
+                            show: false
+                        },
+                        axisLabel: {
+                            show: true,
+                            textStyle: {
+                                color: '#a4a7ab',
+                                align: 'center'
+                            }
+                        }
+
+                    }
+                ],
+                yAxis : {
+                    type: 'value',
+                    name : '(值)',
+                    axisLabel : {
+                        formatter: '{value} ',
+                        textStyle: {
+                            color: '#a4a7ab',
+                            align: 'right'
+                        }
+                    },
+                    splitLine: {
+                        show: false
+                    },
+                },
+                series : [
+                    {
+                        name:'出水NH3',
+                        type:'line',
+                        stack: '异常',
+                        data:obj,
+                        itemStyle: {
+                            normal: {
+                                color:"#33A3DB"
+                            }
+                        }
+                    },
+                ]
+            };
+
+            linechart.clear();
+            linechart.setOption(option);
+        }
+
+        function in_TP_linechart(data,obj) {
+            var linechart = echarts.init(document.getElementById('in_TP_line'));
+            window.addEventListener('resize', function () {
+                linechart.resize();
+            });
+
+            option = {
+                tooltip : {
+                    trigger: 'axis'
+                },
+                grid: {
+                    x: 46,
+                    y:30,
+                    x2:30,
+                    y2:80,
+                    borderWidth: 0
+                },
+
+                calculable : false,
+                xAxis : [
+                    {
+                        type : 'category',
+                        data : data,
+                        splitLine: {
+                            show: false
+                        },
+                        axisLabel: {
+                            show: true,
+                            textStyle: {
+                                color: '#a4a7ab',
+                                align: 'center'
+                            }
+                        }
+
+                    }
+                ],
+                yAxis : {
+                    type: 'value',
+                    name : '(值)',
+                    axisLabel : {
+                        formatter: '{value} ',
+                        textStyle: {
+                            color: '#a4a7ab',
+                            align: 'right'
+                        }
+                    },
+                    splitLine: {
+                        show: false
+                    },
+                },
+                series : [
+                    {
+                        name:'入水TP',
+                        type:'line',
+                        stack: '异常',
+                        data:obj,
+                        itemStyle: {
+                            normal: {
+                                color:"#037E6E"
+                            }
+                        }
+                    },
+                ]
+            };
+
+            linechart.clear();
+            linechart.setOption(option);
+        }
+
+        function out_TP_linechart(data,obj) {
+            var linechart = echarts.init(document.getElementById('out_TP_line'));
+            window.addEventListener('resize', function () {
+                linechart.resize();
+            });
+
+
+            option = {
+                tooltip : {
+                    trigger: 'axis'
+                },
+                grid: {
+                    x: 46,
+                    y:30,
+                    x2:30,
+                    y2:80,
+                    borderWidth: 0
+                },
+
+                calculable : false,
+                xAxis : [
+                    {
+                        type : 'category',
+                        data : data,
+                        splitLine: {
+                            show: false
+                        },
+                        axisLabel: {
+                            show: true,
+                            textStyle: {
+                                color: '#a4a7ab',
+                                align: 'center'
+                            }
+                        }
+
+                    }
+                ],
+                yAxis : {
+                    type: 'value',
+                    name : '(值)',
+                    axisLabel : {
+                        formatter: '{value} ',
+                        textStyle: {
+                            color: '#a4a7ab',
+                            align: 'right'
+                        }
+                    },
+                    splitLine: {
+                        show: false
+                    },
+                },
+                series : [
+                    {
+                        name:'出水TP',
+                        type:'line',
+                        stack: '异常',
+                        data:obj,
+                        itemStyle: {
+                            normal: {
+                                color:"#01AF9E"
+                            }
+                        }
+                    },
+                ]
+            };
+
+            linechart.clear();
+            linechart.setOption(option);
+        }
+
+        function in_TN_linechart(data,obj) {
+            var linechart = echarts.init(document.getElementById('in_TN_line'));
+            window.addEventListener('resize', function () {
+                linechart.resize();
+            });
+
+            option = {
+                tooltip : {
+                    trigger: 'axis'
+                },
+                grid: {
+                    x: 46,
+                    y:30,
+                    x2:30,
+                    y2:80,
+                    borderWidth: 0
+                },
+
+                calculable : false,
+                xAxis : [
+                    {
+                        type : 'category',
+                        data : data,
+                        splitLine: {
+                            show: false
+                        },
+                        axisLabel: {
+                            show: true,
+                            textStyle: {
+                                color: '#a4a7ab',
+                                align: 'center'
+                            }
+                        }
+
+                    }
+                ],
+                yAxis : {
+                    type: 'value',
+                    name : '(值)',
+                    axisLabel : {
+                        formatter: '{value} ',
+                        textStyle: {
+                            color: '#a4a7ab',
+                            align: 'right'
+                        }
+                    },
+                    splitLine: {
+                        show: false
+                    },
+                },
+                series : [
+                    {
+                        name:'入水TN',
+                        type:'line',
+                        stack: '异常',
+                        data:obj,
+                        itemStyle: {
+                            normal: {
+                                color:"#DF871A"
+                            }
+                        }
+                    },
+                ]
+            };
+
+            linechart.clear();
+            linechart.setOption(option);
+        }
+
+        function out_TN_linechart(data,obj) {
+            var linechart = echarts.init(document.getElementById('out_TN_line'));
+            window.addEventListener('resize', function () {
+                linechart.resize();
+            });
+
+            option = {
+                tooltip : {
+                    trigger: 'axis'
+                },
+                grid: {
+                    x: 46,
+                    y:30,
+                    x2:30,
+                    y2:80,
+                    borderWidth: 0
+                },
+
+                calculable : false,
+                xAxis : [
+                    {
+                        type : 'category',
+                        data : data,
+                        splitLine: {
+                            show: false
+                        },
+                        axisLabel: {
+                            show: true,
+                            textStyle: {
+                                color: '#a4a7ab',
+                                align: 'center'
+                            }
+                        }
+
+                    }
+                ],
+                yAxis : {
+                    type: 'value',
+                    name : '(值)',
+                    axisLabel : {
+                        formatter: '{value} ',
+                        textStyle: {
+                            color: '#a4a7ab',
+                            align: 'right'
+                        }
+                    },
+                    splitLine: {
+                        show: false
+                    },
+                },
+                series : [
+                    {
+                        name:'出水TN',
+                        type:'line',
+                        stack: '异常',
+                        data:obj,
+                        itemStyle: {
+                            normal: {
+                                color:"#FEE200"
+                            }
+                        }
+                    },
+                ]
+            };
+
+            linechart.clear();
+            linechart.setOption(option);
+        }
+
+    </script>
+
+
+    <script th:inline="javascript">
+
+        //临时数据（60天）
+
+        //生成从minNum到maxNum的随机数
+        function randomNum(minNum,maxNum){
+            switch(arguments.length){
+                case 1:
+                    return parseInt(Math.random()*minNum+1,10);
+                    break;
+                case 2:
+                    return parseInt(Math.random()*(maxNum-minNum+1)+minNum,10);
+                    break;
+                default:
+                    return 0;
+                    break;
+            }
+        }
+
+        //初始化页面数据
+        $(function() {
+//            var day1 = new Date();
+//            var month =day1.getMonth()+1;
+//            var day = day1.getDate();
+//            if(month==1){
+//                now_days = day;
+//                data_01 = data_01.slice(0,day);
+//            }
+
+            setmonthData();
+
+            $("#timeValue").val("3");
+            change_water();
+
+        });
+
+        function changewaterid(){
+            var waterValue = $("#waterValue").val();
+            // if(waterValue == 0){
+            //     $("#timeValue").empty();
+            //     $("#timeValue").append(
+
+            //         "<option class=\"water_option\" value=\"11\">2019-03</option>" +
+            //         "<option class=\"water_option\" value=\"12\">2019-04</option>"+ "<option class=\"water_option\" value=\"13\">2019-05</option>"+
+            //         "<option class=\"water_option\" value=\"14\">2019-06</option>"+ "<option class=\"water_option\" value=\"15\">2019-07</option>"+
+            //         "<option class=\"water_option\" value=\"16\">2019-08</option>"+ "<option class=\"water_option\" value=\"17\">2019-09</option>"+
+            //         "<option class=\"water_option\" value=\"18\">2019-10</option>"+ "<option class=\"water_option\" value=\"19\">2019-11</option>"+
+            //         "<option class=\"water_option\" value=\"20\">2019-12</option>"+ 
+
+            //         "<option class=\"water_option\" value=\"3\">2020-01</option>"+
+            //         "<option class=\"water_option\" value=\"4\">2020-02</option>"+ "<option class=\"water_option\" value=\"5\">2020-03</option>"+
+            //         "<option class=\"water_option\" value=\"21\">2020-04</option>"+ "<option class=\"water_option\" value=\"22\">2020-05</option>"+
+            //         "<option class=\"water_option\" value=\"23\">2020-06</option>"+
+            //         "<option class=\"water_option\" value=\"24\">2020-07</option>"+
+            //         "<option class=\"water_option\" value=\"25\">2020-08</option>"+
+            //         "<option class=\"water_option\" value=\"26\">2020-09</option>"+
+            //         "<option class=\"water_option\" value=\"27\">2020-10</option>"+
+            //         "<option class=\"water_option\" value=\"28\">2020-11</option>");
+            // }else if(waterValue == 1){
+            //     $("#timeValue").empty();
+            //     $("#timeValue").append("<option class=\"water_option\" value=\"11\">2019-03</option>" +
+            //         "<option class=\"water_option\" value=\"12\">2019-04</option>"+ "<option class=\"water_option\" value=\"13\">2019-05</option>"+
+            //         "<option class=\"water_option\" value=\"14\">2019-06</option>"+ "<option class=\"water_option\" value=\"15\">2019-07</option>"+
+            //         "<option class=\"water_option\" value=\"16\">2019-08</option>"+ "<option class=\"water_option\" value=\"17\">2019-09</option>"+
+            //         "<option class=\"water_option\" value=\"18\">2019-10</option>"+ "<option class=\"water_option\" value=\"19\">2019-11</option>"+
+            //         "<option class=\"water_option\" value=\"20\">2019-12</option>"+ "<option class=\"water_option\" value=\"3\">2020-01</option>"+
+            //         "<option class=\"water_option\" value=\"4\">2020-02</option>"+ "<option class=\"water_option\" value=\"5\">2020-03</option>"+
+            //         "<option class=\"water_option\" value=\"21\">2020-04</option>"+ "<option class=\"water_option\" value=\"22\">2020-05</option>"+
+            //         "<option class=\"water_option\" value=\"23\">2020-06</option>"+
+            //         "<option class=\"water_option\" value=\"24\">2020-07</option>"+
+            //         "<option class=\"water_option\" value=\"25\">2020-08</option>"+
+            //         "<option class=\"water_option\" value=\"26\">2020-09</option>"+
+            //         "<option class=\"water_option\" value=\"27\">2020-10</option>"+
+            //         "<option class=\"water_option\" value=\"28\">2020-11</option>");
+            // }else if(waterValue == 2){
+            //     $("#timeValue").empty();
+            //     $("#timeValue").append("<option class=\"water_option\" value=\"8\">2018-12</option>" + "<option class=\"water_option\" value=\"9\">2019-01</option>" +
+            //         "<option class=\"water_option\" value=\"10\">2019-02</option>" + "<option class=\"water_option\" value=\"11\">2019-03</option>" +
+            //         "<option class=\"water_option\" value=\"12\">2019-04</option>"+ "<option class=\"water_option\" value=\"13\">2019-05</option>"+
+            //         "<option class=\"water_option\" value=\"14\">2019-06</option>"+ "<option class=\"water_option\" value=\"15\">2019-07</option>"+
+            //         "<option class=\"water_option\" value=\"16\">2019-08</option>"+ "<option class=\"water_option\" value=\"17\">2019-09</option>"+
+            //         "<option class=\"water_option\" value=\"18\">2019-10</option>"+ "<option class=\"water_option\" value=\"19\">2019-11</option>"+
+            //         "<option class=\"water_option\" value=\"20\">2019-12</option>"+ "<option class=\"water_option\" value=\"3\">2020-01</option>"+
+            //         "<option class=\"water_option\" value=\"4\">2020-02</option>"+ "<option class=\"water_option\" value=\"5\">2020-03</option>"+
+            //         "<option class=\"water_option\" value=\"21\">2020-04</option>"+ "<option class=\"water_option\" value=\"22\">2020-05</option>"+
+            //         "<option class=\"water_option\" value=\"23\">2020-06</option>"+
+            //         "<option class=\"water_option\" value=\"24\">2020-07</option>"+
+            //         "<option class=\"water_option\" value=\"25\">2020-08</option>"+
+            //         "<option class=\"water_option\" value=\"26\">2020-09</option>"+
+            //         "<option class=\"water_option\" value=\"27\">2020-10</option>"+
+            //         "<option class=\"water_option\" value=\"28\">2020-11</option>");
+            // }else if(waterValue == 3){
+            //     $("#timeValue").empty();
+            //     $("#timeValue").append("<option class=\"water_option\" value=\"12\">2019-04</option>"+ "<option class=\"water_option\" value=\"13\">2019-05</option>"+
+            //         "<option class=\"water_option\" value=\"14\">2019-06</option>"+ "<option class=\"water_option\" value=\"15\">2019-07</option>"+
+            //         "<option class=\"water_option\" value=\"16\">2019-08</option>"+ "<option class=\"water_option\" value=\"17\">2019-09</option>"+
+            //         "<option class=\"water_option\" value=\"18\">2019-10</option>"+ "<option class=\"water_option\" value=\"19\">2019-11</option>"+
+            //         "<option class=\"water_option\" value=\"20\">2019-12</option>"+ "<option class=\"water_option\" value=\"3\">2020-01</option>"+
+            //         "<option class=\"water_option\" value=\"4\">2020-02</option>"+ "<option class=\"water_option\" value=\"5\">2020-03</option>"+
+            //         "<option class=\"water_option\" value=\"21\">2020-04</option>"+ "<option class=\"water_option\" value=\"22\">2020-05</option>"+
+            //         "<option class=\"water_option\" value=\"23\">2020-06</option>"+
+            //         "<option class=\"water_option\" value=\"24\">2020-07</option>"+
+            //         "<option class=\"water_option\" value=\"25\">2020-08</option>"+
+            //         "<option class=\"water_option\" value=\"26\">2020-09</option>"+
+            //         "<option class=\"water_option\" value=\"27\">2020-10</option>"+
+            //         "<option class=\"water_option\" value=\"28\">2020-11</option>");
+            // }else if(waterValue == 4){
+            //     $("#timeValue").empty();
+            //     $("#timeValue").append("<option class=\"water_option\" value=\"8\">2018-12</option>" + "<option class=\"water_option\" value=\"9\">2019-01</option>" +
+            //         "<option class=\"water_option\" value=\"10\">2019-02</option>" + "<option class=\"water_option\" value=\"11\">2019-03</option>" +
+            //         "<option class=\"water_option\" value=\"12\">2019-04</option>"+ "<option class=\"water_option\" value=\"13\">2019-05</option>"+
+            //         "<option class=\"water_option\" value=\"14\">2019-06</option>"+ "<option class=\"water_option\" value=\"15\">2019-07</option>"+
+            //         "<option class=\"water_option\" value=\"16\">2019-08</option>"+ "<option class=\"water_option\" value=\"17\">2019-09</option>"+
+            //         "<option class=\"water_option\" value=\"18\">2019-10</option>"+ "<option class=\"water_option\" value=\"19\">2019-11</option>"+
+            //         "<option class=\"water_option\" value=\"20\">2019-12</option>"+ "<option class=\"water_option\" value=\"3\">2020-01</option>"+
+            //         "<option class=\"water_option\" value=\"4\">2020-02</option>"+ "<option class=\"water_option\" value=\"5\">2020-03</option>"+
+            //         "<option class=\"water_option\" value=\"21\">2020-04</option>"+ "<option class=\"water_option\" value=\"22\">2020-05</option>"+
+            //         "<option class=\"water_option\" value=\"23\">2020-06</option>"+
+            //         "<option class=\"water_option\" value=\"24\">2020-07</option>"+
+            //         "<option class=\"water_option\" value=\"25\">2020-08</option>"+
+            //         "<option class=\"water_option\" value=\"26\">2020-09</option>"+
+            //         "<option class=\"water_option\" value=\"27\">2020-10</option>"+
+            //         "<option class=\"water_option\" value=\"28\">2020-11</option>");
+            // }else if(waterValue == 5){
+            //     $("#timeValue").empty();
+            //     $("#timeValue").append("<option class=\"water_option\" value=\"8\">2018-12</option>" + "<option class=\"water_option\" value=\"9\">2019-01</option>" +
+            //         "<option class=\"water_option\" value=\"10\">2019-02</option>" + "<option class=\"water_option\" value=\"11\">2019-03</option>" +
+            //         "<option class=\"water_option\" value=\"12\">2019-04</option>"+ "<option class=\"water_option\" value=\"13\">2019-05</option>"+
+            //         "<option class=\"water_option\" value=\"14\">2019-06</option>"+ "<option class=\"water_option\" value=\"15\">2019-07</option>"+
+            //         "<option class=\"water_option\" value=\"16\">2019-08</option>"+ "<option class=\"water_option\" value=\"17\">2019-09</option>"+
+            //         "<option class=\"water_option\" value=\"18\">2019-10</option>"+ "<option class=\"water_option\" value=\"19\">2019-11</option>"+
+            //         "<option class=\"water_option\" value=\"20\">2019-12</option>"+ "<option class=\"water_option\" value=\"3\">2020-01</option>"+
+            //         "<option class=\"water_option\" value=\"4\">2020-02</option>"+ "<option class=\"water_option\" value=\"5\">2020-03</option>"+
+            //         "<option class=\"water_option\" value=\"21\">2020-04</option>"+ "<option class=\"water_option\" value=\"22\">2020-05</option>"+
+            //         "<option class=\"water_option\" value=\"23\">2020-06</option>"+
+            //         "<option class=\"water_option\" value=\"24\">2020-07</option>"+
+            //         "<option class=\"water_option\" value=\"25\">2020-08</option>"+
+            //         "<option class=\"water_option\" value=\"26\">2020-09</option>"+
+            //         "<option class=\"water_option\" value=\"27\">2020-10</option>"+
+            //         "<option class=\"water_option\" value=\"28\">2020-11</option>");
+            // }else if(waterValue == 6){
+            //     $("#timeValue").empty();
+            //     $("#timeValue").append("<option class=\"water_option\" value=\"8\">2018-12</option>" + "<option class=\"water_option\" value=\"9\">2019-01</option>" +
+            //         "<option class=\"water_option\" value=\"10\">2019-02</option>" + "<option class=\"water_option\" value=\"11\">2019-03</option>" +
+            //         "<option class=\"water_option\" value=\"12\">2019-04</option>"+ "<option class=\"water_option\" value=\"13\">2019-05</option>"+
+            //         "<option class=\"water_option\" value=\"14\">2019-06</option>"+ "<option class=\"water_option\" value=\"15\">2019-07</option>"+
+            //         "<option class=\"water_option\" value=\"16\">2019-08</option>"+ "<option class=\"water_option\" value=\"17\">2019-09</option>"+
+            //         "<option class=\"water_option\" value=\"18\">2019-10</option>"+ "<option class=\"water_option\" value=\"19\">2019-11</option>"+
+            //         "<option class=\"water_option\" value=\"20\">2019-12</option>"+ "<option class=\"water_option\" value=\"3\">2020-01</option>"+
+            //         "<option class=\"water_option\" value=\"4\">2020-02</option>"+ "<option class=\"water_option\" value=\"5\">2020-03</option>"+
+            //         "<option class=\"water_option\" value=\"21\">2020-04</option>"+ "<option class=\"water_option\" value=\"22\">2020-05</option>"+
+            //         "<option class=\"water_option\" value=\"23\">2020-06</option>"+
+            //         "<option class=\"water_option\" value=\"24\">2020-07</option>"+
+            //         "<option class=\"water_option\" value=\"25\">2020-08</option>"+
+            //         "<option class=\"water_option\" value=\"26\">2020-09</option>"+
+            //         "<option class=\"water_option\" value=\"27\">2020-10</option>"+
+            //         "<option class=\"water_option\" value=\"28\">2020-11</option>");
+            // }
+
+        }
+
+
+        function change_water(){
+            var waterValue = $("#waterValue").val();
+            var timeValue = $("#timeValue").val();
+
+            // alert(city_in_cod_03);
+
+            var final_model = "";
+            if(waterValue == 0){
+                final_model = model_1;
+            }else if(waterValue == 1){
+                final_model = model_2;
+            }else if(waterValue == 2){
+                final_model = model_3;
+            }else if(waterValue == 3){
+                final_model = model_4;
+            }else if(waterValue == 4){
+                final_model = model_5;
+            }else if(waterValue == 5){
+                final_model = model_6;
+            }else if(waterValue == 6){
+                final_model = model_7;
+            }else{
+                final_model = model_1;
+            }
+
+            if(timeValue==6){
+
+                var totalDay = 23;//2018-10-9开始
+
+                var model_in_cod=[];var model_out_cod=[];var model_in_NH3=[];var model_out_NH3=[];var model_in_TP=[];var model_out_TP=[];var model_in_TN=[];var model_out_TN=[];
+
+                for(var i=0;i<totalDay;i++){
+                    var j  = i ;
+                    model_in_cod.push(final_model[j][0]);
+                    model_out_cod.push(final_model[j][1]);
+                    model_in_NH3.push(final_model[j][2]);
+                    model_out_NH3.push(final_model[j][3]);
+                    model_in_TP.push(final_model[j][4]);
+                    model_out_TP.push(final_model[j][5]);
+                    model_in_TN.push(final_model[j][6]);
+                    model_out_TN.push(final_model[j][7]);
+                }
+
+                change_line(data_18_10,model_in_cod,model_in_TP,model_in_TN,model_in_NH3,
+                    model_out_cod,model_out_TP,model_out_TN,model_out_NH3,
+                    obj1_18_10[waterValue],obj2_18_10[waterValue],obj_f_18_10[waterValue],
+                    obj3_18_10[waterValue],obj4_18_10[waterValue],obj5_18_10[waterValue],hot_18_10);
+
+            }else if(timeValue==7){
+
+                var totalDay = 30;
+
+                var model_in_cod=[];var model_out_cod=[];var model_in_NH3=[];var model_out_NH3=[];var model_in_TP=[];var model_out_TP=[];var model_in_TN=[];var model_out_TN=[];
+
+                for(var i=0;i<totalDay;i++){
+                    var j  = i + 23;
+                    model_in_cod.push(final_model[j][0]);
+                    model_out_cod.push(final_model[j][1]);
+                    model_in_NH3.push(final_model[j][2]);
+                    model_out_NH3.push(final_model[j][3]);
+                    model_in_TP.push(final_model[j][4]);
+                    model_out_TP.push(final_model[j][5]);
+                    model_in_TN.push(final_model[j][6]);
+                    model_out_TN.push(final_model[j][7]);
+                }
+
+                change_line(data_18_11,model_in_cod,model_in_TP,model_in_TN,model_in_NH3,
+                    model_out_cod,model_out_TP,model_out_TN,model_out_NH3,
+                    obj1_18_11[waterValue],obj2_18_11[waterValue],obj_f_18_11[waterValue],
+                    obj3_18_11[waterValue],obj4_18_11[waterValue],obj5_18_11[waterValue],hot_18_11);
+
+            }else if(timeValue==8){
+
+                var totalDay = 31;
+
+                var model_in_cod=[];var model_out_cod=[];var model_in_NH3=[];var model_out_NH3=[];var model_in_TP=[];var model_out_TP=[];var model_in_TN=[];var model_out_TN=[];
+
+                var time_date=[];
+
+                if(waterValue == 2 || waterValue == 4 ){
+                    for(var i=0;i<22;i++){
+                        var j  = i + 53 + 9;
+                        model_in_cod.push(final_model[j][0]);
+                        model_out_cod.push(final_model[j][1]);
+                        model_in_NH3.push(final_model[j][2]);
+                        model_out_NH3.push(final_model[j][3]);
+                        model_in_TP.push(final_model[j][4]);
+                        model_out_TP.push(final_model[j][5]);
+                        model_in_TN.push(final_model[j][6]);
+                        model_out_TN.push(final_model[j][7]);
+                    }
+                    time_date = data_18_12_10;
+                }else{
+                    for(var i=0;i<totalDay;i++){
+                        var j  = i + 53;
+                        model_in_cod.push(final_model[j][0]);
+                        model_out_cod.push(final_model[j][1]);
+                        model_in_NH3.push(final_model[j][2]);
+                        model_out_NH3.push(final_model[j][3]);
+                        model_in_TP.push(final_model[j][4]);
+                        model_out_TP.push(final_model[j][5]);
+                        model_in_TN.push(final_model[j][6]);
+                        model_out_TN.push(final_model[j][7]);
+                    }
+                    time_date = data_18_12;
+                }
+
+                change_line(time_date,model_in_cod,model_in_TP,model_in_TN,model_in_NH3,
+                    model_out_cod,model_out_TP,model_out_TN,model_out_NH3,
+                    obj1_18_12[waterValue],obj2_18_12[waterValue],obj_f_18_12[waterValue],
+                    obj3_18_12[waterValue],obj4_18_12[waterValue],obj5_18_12[waterValue],hot_18_12);
+
+            }else if(timeValue==9){
+
+                var totalDay = 31;
+
+                var model_in_cod=[];var model_out_cod=[];var model_in_NH3=[];var model_out_NH3=[];var model_in_TP=[];var model_out_TP=[];var model_in_TN=[];var model_out_TN=[];
+
+                for(var i=0;i<totalDay;i++){
+                    var j  = i + 84;
+                    model_in_cod.push(final_model[j][0]);
+                    model_out_cod.push(final_model[j][1]);
+                    model_in_NH3.push(final_model[j][2]);
+                    model_out_NH3.push(final_model[j][3]);
+                    model_in_TP.push(final_model[j][4]);
+                    model_out_TP.push(final_model[j][5]);
+                    model_in_TN.push(final_model[j][6]);
+                    model_out_TN.push(final_model[j][7]);
+                }
+
+                change_line(data_19_01,model_in_cod,model_in_TP,model_in_TN,model_in_NH3,
+                    model_out_cod,model_out_TP,model_out_TN,model_out_NH3,
+                    obj1_19_01[waterValue],obj2_19_01[waterValue],obj_f_19_01[waterValue],
+                    obj3_19_01[waterValue],obj4_19_01[waterValue],obj5_19_01[waterValue],hot_19_01);
+
+            }else if(timeValue==10){
+
+                var totalDay = 28;
+
+                var model_in_cod=[];var model_out_cod=[];var model_in_NH3=[];var model_out_NH3=[];var model_in_TP=[];var model_out_TP=[];var model_in_TN=[];var model_out_TN=[];
+
+                for(var i=0;i<totalDay;i++){
+                    var j  = i + 115;
+                    model_in_cod.push(final_model[j][0]);
+                    model_out_cod.push(final_model[j][1]);
+                    model_in_NH3.push(final_model[j][2]);
+                    model_out_NH3.push(final_model[j][3]);
+                    model_in_TP.push(final_model[j][4]);
+                    model_out_TP.push(final_model[j][5]);
+                    model_in_TN.push(final_model[j][6]);
+                    model_out_TN.push(final_model[j][7]);
+                }
+
+                change_line(data_19_02,model_in_cod,model_in_TP,model_in_TN,model_in_NH3,
+                    model_out_cod,model_out_TP,model_out_TN,model_out_NH3,
+                    obj1_19_02[waterValue],obj2_19_02[waterValue],obj_f_19_02[waterValue],
+                    obj3_19_02[waterValue],obj4_19_02[waterValue],obj5_19_02[waterValue],hot_19_02);
+
+            }else if(timeValue==11){
+
+                var totalDay = 31;
+
+                var model_in_cod=[];var model_out_cod=[];var model_in_NH3=[];var model_out_NH3=[];var model_in_TP=[];var model_out_TP=[];var model_in_TN=[];var model_out_TN=[];
+
+                var time_date =[];
+                if(waterValue == 1 || waterValue == 0 ){
+                    for(var i=0;i<22;i++){
+                        var j  = i + 143 + 9;
+                        model_in_cod.push(final_model[j][0]);
+                        model_out_cod.push(final_model[j][1]);
+                        model_in_NH3.push(final_model[j][2]);
+                        model_out_NH3.push(final_model[j][3]);
+                        model_in_TP.push(final_model[j][4]);
+                        model_out_TP.push(final_model[j][5]);
+                        model_in_TN.push(final_model[j][6]);
+                        model_out_TN.push(final_model[j][7]);
+                    }
+                    time_date = data_19_03_10;
+                }else{
+                    for(var i=0;i<totalDay;i++){
+                        var j  = i + 143;
+                        model_in_cod.push(final_model[j][0]);
+                        model_out_cod.push(final_model[j][1]);
+                        model_in_NH3.push(final_model[j][2]);
+                        model_out_NH3.push(final_model[j][3]);
+                        model_in_TP.push(final_model[j][4]);
+                        model_out_TP.push(final_model[j][5]);
+                        model_in_TN.push(final_model[j][6]);
+                        model_out_TN.push(final_model[j][7]);
+                    }
+                    time_date = data_19_03;
+                }
+
+
+                change_line(time_date,model_in_cod,model_in_TP,model_in_TN,model_in_NH3,
+                    model_out_cod,model_out_TP,model_out_TN,model_out_NH3,
+                    obj1_19_03[waterValue],obj2_19_03[waterValue],obj_f_19_03[waterValue],
+                    obj3_19_03[waterValue],obj4_19_03[waterValue],obj5_19_03[waterValue],hot_19_03);
+
+            }else if(timeValue==12){
+
+                var totalDay = 30;
+
+                var model_in_cod=[];var model_out_cod=[];var model_in_NH3=[];var model_out_NH3=[];var model_in_TP=[];var model_out_TP=[];var model_in_TN=[];var model_out_TN=[];
+
+                for(var i=0;i<totalDay;i++){
+                    var j  = i + 174;
+                    model_in_cod.push(final_model[j][0]);
+                    model_out_cod.push(final_model[j][1]);
+                    model_in_NH3.push(final_model[j][2]);
+                    model_out_NH3.push(final_model[j][3]);
+                    model_in_TP.push(final_model[j][4]);
+                    model_out_TP.push(final_model[j][5]);
+                    model_in_TN.push(final_model[j][6]);
+                    model_out_TN.push(final_model[j][7]);
+                }
+
+                change_line(data_19_04,model_in_cod,model_in_TP,model_in_TN,model_in_NH3,
+                    model_out_cod,model_out_TP,model_out_TN,model_out_NH3,
+                    obj1_19_04[waterValue],obj2_19_04[waterValue],obj_f_19_04[waterValue],
+                    obj3_19_04[waterValue],obj4_19_04[waterValue],obj5_19_04[waterValue],hot_19_04);
+
+            }else if(timeValue==13){
+
+                var totalDay = 31;
+
+                var model_in_cod=[];var model_out_cod=[];var model_in_NH3=[];var model_out_NH3=[];var model_in_TP=[];var model_out_TP=[];var model_in_TN=[];var model_out_TN=[];
+
+                for(var i=0;i<totalDay;i++){
+                    var j  = i + 204;
+                    model_in_cod.push(final_model[j][0]);
+                    model_out_cod.push(final_model[j][1]);
+                    model_in_NH3.push(final_model[j][2]);
+                    model_out_NH3.push(final_model[j][3]);
+                    model_in_TP.push(final_model[j][4]);
+                    model_out_TP.push(final_model[j][5]);
+                    model_in_TN.push(final_model[j][6]);
+                    model_out_TN.push(final_model[j][7]);
+                }
+
+                change_line(data_19_05,model_in_cod,model_in_TP,model_in_TN,model_in_NH3,
+                    model_out_cod,model_out_TP,model_out_TN,model_out_NH3,
+                    obj1_19_05[waterValue],obj2_19_05[waterValue],obj_f_19_05[waterValue],
+                    obj3_19_05[waterValue],obj4_19_05[waterValue],obj5_19_05[waterValue],hot_19_05);
+
+            }else if(timeValue==14){
+
+                var totalDay = 30;
+
+                var model_in_cod=[];var model_out_cod=[];var model_in_NH3=[];var model_out_NH3=[];var model_in_TP=[];var model_out_TP=[];var model_in_TN=[];var model_out_TN=[];
+
+                for(var i=0;i<totalDay;i++){
+                    var j  = i + 235;
+                    model_in_cod.push(final_model[j][0]);
+                    model_out_cod.push(final_model[j][1]);
+                    model_in_NH3.push(final_model[j][2]);
+                    model_out_NH3.push(final_model[j][3]);
+                    model_in_TP.push(final_model[j][4]);
+                    model_out_TP.push(final_model[j][5]);
+                    model_in_TN.push(final_model[j][6]);
+                    model_out_TN.push(final_model[j][7]);
+                }
+
+                change_line(data_19_06,model_in_cod,model_in_TP,model_in_TN,model_in_NH3,
+                    model_out_cod,model_out_TP,model_out_TN,model_out_NH3,
+                    obj1_19_06[waterValue],obj2_19_06[waterValue],obj_f_19_06[waterValue],
+                    obj3_19_06[waterValue],obj4_19_06[waterValue],obj5_19_06[waterValue],hot_19_06);
+
+            }else if(timeValue==15){
+
+                var totalDay = 31;
+
+                var model_in_cod=[];var model_out_cod=[];var model_in_NH3=[];var model_out_NH3=[];var model_in_TP=[];var model_out_TP=[];var model_in_TN=[];var model_out_TN=[];
+
+                for(var i=0;i<totalDay;i++){
+                    var j  = i + 265;
+                    model_in_cod.push(final_model[j][0]);
+                    model_out_cod.push(final_model[j][1]);
+                    model_in_NH3.push(final_model[j][2]);
+                    model_out_NH3.push(final_model[j][3]);
+                    model_in_TP.push(final_model[j][4]);
+                    model_out_TP.push(final_model[j][5]);
+                    model_in_TN.push(final_model[j][6]);
+                    model_out_TN.push(final_model[j][7]);
+                }
+
+                change_line(data_19_07,model_in_cod,model_in_TP,model_in_TN,model_in_NH3,
+                    model_out_cod,model_out_TP,model_out_TN,model_out_NH3,
+                    obj1_19_07[waterValue],obj2_19_07[waterValue],obj_f_19_07[waterValue],
+                    obj3_19_07[waterValue],obj4_19_07[waterValue],obj5_19_07[waterValue],hot_19_07);
+
+            }else if(timeValue==16){
+
+                var totalDay = 31;
+
+                var model_in_cod=[];var model_out_cod=[];var model_in_NH3=[];var model_out_NH3=[];var model_in_TP=[];var model_out_TP=[];var model_in_TN=[];var model_out_TN=[];
+
+                for(var i=0;i<totalDay;i++){
+                    var j  = i + 296;
+                    model_in_cod.push(final_model[j][0]);
+                    model_out_cod.push(final_model[j][1]);
+                    model_in_NH3.push(final_model[j][2]);
+                    model_out_NH3.push(final_model[j][3]);
+                    model_in_TP.push(final_model[j][4]);
+                    model_out_TP.push(final_model[j][5]);
+                    model_in_TN.push(final_model[j][6]);
+                    model_out_TN.push(final_model[j][7]);
+                }
+
+                change_line(data_19_08,model_in_cod,model_in_TP,model_in_TN,model_in_NH3,
+                    model_out_cod,model_out_TP,model_out_TN,model_out_NH3,
+                    obj1_19_08[waterValue],obj2_19_08[waterValue],obj_f_19_08[waterValue],
+                    obj3_19_08[waterValue],obj4_19_08[waterValue],obj5_19_08[waterValue],hot_19_08);
+
+            }else if(timeValue==17){
+
+                var totalDay = 30;
+
+                var model_in_cod=[];var model_out_cod=[];var model_in_NH3=[];var model_out_NH3=[];var model_in_TP=[];var model_out_TP=[];var model_in_TN=[];var model_out_TN=[];
+
+                for(var i=0;i<totalDay;i++){
+                    var j  = i + 327;
+                    model_in_cod.push(final_model[j][0]);
+                    model_out_cod.push(final_model[j][1]);
+                    model_in_NH3.push(final_model[j][2]);
+                    model_out_NH3.push(final_model[j][3]);
+                    model_in_TP.push(final_model[j][4]);
+                    model_out_TP.push(final_model[j][5]);
+                    model_in_TN.push(final_model[j][6]);
+                    model_out_TN.push(final_model[j][7]);
+                }
+
+                change_line(data_19_09,model_in_cod,model_in_TP,model_in_TN,model_in_NH3,
+                    model_out_cod,model_out_TP,model_out_TN,model_out_NH3,
+                    obj1_19_09[waterValue],obj2_19_09[waterValue],obj_f_19_09[waterValue],
+                    obj3_19_09[waterValue],obj4_19_09[waterValue],obj5_19_09[waterValue],hot_19_09);
+
+            }else if(timeValue==18){
+
+                var totalDay = 31;
+
+                var model_in_cod=[];var model_out_cod=[];var model_in_NH3=[];var model_out_NH3=[];var model_in_TP=[];var model_out_TP=[];var model_in_TN=[];var model_out_TN=[];
+
+                for(var i=0;i<totalDay;i++){
+                    var j  = i + 357;
+                    model_in_cod.push(final_model[j][0]);
+                    model_out_cod.push(final_model[j][1]);
+                    model_in_NH3.push(final_model[j][2]);
+                    model_out_NH3.push(final_model[j][3]);
+                    model_in_TP.push(final_model[j][4]);
+                    model_out_TP.push(final_model[j][5]);
+                    model_in_TN.push(final_model[j][6]);
+                    model_out_TN.push(final_model[j][7]);
+                }
+
+                change_line(data_19_10,model_in_cod,model_in_TP,model_in_TN,model_in_NH3,
+                    model_out_cod,model_out_TP,model_out_TN,model_out_NH3,
+                    obj1_19_10[waterValue],obj2_19_10[waterValue],obj_f_19_10[waterValue],
+                    obj3_19_10[waterValue],obj4_19_10[waterValue],obj5_19_10[waterValue],hot_19_10);
+
+            }else if(timeValue==19){
+
+                var totalDay = 30;
+
+                var model_in_cod=[];var model_out_cod=[];var model_in_NH3=[];var model_out_NH3=[];var model_in_TP=[];var model_out_TP=[];var model_in_TN=[];var model_out_TN=[];
+
+                for(var i=0;i<totalDay;i++){
+                    var j  = i + 388;
+                    model_in_cod.push(final_model[j][0]);
+                    model_out_cod.push(final_model[j][1]);
+                    model_in_NH3.push(final_model[j][2]);
+                    model_out_NH3.push(final_model[j][3]);
+                    model_in_TP.push(final_model[j][4]);
+                    model_out_TP.push(final_model[j][5]);
+                    model_in_TN.push(final_model[j][6]);
+                    model_out_TN.push(final_model[j][7]);
+                }
+
+                change_line(data_19_11,model_in_cod,model_in_TP,model_in_TN,model_in_NH3,
+                    model_out_cod,model_out_TP,model_out_TN,model_out_NH3,
+                    obj1_19_11[waterValue],obj2_19_11[waterValue],obj_f_19_11[waterValue],
+                    obj3_19_11[waterValue],obj4_19_11[waterValue],obj5_19_11[waterValue],hot_19_11);
+
+            }else if(timeValue==20){
+
+                var totalDay = 31;
+
+                var model_in_cod=[];var model_out_cod=[];var model_in_NH3=[];var model_out_NH3=[];var model_in_TP=[];var model_out_TP=[];var model_in_TN=[];var model_out_TN=[];
+
+                for(var i=0;i<totalDay;i++){
+                    var j  = i + 418;
+                    model_in_cod.push(final_model[j][0]);
+                    model_out_cod.push(final_model[j][1]);
+                    model_in_NH3.push(final_model[j][2]);
+                    model_out_NH3.push(final_model[j][3]);
+                    model_in_TP.push(final_model[j][4]);
+                    model_out_TP.push(final_model[j][5]);
+                    model_in_TN.push(final_model[j][6]);
+                    model_out_TN.push(final_model[j][7]);
+                }
+
+                change_line(data_19_12,model_in_cod,model_in_TP,model_in_TN,model_in_NH3,
+                    model_out_cod,model_out_TP,model_out_TN,model_out_NH3,
+                    obj1_19_12[waterValue],obj2_19_12[waterValue],obj_f_19_12[waterValue],
+                    obj3_19_12[waterValue],obj4_19_12[waterValue],obj5_19_12[waterValue],hot_19_12);
+
+            }else if(timeValue==3){
+
+                var totalDay = 31//mGetDate(2020,1);
+
+
+                var model_in_cod=[];var model_out_cod=[];var model_in_NH3=[];var model_out_NH3=[];var model_in_TP=[];var model_out_TP=[];var model_in_TN=[];var model_out_TN=[];
+
+                for(var j=0;j<totalDay;j++){
+                    var i  = j + 449;
+                    model_in_cod.push(final_model[i][0]);
+                    model_out_cod.push(final_model[i][1]);
+                    model_in_NH3.push(final_model[i][2]);
+                    model_out_NH3.push(final_model[i][3]);
+                    model_in_TP.push(final_model[i][4]);
+                    model_out_TP.push(final_model[i][5]);
+                    model_in_TN.push(final_model[i][6]);
+                    model_out_TN.push(final_model[i][7]);
+                }
+
+                change_line(data_20_01,model_in_cod,model_in_TP,model_in_TN,model_in_NH3,
+                    model_out_cod,model_out_TP,model_out_TN,model_out_NH3,
+                    obj1_20_01[waterValue],obj2_20_01[waterValue],obj_f_20_01[waterValue],
+                    obj3_20_01[waterValue],obj4_20_01[waterValue],obj5_20_01[waterValue],hot_20_01);
+
+            }else if(timeValue==4){
+
+                var totalDay = 29;
+
+                var model_in_cod=[];var model_out_cod=[];var model_in_NH3=[];var model_out_NH3=[];var model_in_TP=[];var model_out_TP=[];var model_in_TN=[];var model_out_TN=[];
+
+                for(var i=0;i<totalDay;i++){
+                    var j  = i + 480;
+                    model_in_cod.push(final_model[j][0]);
+                    model_out_cod.push(final_model[j][1]);
+                    model_in_NH3.push(final_model[j][2]);
+                    model_out_NH3.push(final_model[j][3]);
+                    model_in_TP.push(final_model[j][4]);
+                    model_out_TP.push(final_model[j][5]);
+                    model_in_TN.push(final_model[j][6]);
+                    model_out_TN.push(final_model[j][7]);
+                }
+
+                change_line(data_20_02,model_in_cod,model_in_TP,model_in_TN,model_in_NH3,
+                    model_out_cod,model_out_TP,model_out_TN,model_out_NH3,
+                    obj1_20_02[waterValue],obj2_20_02[waterValue],obj_f_20_02[waterValue],
+                    obj3_20_02[waterValue],obj4_20_02[waterValue],obj5_20_02[waterValue],hot_20_02);
+
+            }else if(timeValue==5){
+
+                // var totalDay = DateDiff(laydate.now(),"2020-03-01");//计算所选时间距离2020-03-01的天数
+                // var totalDay = mGetDate(2020,3);
+                var totalDay = 31;
+
+                data_20_03 = data_20_03.splice(0,totalDay);
+                hot_20_03 = hot_20_03.splice(0,totalDay);
+
+                var model_in_cod=[];var model_out_cod=[];var model_in_NH3=[];var model_out_NH3=[];var model_in_TP=[];var model_out_TP=[];var model_in_TN=[];var model_out_TN=[];
+
+                for(var i=0;i<totalDay;i++){
+
+                    var j  = i + 509;
+
+                    model_in_cod.push(final_model[j][0]);
+                    model_out_cod.push(final_model[j][1]);
+                    model_in_NH3.push(final_model[j][2]);
+                    model_out_NH3.push(final_model[j][3]);
+                    model_in_TP.push(final_model[j][4]);
+                    model_out_TP.push(final_model[j][5]);
+                    model_in_TN.push(final_model[j][6]);
+                    model_out_TN.push(final_model[j][7]);
+                }
+
+                change_line(data_20_03,model_in_cod,model_in_TP,model_in_TN,model_in_NH3,
+                    model_out_cod,model_out_TP,model_out_TN,model_out_NH3,
+                    obj1_20_03[waterValue],obj2_20_03[waterValue],obj_f_20_03[waterValue],
+                    obj3_20_03[waterValue],obj4_20_03[waterValue],obj5_20_03[waterValue],hot_20_03);
+            }else if(timeValue==21){
+
+                 var totalDay = 30;//计算所选时间距离2020-03-01的天数
+                // var totalDay = mGetDate(2020,3);
+//                var totalDay = 30;
+
+                data_20_04 = data_20_04.splice(0,totalDay);
+                hot_20_04 = hot_20_04.splice(0,totalDay);
+
+                var model_in_cod=[];var model_out_cod=[];var model_in_NH3=[];var model_out_NH3=[];var model_in_TP=[];var model_out_TP=[];var model_in_TN=[];var model_out_TN=[];
+
+                for(var i=0;i<totalDay;i++){
+
+                    var j  = i + 540;
+
+                    model_in_cod.push(final_model[j][0]);
+                    model_out_cod.push(final_model[j][1]);
+                    model_in_NH3.push(final_model[j][2]);
+                    model_out_NH3.push(final_model[j][3]);
+                    model_in_TP.push(final_model[j][4]);
+                    model_out_TP.push(final_model[j][5]);
+                    model_in_TN.push(final_model[j][6]);
+                    model_out_TN.push(final_model[j][7]);
+                }
+
+                change_line(data_20_04,model_in_cod,model_in_TP,model_in_TN,model_in_NH3,
+                    model_out_cod,model_out_TP,model_out_TN,model_out_NH3,
+                    obj1_20_04[waterValue],obj2_20_04[waterValue],obj_f_20_04[waterValue],
+                    obj3_20_04[waterValue],obj4_20_04[waterValue],obj5_20_04[waterValue],hot_20_04);
+            }
+            else if(timeValue==22){
+
+                 var totalDay = 31;//计算所选时间距离2020-03-01的天数
+                // var totalDay = mGetDate(2020,3);
+//                var totalDay = 30;
+
+                data_20_05 = data_20_05.splice(0,totalDay);
+                hot_20_05 = hot_20_05.splice(0,totalDay);
+
+                var model_in_cod=[];var model_out_cod=[];var model_in_NH3=[];var model_out_NH3=[];var model_in_TP=[];var model_out_TP=[];var model_in_TN=[];var model_out_TN=[];
+
+                for(var i=0;i<totalDay;i++){
+
+                    var j  = i + 570;
+
+                    model_in_cod.push(final_model[j][0]);
+                    model_out_cod.push(final_model[j][1]);
+                    model_in_NH3.push(final_model[j][2]);
+                    model_out_NH3.push(final_model[j][3]);
+                    model_in_TP.push(final_model[j][4]);
+                    model_out_TP.push(final_model[j][5]);
+                    model_in_TN.push(final_model[j][6]);
+                    model_out_TN.push(final_model[j][7]);
+                }
+
+                change_line(data_20_05,model_in_cod,model_in_TP,model_in_TN,model_in_NH3,
+                    model_out_cod,model_out_TP,model_out_TN,model_out_NH3,
+                    obj1_20_05[waterValue],obj2_20_05[waterValue],obj_f_20_05[waterValue],
+                    obj3_20_05[waterValue],obj4_20_05[waterValue],obj5_20_05[waterValue],hot_20_05);
+            }
+            else if(timeValue==23){
+
+                 var totalDay = 30;//计算所选时间距离2020-03-01的天数
+                // var totalDay = mGetDate(2020,3);
+//                var totalDay = 30;
+
+                data_20_06 = data_20_06.splice(0,totalDay);
+                hot_20_06 = hot_20_06.splice(0,totalDay);
+
+                var model_in_cod=[];var model_out_cod=[];var model_in_NH3=[];var model_out_NH3=[];var model_in_TP=[];var model_out_TP=[];var model_in_TN=[];var model_out_TN=[];
+
+                for(var i=0;i<totalDay;i++){
+
+                    var j  = i + 601;
+
+                    model_in_cod.push(final_model[j][0]);
+                    model_out_cod.push(final_model[j][1]);
+                    model_in_NH3.push(final_model[j][2]);
+                    model_out_NH3.push(final_model[j][3]);
+                    model_in_TP.push(final_model[j][4]);
+                    model_out_TP.push(final_model[j][5]);
+                    model_in_TN.push(final_model[j][6]);
+                    model_out_TN.push(final_model[j][7]);
+                }
+
+                change_line(data_20_06,model_in_cod,model_in_TP,model_in_TN,model_in_NH3,
+                    model_out_cod,model_out_TP,model_out_TN,model_out_NH3,
+                    obj1_20_06[waterValue],obj2_20_06[waterValue],obj_f_20_06[waterValue],
+                    obj3_20_06[waterValue],obj4_20_06[waterValue],obj5_20_06[waterValue],hot_20_06);
+            }
+            else if(timeValue==24){
+
+                 var totalDay = 31;//计算所选时间距离2020-03-01的天数
+                // var totalDay = mGetDate(2020,3);
+//                var totalDay = 30;
+
+                data_20_07 = data_20_07.splice(0,totalDay);
+                hot_20_07 = hot_20_07.splice(0,totalDay);
+
+                var model_in_cod=[];var model_out_cod=[];var model_in_NH3=[];var model_out_NH3=[];var model_in_TP=[];var model_out_TP=[];var model_in_TN=[];var model_out_TN=[];
+
+                for(var i=0;i<totalDay;i++){
+
+                    var j  = i + 631;
+
+                    model_in_cod.push(final_model[j][0]);
+                    model_out_cod.push(final_model[j][1]);
+                    model_in_NH3.push(final_model[j][2]);
+                    model_out_NH3.push(final_model[j][3]);
+                    model_in_TP.push(final_model[j][4]);
+                    model_out_TP.push(final_model[j][5]);
+                    model_in_TN.push(final_model[j][6]);
+                    model_out_TN.push(final_model[j][7]);
+                }
+
+                change_line(data_20_07,model_in_cod,model_in_TP,model_in_TN,model_in_NH3,
+                    model_out_cod,model_out_TP,model_out_TN,model_out_NH3,
+                    obj1_20_07[waterValue],obj2_20_07[waterValue],obj_f_20_07[waterValue],
+                    obj3_20_07[waterValue],obj4_20_07[waterValue],obj5_20_07[waterValue],hot_20_07);
+            }else if(timeValue==25){
+
+                 var totalDay = 31;//计算所选时间距离2020-03-01的天数
+                // var totalDay = mGetDate(2020,3);
+//                var totalDay = 30;
+
+                data_20_08 = data_20_08.splice(0,totalDay);
+                hot_20_08 = hot_20_08.splice(0,totalDay);
+
+                var model_in_cod=[];var model_out_cod=[];var model_in_NH3=[];var model_out_NH3=[];var model_in_TP=[];var model_out_TP=[];var model_in_TN=[];var model_out_TN=[];
+
+                for(var i=0;i<totalDay;i++){
+
+                    var j  = i + 662;
+
+                    model_in_cod.push(final_model[j][0]);
+                    model_out_cod.push(final_model[j][1]);
+                    model_in_NH3.push(final_model[j][2]);
+                    model_out_NH3.push(final_model[j][3]);
+                    model_in_TP.push(final_model[j][4]);
+                    model_out_TP.push(final_model[j][5]);
+                    model_in_TN.push(final_model[j][6]);
+                    model_out_TN.push(final_model[j][7]);
+                }
+
+                change_line(data_20_08,model_in_cod,model_in_TP,model_in_TN,model_in_NH3,
+                    model_out_cod,model_out_TP,model_out_TN,model_out_NH3,
+                    obj1_20_08[waterValue],obj2_20_08[waterValue],obj_f_20_08[waterValue],
+                    obj3_20_08[waterValue],obj4_20_08[waterValue],obj5_20_08[waterValue],hot_20_07);
+            }else if(timeValue==26){
+
+                 var totalDay = 30;//计算所选时间距离2020-03-01的天数
+                // var totalDay = mGetDate(2020,3);
+//                var totalDay = 30;
+
+                data_20_09 = data_20_09.splice(0,totalDay);
+                hot_20_09 = hot_20_09.splice(0,totalDay);
+
+                var model_in_cod=[];var model_out_cod=[];var model_in_NH3=[];var model_out_NH3=[];var model_in_TP=[];var model_out_TP=[];var model_in_TN=[];var model_out_TN=[];
+
+                for(var i=0;i<totalDay;i++){
+
+                    var j  = i + 693;
+
+                    model_in_cod.push(final_model[j][0]);
+                    model_out_cod.push(final_model[j][1]);
+                    model_in_NH3.push(final_model[j][2]);
+                    model_out_NH3.push(final_model[j][3]);
+                    model_in_TP.push(final_model[j][4]);
+                    model_out_TP.push(final_model[j][5]);
+                    model_in_TN.push(final_model[j][6]);
+                    model_out_TN.push(final_model[j][7]);
+                }
+
+                change_line(data_20_09,model_in_cod,model_in_TP,model_in_TN,model_in_NH3,
+                    model_out_cod,model_out_TP,model_out_TN,model_out_NH3,
+                    obj1_20_09[waterValue],obj2_20_09[waterValue],obj_f_20_09[waterValue],
+                    obj3_20_09[waterValue],obj4_20_09[waterValue],obj5_20_09[waterValue],hot_20_07);
+            }else if(timeValue==27){
+
+                 var totalDay = 31;//计算所选时间距离2020-03-01的天数
+                // var totalDay = mGetDate(2020,3);
+//                var totalDay = 30;
+
+                data_20_10 = data_20_10.splice(0,totalDay);
+                hot_20_10 = hot_20_10.splice(0,totalDay);
+
+                var model_in_cod=[];var model_out_cod=[];var model_in_NH3=[];var model_out_NH3=[];var model_in_TP=[];var model_out_TP=[];var model_in_TN=[];var model_out_TN=[];
+
+                for(var i=0;i<totalDay;i++){
+
+                    var j  = i + 723;
+
+                    model_in_cod.push(final_model[j][0]);
+                    model_out_cod.push(final_model[j][1]);
+                    model_in_NH3.push(final_model[j][2]);
+                    model_out_NH3.push(final_model[j][3]);
+                    model_in_TP.push(final_model[j][4]);
+                    model_out_TP.push(final_model[j][5]);
+                    model_in_TN.push(final_model[j][6]);
+                    model_out_TN.push(final_model[j][7]);
+                }
+
+                change_line(data_20_10,model_in_cod,model_in_TP,model_in_TN,model_in_NH3,
+                    model_out_cod,model_out_TP,model_out_TN,model_out_NH3,
+                    obj1_20_10[waterValue],obj2_20_10[waterValue],obj_f_20_10[waterValue],
+                    obj3_20_10[waterValue],obj4_20_10[waterValue],obj5_20_10[waterValue],hot_20_10);
+            }else if(timeValue==28){
+
+                 var totalDay = 30;//计算所选时间距离2020-03-01的天数
+                // var totalDay = mGetDate(2020,3);
+//                var totalDay = 30;
+
+                data_20_11 = data_20_11.splice(0,totalDay);
+                hot_20_11 = hot_20_11.splice(0,totalDay);
+
+                var model_in_cod=[];var model_out_cod=[];var model_in_NH3=[];var model_out_NH3=[];var model_in_TP=[];var model_out_TP=[];var model_in_TN=[];var model_out_TN=[];
+
+                for(var i=0;i<totalDay;i++){
+
+                    var j  = i + 754;
+
+                    model_in_cod.push(final_model[j][0]);
+                    model_out_cod.push(final_model[j][1]);
+                    model_in_NH3.push(final_model[j][2]);
+                    model_out_NH3.push(final_model[j][3]);
+                    model_in_TP.push(final_model[j][4]);
+                    model_out_TP.push(final_model[j][5]);
+                    model_in_TN.push(final_model[j][6]);
+                    model_out_TN.push(final_model[j][7]);
+                }
+
+                change_line(data_20_11,model_in_cod,model_in_TP,model_in_TN,model_in_NH3,
+                    model_out_cod,model_out_TP,model_out_TN,model_out_NH3,
+                    obj1_20_11[waterValue],obj2_20_11[waterValue],obj_f_20_11[waterValue],
+                    obj3_20_11[waterValue],obj4_20_11[waterValue],obj5_20_11[waterValue],hot_20_11);
+            }else if(timeValue==29){
+
+                 var totalDay = DateDiff(laydate.now(),"2020-12-01")+1;//计算所选时间距离2020-03-01的天数
+                // var totalDay = mGetDate(2020,3);
+//                var totalDay = 30;
+
+                data_20_12 = data_20_12.splice(0,totalDay);
+                hot_20_12 = hot_20_12.splice(0,totalDay);
+
+                var model_in_cod=[];var model_out_cod=[];var model_in_NH3=[];var model_out_NH3=[];var model_in_TP=[];var model_out_TP=[];var model_in_TN=[];var model_out_TN=[];
+
+                for(var i=0;i<totalDay;i++){
+
+                    var j  = i + 754;
+
+                    model_in_cod.push(final_model[j][0]);
+                    model_out_cod.push(final_model[j][1]);
+                    model_in_NH3.push(final_model[j][2]);
+                    model_out_NH3.push(final_model[j][3]);
+                    model_in_TP.push(final_model[j][4]);
+                    model_out_TP.push(final_model[j][5]);
+                    model_in_TN.push(final_model[j][6]);
+                    model_out_TN.push(final_model[j][7]);
+                }
+
+                change_line(data_20_12,model_in_cod,model_in_TP,model_in_TN,model_in_NH3,
+                    model_out_cod,model_out_TP,model_out_TN,model_out_NH3,
+                    obj1_20_12[waterValue],obj2_20_12[waterValue],obj_f_20_12[waterValue],
+                    obj3_20_12[waterValue],obj4_20_12[waterValue],obj5_20_12[waterValue],hot_20_12);
+            }
+
+        }
+
+
+        function change_line(date,objin1,objin2,objin3,objin4,objout1,objout2,objout3,objout4,obj1,obj2,obj_f,obj3,obj4,obj5,obj6){
+            in_cod_linechart(date,objin1);
+            in_TP_linechart(date,objin3);
+            in_TN_linechart(date,objin2);
+            in_NH_linechart(date,objin4);
+
+            out_cod_linechart(date,objout1);
+            out_TP_linechart(date,objout3);
+            out_TN_linechart(date,objout2);
+            out_NH_linechart(date,objout4);
+
+            linechart(obj1,obj2);
+            initfengli(date,obj_f);
+            initgongyi(date,obj6);
+        }
+
+        function mGetDate(year, month){
+            var d = new Date(year, month, 0);
+            return d.getDate();
+        }
+
+
+        //计算天数差的函数，通用
+        function  DateDiff(sDate1,  sDate2){    //sDate1和sDate2是2002-12-18格式
+            var  aDate,  oDate1,  oDate2,  iDays
+            aDate  =  sDate1.split("-")
+            oDate1  =  new  Date(aDate[1]  +  '-'  +  aDate[2]  +  '-'  +  aDate[0])    //转换为12-18-2002格式
+            aDate  =  sDate2.split("-")
+            oDate2  =  new  Date(aDate[1]  +  '-'  +  aDate[2]  +  '-'  +  aDate[0])
+            iDays  =  parseInt(Math.abs(oDate1  -  oDate2)  /  1000  /  60  /  60  /24)    //把相差的毫秒数转换为天数
+            return  iDays
+        }
+
+
+            function click2(){
+                history.back(-1);
+            }
+
+
+    </script>
+
+
+
+</body>
+</html>
+
+

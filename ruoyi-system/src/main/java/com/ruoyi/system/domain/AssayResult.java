@@ -45,8 +45,7 @@ public class AssayResult extends BaseEntity
 	/** 曲线唯一ID */
 	private Long curveId;
 
-	/** j_1901_s0_1 */
-	private Float j_1901_s0_1;
+	private String assayType;
 
 	public AssaySample assaySample;
 
@@ -177,6 +176,14 @@ public class AssayResult extends BaseEntity
 
 	public void setAssaySample(AssaySample assaySample) {
 		this.assaySample = assaySample;
+	}
+
+	public String getAssayType() {
+		return assayType;
+	}
+
+	public void setAssayType(String assayType) {
+		this.assayType = assayType;
 	}
 
 	public String toString() {

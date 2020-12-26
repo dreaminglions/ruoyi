@@ -70,4 +70,6 @@ public interface AssayResultMapper
 	public OutDataEnity getOuaData(@Param(value="workId") Long workId, @Param(value="startTime") String startTime, @Param(value="endTime") String endTime);
 
 	public List<AssayItem> selectItemByAssayNo(String assayNo);
+
+	public List<String> selectTypeByAssayNo(String assayNo);
 }

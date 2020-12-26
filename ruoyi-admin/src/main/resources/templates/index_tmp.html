@@ -29,19 +29,28 @@
                 <p id="assaytotal">2568 次</p>
             </div>
         </div>
+
+
         <div class="left-center">
             <div class="title-box">
                 <h6>化验概况统计</h6>
             </div>
             <div class="chart-box pie-chart">
                 <div id="pie"></div>
+            </div>
+
+        </div>
+
+        <div class="left-bottom select"  >
+            <div class="chart-box pie-chart">
                 <div>
                     <div class="pie-data">
                     </div>
                 </div>
             </div>
         </div>
-        <div class="left-bottom select" >
+
+        <div class="left-bottom select" style="display: none" >
             <div class="title-box">
                 <h6>化验告警统计</h6>
             </div>
@@ -64,43 +73,6 @@
             </div>
         </div>
 
-        <!-- <div class="center-center"> -->
-        <!-- <div class="weather-box">
-            <div class="data">
-                <p class="time" id="time">00:00:00</p>
-                <p id="date"></p>
-            </div>
-            <div class="weather">
-                <img id="weatherImg" src="images/weather/weather_img02.png" alt="">
-                <div id="weather">
-                    <p class="active">小雪</p>
-                    <p>-9-2℃</p>
-                    <p>哈尔滨市南岗区</p>
-                </div>
-            </div>
-        </div>
-        <img src="images/line_bg.png" alt="">
-        <div class="select-box">
-            <p class="p1">全国机器总量统计</p>
-            <p class="p2">106 台</p>
-        </div> -->
-
-        <!--                 <div  class="message-box">
-                            <div id="scrollNews" class="scrollNews">
-                                <ul id="p1">
-                                    <li>&nbsp&nbsp&nbsp&nbsp <a> 09:17:23 &nbsp | &nbsp  当日第一次化验开始进行，状态正常 &nbsp  |&nbsp (文昌污水处理厂)</a></li>
-                                    <li>&nbsp&nbsp&nbsp&nbsp <a> 11:22:05 &nbsp | &nbsp  当日第一次化验开始进行，状态正常 &nbsp  |&nbsp (太平污水处理厂)</a></li>
-                                    <li>&nbsp&nbsp&nbsp&nbsp <a> 12:09:31 &nbsp | &nbsp  当日第一次化验开始进行，状态正常 &nbsp  |&nbsp (磐石污水处理厂)</a></li>
-                                    <li>&nbsp&nbsp&nbsp&nbsp <a> 15:47:51 &nbsp | &nbsp  当日第一次化验正常结束 &nbsp  |&nbsp (文昌污水处理厂)</a></li>
-                                    <li>&nbsp&nbsp&nbsp&nbsp <a> 14:36:02 &nbsp | &nbsp  当日第一次化验开始进行 &nbsp  |&nbsp (信义污水处理厂)</a></li>
-                                    <li>&nbsp&nbsp&nbsp&nbsp <a> 17:55:04 &nbsp | &nbsp  当日第一次化验正常结束 &nbsp  |&nbsp (太平污水处理厂)</a></li>
-                                    <li>&nbsp&nbsp&nbsp&nbsp <a> 18:31:25 &nbsp | &nbsp  当日第一次化验正常结束 &nbsp  |&nbsp (磐石污水处理厂)</a></li>
-                                    <li>&nbsp&nbsp&nbsp&nbsp <a> 20:42:40 &nbsp | &nbsp  当日第一次化验正常结束 &nbsp  |&nbsp (信义污水处理厂)</a></li>
-                                </ul>
-                            </div>
-                        </div> -->
-
-        <!-- </div> -->
 
     </div>
     <div class="box-right">
@@ -116,36 +88,24 @@
         </div>
         <div class="right-center">
 
-            <!-- <div class="title-box">
-                <h6 id="barTitle">设备状态统计</h6>
-            </div>
-            <div class="devicepie-box">
-                <div id="devicepie" class="gd-map"></div>
-            </div> -->
-
-
             <div class="title-box">
                 <h6>设备状态统计</h6>
             </div>
             <div class="chart-box pie-chart">
                 <div id="device-pie"></div>
-                <div>
-                    <div class="device-pie-data">
-                    </div>
-                </div>
             </div>
-
 
         </div>
-        <div class="right-bottom">
-            <!-- <div class="title-box">
-                <h6 id="barTitle">故障情况统计</h6>
-            </div>
 
-            <div class="devicepie-box">
-                <div id="alertpie" class="gd-map"></div>
+        <div class="right-bottom">
+            <div class="chart-box pie-chart">
+                <div class="device-pie-data">
+                </div>
             </div>
--->
+        </div>
+
+
+        <div class="right-bottom"  style="display: none">
 
             <div class="title-box">
                 <p id="switchBtn">设备维护统计</span>
@@ -299,7 +259,7 @@
                 success: function(result) {
                     var obj = eval('('+result.deviceTotal+')');
 
-                    obj = {"total":["5",],"deviceValue":[{name:"化验中设备",value:2},{name:"离线设备",value:2},{name:"在线设备",value:1}]};
+                    //obj = {"total":["5",],"deviceValue":[{name:"化验中设备",value:2},{name:"离线设备",value:2},{name:"在线设备",value:1}]};
 
                     var total =obj.total;
                     var devicepie = obj.deviceValue;
