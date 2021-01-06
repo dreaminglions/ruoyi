@@ -1,6 +1,7 @@
 package com.ruoyi.system.mapper;
 
 import com.ruoyi.system.domain.BizWaterWork;
+import com.ruoyi.system.domain.DataEnity;
 import com.ruoyi.system.domain.WeatherEnity;
 
 import java.util.List;
@@ -106,4 +107,6 @@ public interface BizWaterWorkMapper
 	 * @return 结果
 	 */
 	public int updateDelFlag(Long worksId);
+
+	public List<DataEnity> selectProvWork();
 }

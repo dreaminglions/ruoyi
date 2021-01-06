@@ -178,13 +178,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
     <select id="getDeviceTotal" resultType="DataEnity">
             SELECT '在线设备' as 'key',count(*) as 'value' FROM biz_device t
-            where t.device_status ='0' and t.assay_status='0'
+            where t.device_status ='0' and (t.assay_status='0' or t.assay_status='2' or t.assay_status='3')
             UNION
             SELECT '离线设备' as 'key',count(*) as 'value' FROM biz_device t
             where t.device_status ='0'  and t.assay_status='1'
-            UNION
-            SELECT '化验中设备' as 'key',count(*) as 'value' FROM biz_device t
-            where t.device_status ='0' and t.assay_status='2'
     </select>
     
 </mapper>

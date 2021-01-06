@@ -242,6 +242,17 @@ pre {
     height: auto;
 }
 
+.chart-box_title {
+    position: absolute;
+    top: 0.2rem;
+    bottom: 0;
+    width: 90%;
+    margin: auto;
+    left: 0;
+    right: 0;
+    height: auto;
+}
+
 .map-box {
     position: absolute;
     top: 0.2%;
@@ -371,7 +382,7 @@ pre {
     width: 100%;
     height: 0.45rem;
     line-height: 0.45rem;
-    font-size: 0.20rem;/*0.1rem;*/
+    font-size: 0.25rem;/*0.1rem;*/
     color: #cdddf7;
     display: flex;
     flex-flow: row nowrap;
@@ -412,7 +423,7 @@ pre {
     width: 100%;
     height: 0.45rem;
     line-height: 0.45rem;
-    font-size: 0.20rem;/*0.1rem;*/
+    font-size: 0.25rem;/*0.1rem;*/
     color: #cdddf7;
     display: flex;
     flex-flow: row nowrap;
@@ -446,7 +457,7 @@ pre {
 
 .left-bottom {
     width: 100%;
-    height: 20.6%;
+    height: 30%;
     position: relative;
 }
 
@@ -839,6 +850,7 @@ pre {
     top: 0.8rem;
 }
 
+
 .table1 {
     font-size: 0.16rem;
     border: 1px solid #0e94ea;
@@ -984,7 +996,7 @@ pre {
 
 .right-bottom {
     width: 100%;
-    height: 20%;
+    height: 30%;
     position: relative;
 }
 

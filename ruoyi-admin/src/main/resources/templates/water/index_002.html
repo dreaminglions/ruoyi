@@ -1461,7 +1461,6 @@
                     select_tip = 1;
 
                     var assayData = eval('('+result.assayData+')');
-
                     if(assayData !=''&& assayData != null&& assayData !== 'undefined'){
                         assaydate = assayData.assaydate;
                         in_cod_data = assayData.in_cod_data;
@@ -1473,24 +1472,53 @@
                         in_nh_data = assayData.in_nh_data;
                         out_nh_data = assayData.out_nh_data;
 
-                        in_cod_linechart(assaydate,in_cod_data);
-                        in_TP_linechart(assaydate,in_tp_data);
-                        in_TN_linechart(assaydate,in_tn_data);
-                        in_NH_linechart(assaydate,in_nh_data);
+                        if(assaydate!=''&& assaydate != null&& assaydate != 'undefined'){
 
-                        out_cod_linechart(assaydate,out_cod_data);
-                        out_TP_linechart(assaydate,out_tp_data);
-                        out_TN_linechart(assaydate,out_tn_data);
-                        out_NH_linechart(assaydate,out_nh_data);
+                            if(in_cod_data==''){
+                                in_cod_data = ['-'];
+                            }
+                            if(in_tp_data==''){
+                                in_tp_data = ['-'];
+                            }
+                            if(in_tn_data==''){
+                                in_tn_data = ['-'];
+                            }
+                            if(in_nh_data==''){
+                                in_nh_data = ['-'];
+                            }
+                            if(in_cod_data==''){
+                                in_cod_data = ['-'];
+                            }
+                            if(out_tp_data==''){
+                                out_tp_data = ['-'];
+                            }
+                            if(out_tn_data==''){
+                                out_tn_data = ['-'];
+                            }
+                            if(out_nh_data==''){
+                                out_nh_data = ['-'];
+                            }
+
+                            in_cod_linechart(assaydate,in_cod_data);
+                            in_TP_linechart(assaydate,in_tp_data);
+                            in_TN_linechart(assaydate,in_tn_data);
+                            in_NH_linechart(assaydate,in_nh_data);
+
+                            out_cod_linechart(assaydate,out_cod_data);
+                            out_TP_linechart(assaydate,out_tp_data);
+                            out_TN_linechart(assaydate,out_tn_data);
+                            out_NH_linechart(assaydate,out_nh_data);
+                        }else{
+                            alert(" 无化验数据");
+                        }
 
                     }else{
-                        alert("化验编号: "+NoValue+" 无化验数据");
+                        alert(" 无化验数据");
                     }
-
 
                 },
                 error: function(error) {
-                    alert("化验编号: "+NoValue+" 无化验数据");
+                    alert(" 无化验数据");
                 }
             })
 

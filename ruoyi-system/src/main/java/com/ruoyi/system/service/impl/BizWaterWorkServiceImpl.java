@@ -253,8 +253,13 @@ public class BizWaterWorkServiceImpl implements IBizWaterWorkService
 		return ztrees;
 	}
 
+	@Override
 	public List<WeatherEnity> selectWorksCode(){
 		return bizWaterWorkMapper.selectWorksCode();
 	}
-	
+
+	@Override
+	public List<DataEnity> selectProvWork(){
+		return bizWaterWorkMapper.selectProvWork();
+	}
 }

@@ -49,6 +49,8 @@ public class BizAssay extends BaseEntity
 	/** 步进信息3 */
 	private String stepInfo3;
 
+	private String assayStatus;
+
 	private BizDevice device;
 
 	public Long getAssayId() {
@@ -193,6 +195,14 @@ public class BizAssay extends BaseEntity
 
 	public void setStepInfo3(String stepInfo3) {
 		this.stepInfo3 = stepInfo3;
+	}
+
+	public String getAssayStatus() {
+		return assayStatus;
+	}
+
+	public void setAssayStatus(String assayStatus) {
+		this.assayStatus = assayStatus;
 	}
 
 	public String toString() {

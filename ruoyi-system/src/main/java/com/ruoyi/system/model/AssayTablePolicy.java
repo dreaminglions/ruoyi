@@ -21,7 +21,8 @@ public class AssayTablePolicy extends DynamicTableRenderPolicy {
         List<RowRenderData> assayResult = assayData.getAssayResult();
         if (null != assayResult) {
             table.removeRow(assayRow);
-            for (int i = 0; i < assayResult.size(); i++) {
+            int size = assayResult.size()-1;
+            for (int i = size; i >=0; i--) {
 
                 XWPFTableRow insertNewTableRow = table.insertNewTableRow(assayRow);
                 for (int j = 0; j < 10; j++) insertNewTableRow.createCell();

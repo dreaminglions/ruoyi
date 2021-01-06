@@ -100,6 +100,14 @@ public class SysIndexController extends BaseController
     }
 
     // 现场
+    @GetMapping("/information_example")
+    public String information_example( ModelMap mmap)
+    {
+
+        return "water/index_002_example";
+    }
+
+    // 现场
     @GetMapping("/scene")
     public String scene( ModelMap mmap)
     {
@@ -247,11 +255,13 @@ public class SysIndexController extends BaseController
             nodemap.put("smallprocess",assay.getAssaySmallprocess());
             nodemap.put("repairBy",assay.getAssayBy());
 
-            if("999".equals(assay.getAssayBigprocess())){
-                nodemap.put("node","化验完成");
-            }else{
-                nodemap.put("node","化验中");
-            }
+//            if("999".equals(assay.getAssayBigprocess())){
+//                nodemap.put("node","化验完成");
+//            }else{
+//                nodemap.put("node","化验中");
+//            }
+            String node = assay.getAssayStatus();
+            nodemap.put("node",node);
 
             nodemap.put("version",assay.getVersion());
             nodemap.put("stepName",assay.getStepName());
@@ -306,13 +316,13 @@ public class SysIndexController extends BaseController
                     if(assayType.equals(result.getAssayType())){
                         String item = result.getAssayItem();
                         float c_value = result.getResultConcentration();
-                        if("1".equals(item)){
+                        if("4".equals(item)){
                             enity.setTn(c_value);
-                        }else if("2".equals(item)){
-                            enity.setNh(c_value);
                         }else if("3".equals(item)){
+                            enity.setNh(c_value);
+                        }else if("1".equals(item)){
                             enity.sethCod(c_value);
-                        }else if("4".equals(item)){
+                        }else if("2".equals(item)){
                             enity.setlCod(c_value);
                         }else if("5".equals(item)){
                             enity.setTp(c_value);
@@ -802,6 +812,44 @@ public class SysIndexController extends BaseController
         return ajax;
     }
 
+    @PostMapping("/index/getprovmap")
+    @ResponseBody
+    public AjaxResult getprovmap(@RequestBody JSONObject params) {
+        String jsonData = "{";
+
+        List<DataEnity> worksList = bizWaterWorkService.selectProvWork();
+
+        String prov = "\"prov\":[{name: '上海', value: 0}, {name: '河北', value: 0}, {name: '山西', value: 0}, {name: '内蒙古', value: 0},\n" +
+                "        {name: '辽宁', value: 0},\n" +
+                "        {name: '吉林', value: 0},\n" +
+                "        {name: '黑龙江', value: 0},\n" +
+                "        {name: '江苏', value: 0},\n" +
+                "        {name: '浙江', value: 0},\n" +
+                "        {name: '安徽', value: 0}, {name: '福建', value: 0}, {name: '江西', value: 0}, {name: '山东', value: 0},\n" +
+                "        {name: '河南', value: 0}, {name: '湖北', value: 0}, {name: '湖南', value: 0},\n" +
+                "        {name: '广东', value: 0},\n" +
+                "        {name: '广西', value: 0}, {name: '海南', value: 0},\n" +
+                "        {name: '四川', value: 0}, {name: '贵州', value: 0}, {name: '云南', value: 0}, {name: '西藏', value: 0}, {name: '陕西', value: 0}, {name: '甘肃', value: 0},\n" +
+                "        {name: '青海', value: 0}, {name: '宁夏', value: 0}, {name: '新疆', value: 0}, {name: '北京', value: 0},\n" +
+                "        {name: '天津', value: 0}, {name: '重庆', value: 0}, {name: '香港', value: 0}, {name: '澳门', value: 0}, {name: '台湾', value: 0}, {name: '南海诸岛', value: 0}]";
+
+        if(worksList!=null){
+            for(DataEnity obj:worksList){
+                String prov1="{name: '"+obj.getKey()+"', value: 0},";
+                String prov2="{name: '"+obj.getKey()+"', value: "+obj.getValue()+"},";;
+                String prov_new =prov.replace(prov1,prov2);
+                prov = prov_new;
+            }
+
+        }
+
+        jsonData += prov;
+        jsonData += "}";
+        AjaxResult ajax = AjaxResult.success();
+        ajax.put("provmap", jsonData);
+        return ajax;
+    }
+
     @PostMapping("/index/getAreamap")
     @ResponseBody
     public AjaxResult getAreamap(@RequestBody JSONObject params) {
@@ -832,7 +880,7 @@ public class SysIndexController extends BaseController
         AjaxResult ajax = AjaxResult.success();
         ajax.put("areamap", jsonData);
         return ajax;
-    }
+}
 
 
     @PostMapping("/index/freshIndex")

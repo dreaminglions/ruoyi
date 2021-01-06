@@ -1,10 +1,7 @@
 package com.ruoyi.system.service;
 
 import com.ruoyi.common.core.domain.Ztree;
-import com.ruoyi.system.domain.BizWaterWork;
-import com.ruoyi.system.domain.SysRole;
-import com.ruoyi.system.domain.SysUser;
-import com.ruoyi.system.domain.WeatherEnity;
+import com.ruoyi.system.domain.*;
 
 import java.util.List;
 
@@ -90,4 +87,6 @@ public interface IBizWaterWorkService
 	public List<Ztree> roleWorkTreeData(SysRole role, SysUser user);
 
 	public List<WeatherEnity> selectWorksCode();
+
+	public List<DataEnity> selectProvWork();
 }

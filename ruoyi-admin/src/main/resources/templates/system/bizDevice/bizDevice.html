@@ -154,15 +154,15 @@
                         title : '化验状态',
                         sortable: true,
                         formatter: function (value, row, index) {
-                            var nowtime = new Date();
-                            var nt= nowtime.getTime();
-							var nTime=new Date();
-                            nTime.setTime(nt-1000*60*5);
-                            var assaytime = row.assayTime;
-                            var aTime = new Date(assaytime);
-                            if(nTime>aTime){
-                                return '<i class=\"btn btn-danger btn-xs\" >离线</i> ';
-							}else{
+//                            var nowtime = new Date();
+//                            var nt= nowtime.getTime();
+//							var nTime=new Date();
+//                            nTime.setTime(nt-1000*60*5);
+//                            var assaytime = row.assayTime;
+//                            var aTime = new Date(assaytime);
+//                            if(nTime>aTime){
+//                                return '<i class=\"btn btn-danger btn-xs\" >离线</i> ';
+//							}else{
                                 if (row.assayStatus == 0) {
                                     return '<i class=\"btn btn-success btn-xs\" >在线</i> ';
                                 } else if(row.assayStatus == 1){
@@ -170,11 +170,11 @@
                                 }else if(row.assayStatus == 2){
                                     return '<i class=\"btn btn-primary btn-xs\" >化验中</i> ';
                                 }else if(row.assayStatus == 3){
-                                    return '<i class=\"btn btn-warning btn-xs\" >化验结束</i> ';
+                                    return '<i class=\"btn btn-warning btn-xs\" >化验中</i> ';
                                 }else if(row.assayStatus == 4){
                                     return '<i class=\"btn btn-danger btn-xs\" >化验故障</i> ';
                                 }
-							}
+//							}
 
                         }
                     },

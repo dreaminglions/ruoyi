@@ -50,6 +50,38 @@
 
 <script th:inline="javascript">
 
+    $(function() {
+
+        var d = {};
+        $.ajax({
+            url: ctx + "index/getprovmap",
+        	data: JSON.stringify(d),
+            type: "POST",
+            cache: false,
+            contentType: "application/json;charset=utf-8",
+            processData: false,
+            success: function(result) {
+                var provmap = eval('('+result.provmap+')');
+                if(provmap !=''&& provmap != null&& provmap !== 'undefined'){
+                    var prov_Arr = JSON.stringify(provmap.prov);
+                    var prov_Arr_json = eval('('+prov_Arr+')');
+//                    alert(prov_Arr_json);
+                    provArr = prov_Arr_json
+                    option.series[0].zoom = 1
+                    option.series[0].mapType = 'china'
+                    option.series[0].data = provArr
+                    option.series[0].markPoint.data = markDataChina;
+                    mycharts.setOption(option)
+                    document.getElementById("backbtn").style.visibility="hidden";
+                }
+            },
+            error: function(error) {
+            }
+        });
+    });
+
+
+
     var ctx = [[@{/}]];
 
     var markDataChina = [{

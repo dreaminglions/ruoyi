@@ -79,7 +79,7 @@
                                 </table>
                             </div>
 
-                            <div class="data_tit3" style="margin-top:1%">化验告警故障 </div>
+                            <div class="data_tit3" style="margin-top:1%">化验故障 </div>
 
                             <!--<div style="width: 90%;height:30%;position: relative;margin: 0 auto;">-->
                                 <!--<div class="message-box" >-->
@@ -102,8 +102,8 @@
                                 </div>
                             </div>
 
-                            <div style="width: 90%;height:5%;position: relative;margin: 0 auto;text-align:center;">
-                                <button class="relieve_enter" style="vertical-align:middle;" onclick="relieve_alert()">解除故障告警</button>
+                            <div style="width: 90%;height:5%;position: relative;margin: 0 auto;text-align:center;display: none">
+                                <button class="relieve_enter" style="vertical-align:middle;" onclick="relieve_alert()">解除故障</button>
                             </div>
 
 
@@ -126,7 +126,7 @@
                                     <tr ><td class="font6">化验设备：</td><td class="font01" id="val02"></td><td class="font6">化验人：</td><td class="font01" id="val03"></td></tr>
                                 </table>
                             </div>
-                            <div class="data_tit3" style="margin-top:2%">化验参数对比 </div>
+                            <div class="data_tit3" style="margin-top:2%">化验结果数据 </div>
 
                             <div style="height:60%;position: relative;margin: 0 auto;overflow:auto;">
                                 <table class="table_data_center" id="assayTable">
@@ -202,7 +202,7 @@
                 <div class="dataAll_top">
                     <div class="dataAllBorder01">
                         <div class="dataAllBorder02">
-                            <div class="data_tit1">化验药剂情况</div>
+                            <div class="data_tit1">本次化验药剂消耗情况</div>
                             <p class="data_chart" id="bookBmonth"></p>
                         </div>
                     </div>
@@ -210,7 +210,7 @@
                 <div class="dataAll">
                     <div class="dataAllBorder01">
                         <div class="dataAllBorder02">
-                            <div class="data_tit1">废液情况</div>
+                            <div class="data_tit4">本次化验废液产生情况</div>
                             <p class="data_chart" id="whearAbook"></p>
                         </div>
                     </div>
@@ -1147,7 +1147,17 @@
 
                         $("#node_v1").css('display','none');
 
-                        $("#valrt_1").html(nodeData.node);
+                        var assay_node =nodeData.node;
+                        if(assay_node !=''&& assay_node != null&& assay_node !== 'undefined'){
+                            if(assay_node=='3'){
+                                $("#valrt_1").html("化验完成");
+                            }else{
+                                $("#valrt_1").html("化验中");
+                            }
+                        }else{
+                            $("#valrt_1").html("化验中");
+                        }
+
                         $("#step_total").html("总步进:"+nodeData.stepTotal);
                         $("#step_now").html("当前步进:"+nodeData.stepNow);
 

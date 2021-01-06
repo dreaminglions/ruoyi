@@ -126,7 +126,18 @@
     box-sizing: border-box;
 }
 .data_tit1{
-    width: 46%;
+    width: 76%;
+    height: 12%;
+    background-image: url("../img/tit01s.png");
+    background-size: 100% 100%;
+    background-repeat: no-repeat;
+    margin:0 auto;
+    font-size: 20px;
+    color: #ffffff;
+    text-align: center;
+}
+.data_tit4{
+    width: 76%;
     height: 16%;
     background-image: url("../img/tit01s.png");
     background-size: 100% 100%;
@@ -136,6 +147,7 @@
     color: #ffffff;
     text-align: center;
 }
+
 .data_tit2{
     width: 36%;
     height: 40px;

@@ -27,6 +27,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="stepInfo1"    column="step_info1"    />
         <result property="stepInfo2"    column="step_info2"    />
         <result property="stepInfo3"    column="step_info3"    />
+        <result property="assayStatus"    column="assay_status"    />
         <association property="device"    column="device_no" javaType="BizDevice" resultMap="deviceResult" />
     </resultMap>
 
@@ -42,7 +43,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <sql id="selectBizAssayVo">
         select r.assay_id,r.assay_no,r.device_no,r.assay_type,r.assay_bigprocess,r.assay_smallprocess,
         r.begin_time,r.end_time,r.assay_date,r.assay_by,r.version,r.step_name,r.step_total,r.step_now,r.step_info1,r.step_info2,r.step_info3,
-        r.create_time, r.create_by, r.update_time, r.update_by,
+        r.create_time, r.create_by, r.update_time, r.update_by,r.assay_status,
                 d.device_id,d.device_name,d.device_status,d.device_works
 		from z_assay r
         LEFT JOIN biz_device d on r.device_no = d.device_no

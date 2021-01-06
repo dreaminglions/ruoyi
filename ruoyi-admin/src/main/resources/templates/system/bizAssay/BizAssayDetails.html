@@ -100,19 +100,19 @@
                             <th style="" tabindex="0"><div class="th-inner sortable both">报出结果(mg/L)</div><div class="fht-cell"></div></th>
                         </tr></thead>
                         <tbody>
-                        <tr data-index="0">
-                            <td style="">1</td><td style="">空白</td><td >1</td><td >0.000</td><td >-</td><td >-</td>
-                        </tr>
-                        <tr data-index="0">
-                            <td style="">2</td><td style="">标准物质</td><td >1</td><td id="sta_abs">0.000</td><td  id="sta_value">-</td><td  id="sta_valueR">-</td>
-                        </tr>
+                        <!--<tr data-index="0">-->
+                            <!--<td style="">1</td><td style="">空白</td><td >1</td><td >0.000</td><td >-</td><td >-</td>-->
+                        <!--</tr>-->
+                        <!--<tr data-index="0">-->
+                            <!--<td style="">2</td><td style="">标准物质</td><td >1</td><td id="sta_abs">0.000</td><td  id="sta_value">-</td><td  id="sta_valueR">-</td>-->
+                        <!--</tr>-->
 
-                        <tr data-index="0" class="cod">
-                            <td style="">3</td><td style="">[[${Sname}]]进水</td><td >1</td><td id="inabs">[[${inCod_As}]]</td><td id="invalue">[[${inCod}]]</td><td id="invalueR">[[${inCod}]]</td>
-                        </tr>
-                        <tr data-index="0" class="cod">
-                            <td style="">4</td><td style="">[[${Sname}]]出水</td><td >2</td><td id="outabs1">[[${outCod_As}]]</td><td id="outvalue">[[${outCod}]]</td><td id="outvalueR">[[${outCod}]]</td>
-                        </tr>
+                        <!--<tr data-index="0" class="cod">-->
+                            <!--<td style="">3</td><td style="">[[${Sname}]]进水</td><td >1</td><td id="inabs">[[${inCod_As}]]</td><td id="invalue">[[${inCod}]]</td><td id="invalueR">[[${inCod}]]</td>-->
+                        <!--</tr>-->
+                        <!--<tr data-index="0" class="cod">-->
+                            <!--<td style="">4</td><td style="">[[${Sname}]]出水</td><td >2</td><td id="outabs1">[[${outCod_As}]]</td><td id="outvalue">[[${outCod}]]</td><td id="outvalueR">[[${outCod}]]</td>-->
+                        <!--</tr>-->
                         <tr data-index="0">
                             <td style=""> </td><td style=""> </td><td >—</td><td>—</td><td>—</td><td>—</td>
                         </tr>
@@ -162,9 +162,11 @@
                     var curveData = eval('('+result.curveData+')');
                     var methodData = eval('('+result.methodData+')');
                     var trHtml="";
+                    var i=0;
                     $.each(itemData, function(key, value){
+                        i++;
                         trHtml+="<tr data-index=\"0\" class=\"cod\">\n" +
-                            "                            <td style=\"\">3</td><td style=\"\">"+value.assayType+"</td><td >1</td><td id=\"inabs\">"+value.resultAbs+"</td><td id=\"invalue\">"+value.resultConcentration+"</td><td id=\"invalueR\">"+value.resultConcentration+"</td>\n" +
+                            "                            <td style=\"\">"+i+"</td><td style=\"\">"+value.assayType+"</td><td >"+value.sampleVolume+"</td><td id=\"inabs\">"+value.resultAbs+"</td><td id=\"invalue\">"+value.resultConcentration+"</td><td id=\"invalueR\">"+value.resultConcentration+"</td>\n" +
                             "                        </tr>"
                     });
 
@@ -194,7 +196,7 @@
                         $(this).remove();
                     });
 
-                    var row=2;
+                    var row=0;
                     var tab="5-table";
                     addTr(tab, row, trHtml);
 

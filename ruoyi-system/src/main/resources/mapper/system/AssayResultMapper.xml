@@ -46,12 +46,14 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
 
     <sql id="selectAssayResultVo">
-        select r.result_id, r.assay_no, r.result_no, r.sample_no, r.sample_volume, r.device_no, r.assay_item, Round(r.result_concentration,3)  result_concentration, r.result_abs, r.result_date, r.result_time, r.curve_k0, r.curve_k1, r.curve_id, r.create_by, r.create_time, r.update_by, r.update_time,r.assay_type,
+        select r.result_id, r.assay_no, r.result_no, r.sample_no, Round(r.sample_volume,3) sample_volume, r.device_no, r.assay_item, Round(r.result_concentration,3)  result_concentration, r.result_abs, r.result_date, r.result_time, r.curve_k0, r.curve_k1, r.curve_id, r.create_by, r.create_time, r.update_by, r.update_time,
+        sa.item_name as assay_type,
         t.item_name,
         s.sample_id,s.sample_name,
         w.works_id,w.works_name,w.works_no
 		from z_assay_result r
 		left join sys_assay_item t on t.assay_item = r.assay_item
+		left join sys_assay_sample sa on r.assay_type = sa.assay_type
 		left join z_assay_sample s on s.sample_no = r.sample_no and s.assay_no = r.assay_no
 		left join biz_water_work w on s.work_no = w.works_no
     </sql>
@@ -192,8 +194,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </select>
 
     <select id="selectTypeByAssayNo" parameterType="String" resultType="String">
-        SELECT DISTINCT z.assay_type from z_assay_result z
+        SELECT DISTINCT sa.item_name as assay_type from z_assay_result z
+        LEFT JOIN sys_assay_sample sa on z.assay_type = sa.assay_type
         where z.assay_no = #{assayNo} and z.assay_type is not null
+        and sa.item_name is not null
     </select>
 
 

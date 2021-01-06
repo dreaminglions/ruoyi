@@ -42,7 +42,7 @@
         </div>
 
         <div class="left-bottom select"  >
-            <div class="chart-box pie-chart">
+            <div class="chart-box_title pie-chart">
                 <div>
                     <div class="pie-data">
                     </div>
@@ -98,7 +98,7 @@
         </div>
 
         <div class="right-bottom">
-            <div class="chart-box pie-chart">
+            <div class="chart-box_title pie-chart">
                 <div class="device-pie-data">
                 </div>
             </div>
@@ -234,6 +234,11 @@
             dataType: 'json',
             success: function(result) {
                 var obj = eval('('+result.assayTotal+')');
+
+//                var total =obj.total;
+//                var total_ok= total-3;
+//
+//                obj = {"total":[""+total+"",],"assayValue":[{name:"正常化验",value:total_ok},{name:"未完成化验",value:3}]};
 
                 obj = {"total":["2563",],"assayValue":[{name:"正常化验",value:2558},{name:"未完成化验",value:5}]};
 
