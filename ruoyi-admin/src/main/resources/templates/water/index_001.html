@@ -1109,11 +1109,11 @@
                 $.each(AssayTableJson, function(key, value){
                     if(value.assayType=="质控样"){
                         trHtml+="<tr class=\"assayclass\">\n" +
-                            "<td>"+value.assayType+"</td><td class=\"font08\" >"+value.hCod+"</td><td class=\"font08\" >"+value.lCod+"</td><td class=\"font08\" >"+value.nh+"</td><td class=\"font08\" >"+value.tp+"</td><td class=\"font08\" >"+value.tn+"</td>\n" +
+                            "<td>"+value.assayType+"</td><td class=\"font08\" >"+value.hCod+"</td><td class=\"font08\" >"+value.lCod+"</td><td class=\"font08\" >"+value.nh+"</td><td class=\"font08\" >"+value.tn+"</td><td class=\"font08\" >"+value.tp+"</td>\n" +
                             "</tr>";
                     }else{
                         trHtml+="<tr class=\"assayclass\">\n" +
-                            "<td>"+value.assayType+"</td><td class=\"font08\" colspan=\"2\" >"+value.lCod+"</td><td class=\"font08\" >"+value.nh+"</td><td class=\"font08\" >"+value.tp+"</td><td class=\"font08\" >"+value.tn+"</td>\n" +
+                            "<td>"+value.assayType+"</td><td class=\"font08\" colspan=\"2\" >"+value.lCod+"</td><td class=\"font08\" >"+value.nh+"</td><td class=\"font08\" >"+value.tn+"</td><td class=\"font08\" >"+value.tp+"</td>\n" +
                             "</tr>";
                     }
                 });
