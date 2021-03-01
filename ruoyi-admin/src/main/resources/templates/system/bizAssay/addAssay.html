@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" >
+<head>
+	<th:block th:include="include :: header('新增化验结果')" />
+</head>
+<body class="white-bg">
+    <div class="wrapper wrapper-content animated fadeInRight ibox-content">
+        <form class="form-horizontal m" id="form-bizAssayResult-add">
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">化验结果编号：</label>
+				<div class="col-sm-8">
+					<input id="assayNo" name="assayNo" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label">设备编号：</label>
+				<div class="col-sm-8">
+					<input id="deviceNo" name="deviceNo" class="form-control" type="text">
+				</div>
+			</div>
+
+			<div class="form-group">
+				<label class="col-sm-3 control-label">化验开始时间：</label>
+				<div class="col-sm-8">
+					<input id="beginTime" name="beginTime" class="form-control" type="text">
+				</div>
+			</div>
+
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">设备版本：</label>
+				<div class="col-sm-8">
+					<input id="version" name="version" class="form-control" type="text">
+				</div>
+			</div>
+
+			<div class="form-group">
+				<label class="col-sm-3 control-label">流程名：</label>
+				<div class="col-sm-8">
+					<input id="stepName" name="stepName" class="form-control" type="text">
+				</div>
+			</div>
+
+			<div class="form-group">
+				<label class="col-sm-3 control-label">总步进：</label>
+				<div class="col-sm-8">
+					<input id="stepTotal" name="stepTotal" class="form-control" type="text">
+				</div>
+			</div>
+
+			<div class="form-group">
+				<label class="col-sm-3 control-label">当前步进：</label>
+				<div class="col-sm-8">
+					<input id="stepNow" name="stepNow" class="form-control" type="text">
+				</div>
+			</div>
+
+			<div class="form-group">
+				<label class="col-sm-3 control-label">步进信息1：</label>
+				<div class="col-sm-8">
+					<input id="stepInfo1" name="stepInfo1" class="form-control" type="text">
+				</div>
+			</div>
+
+			<div class="form-group">
+				<label class="col-sm-3 control-label">步进信息2：</label>
+				<div class="col-sm-8">
+					<input id="stepInfo2" name="stepInfo2" class="form-control" type="text">
+				</div>
+			</div>
+
+			<div class="form-group">
+				<label class="col-sm-3 control-label">步进信息3：</label>
+				<div class="col-sm-8">
+					<input id="stepInfo3" name="stepInfo3" class="form-control" type="text">
+				</div>
+			</div>
+
+			<div class="form-group">
+				<label class="col-sm-3 control-label">化验状态：</label>
+				<div class="col-sm-8">
+					<input id="assayStatus" name="assayStatus" class="form-control" type="text">
+				</div>
+			</div>
+
+
+		</form>
+	</div>
+    <div th:include="include::footer"></div>
+    <script type="text/javascript">
+		var prefix = ctx + "system/bizAssay"
+		$("#form-bizAssayResult-add").validate({
+			rules:{
+				xxxx:{
+					required:true,
+				},
+			},
+			focusCleanup: true
+		});
+		
+		function submitHandler() {
+	        if ($.validate.form()) {
+	            $.operate.save(prefix + "/addAssay", $('#form-bizAssayResult-add').serialize());
+	        }
+	    }
+	</script>
+</body>
+</html>
