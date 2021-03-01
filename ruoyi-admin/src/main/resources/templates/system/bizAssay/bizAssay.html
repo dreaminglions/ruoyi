@@ -38,6 +38,9 @@
 			</div>
 			
 	        <div class="btn-group-sm" id="toolbar" role="group">
+				<a class="btn btn-success" onclick="assayAdd()" shiro:hasPermission="system:bizAssay:list">
+					<i class="fa fa-plus"></i> 添加化验
+				</a>
 				<!--<a class="btn btn-success" onclick="AssayReport()" shiro:hasPermission="system:bizAssayResult:list">-->
 					<!--<i class="fa fa-search"></i> 化验报表-->
 				<!--</a>-->
@@ -127,12 +130,25 @@
 //                        actions.push('<a class="btn btn-success btn-xs ' + editFlag + '" href="#" onclick="setSample(\'' + row.assayNo + '\')"><i class="fa fa-search"></i>设置样品</a> ');
                         actions.push('<a class="btn btn-warning btn-xs ' + listFlag + '" href="#" onclick="assayDetails(\'' + row.assayNo + '\')"><i class="fa fa-search"></i>化验报告</a> ');
                         actions.push('<a class="btn btn-danger btn-xs ' + listFlag + '" href="#" onclick="getFault(\'' + row.assayNo + '\')"><i class="fa fa-search"></i>化验故障</a> ');
+                        actions.push('<a class="btn btn-primary btn-xs ' + listFlag + '" href="#" onclick="resultAdd(\'' + row.assayNo + '\')"><i class="fa fa-search"></i>添加化验结果</a> ');
 						return actions.join('');
 		            }
 		        }]
             };
             $.table.init(options);
         });
+
+
+        function assayAdd(){
+            var url = prefix + '/assayAdd';
+            $.modal.open("添加化验", url);
+        }
+
+
+        function resultAdd(assayNo){
+            var url = prefix + '/resultAdd/' + assayNo;
+            $.modal.open("添加化验结果", url);
+        }
 
         function detail(assayNo){
 			var url = prefix + '/result/' + assayNo;

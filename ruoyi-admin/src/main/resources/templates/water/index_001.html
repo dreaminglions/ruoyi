@@ -1107,7 +1107,7 @@
                 AssayTableJson = assay_tableData;
                 var trHtml="";
                 $.each(AssayTableJson, function(key, value){
-                    if(value.assayType=="质控样"){
+                    if(value.assayType=="质控样"||value.assayType=="空白样"){
                         trHtml+="<tr class=\"assayclass\">\n" +
                             "<td>"+value.assayType+"</td><td class=\"font08\" >"+value.hCod+"</td><td class=\"font08\" >"+value.lCod+"</td><td class=\"font08\" >"+value.nh+"</td><td class=\"font08\" >"+value.tn+"</td><td class=\"font08\" >"+value.tp+"</td>\n" +
                             "</tr>";

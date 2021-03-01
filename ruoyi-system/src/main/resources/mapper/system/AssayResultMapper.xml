@@ -25,6 +25,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="updateBy"    column="update_by"    />
         <result property="assayBy"    column="assay_by"    />
         <result property="assayType"    column="assay_type"    />
+        <result property="samplePost"    column="sample_post"    />
 
         <association property="assaySample"    column="sample_no" javaType="AssaySample" resultMap="sampleResult" />
     </resultMap>
@@ -90,6 +91,7 @@ end) as assay_type,
     <select id="selectAssayResultByAssayNo" parameterType="String" resultMap="AssayResultResult">
         <include refid="selectAssayResultVo"/>
         where r.assay_no = #{assayNo}
+        order by  r.result_date
     </select>
 
         
@@ -110,7 +112,8 @@ end) as assay_type,
             <if test="curveK1 != null  and curveK1 != ''  ">curve_k1,</if>
             <if test="curveId != null  and curveId != ''  ">curve_id,</if>
             <if test="assayType != null  and assayType != ''  ">assay_type,</if>
-			<if test="createBy != null  and createBy != ''  ">create_by,</if>
+            <if test="createBy != null  and createBy != ''  ">create_by,</if>
+            <if test="samplePost != null  and samplePost != ''  ">sample_post,</if>
             create_time
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
@@ -129,6 +132,7 @@ end) as assay_type,
             <if test="curveId != null  and curveId != ''  ">#{curveId},</if>
             <if test="assayType != null  and assayType != ''  ">#{assayType},</if>
 			<if test="createBy != null  and createBy != ''  ">#{createBy},</if>
+            <if test="samplePost != null  and samplePost != ''  ">#{samplePost},</if>
             getdate()
          </trim>
     </insert>
@@ -206,6 +210,7 @@ end) as assay_type
         LEFT JOIN sys_assay_sample sa on z.assay_type = sa.assay_type
         where z.assay_no = #{assayNo} and z.assay_type is not null
         and sa.item_name is not null
+
     </select>
 
 

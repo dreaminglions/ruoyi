@@ -103,7 +103,14 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="assaySmallprocess != null  and assaySmallprocess != ''  ">assay_smallprocess,</if>
             <if test="assayBy != null  and assayBy != ''  ">assay_by,</if>
 			<if test="createBy != null  and createBy != ''  ">create_by,</if>
-            create_time
+            <if test="version != null  and version != ''  ">version,</if>
+            <if test="stepName != null  and stepName != ''  ">step_name,</if>
+            <if test="stepTotal != null  and stepTotal != ''  ">step_total,</if>
+            <if test="stepNow != null  and stepNow != ''  ">step_now,</if>
+            <if test="stepInfo1 != null  and stepInfo1 != ''  ">step_info1,</if>
+            <if test="stepInfo2 != null  and stepInfo2 != ''  ">step_info2,</if>
+            <if test="stepInfo3 != null  and stepInfo3 != ''  ">step_info3,</if>
+            <if test="assayStatus != null  and assayStatus != ''  ">assay_status</if>
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
 			<if test="assayNo != null  and assayNo != ''  ">#{assayNo},</if>
@@ -116,7 +123,14 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="assaySmallprocess != null  and assaySmallprocess != ''  ">#{assaySmallprocess},</if>
             <if test="assayBy != null  and assayBy != ''  ">#{repairBy},</if>
 			<if test="createBy != null  and createBy != ''  ">#{createBy},</if>
-            getdate()
+            <if test="version != null  and version != ''  ">#{version},</if>
+            <if test="stepName != null  and stepName != ''  ">#{stepName},</if>
+            <if test="stepTotal != null  and stepTotal != ''  ">#{stepTotal},</if>
+            <if test="stepNow != null  and stepNow != ''  ">#{stepNow},</if>
+            <if test="stepInfo1 != null  and stepInfo1 != ''  ">#{stepInfo1},</if>
+            <if test="stepInfo2 != null  and stepInfo2 != ''  ">#{stepInfo2},</if>
+            <if test="stepInfo3 != null  and stepInfo3 != ''  ">#{stepInfo3},</if>
+            <if test="assayStatus != null  and assayStatus != ''  ">#{assayStatus}</if>
          </trim>
     </insert>
 	 

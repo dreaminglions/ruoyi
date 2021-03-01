@@ -129,26 +129,6 @@ public class BizAssayController extends BaseController
         return util.exportExcel(list, "bizAssay");
     }
 	
-	/**
-	 * 新增化验结果
-	 */
-	@GetMapping("/add")
-	public String add()
-	{
-	    return prefix + "/add";
-	}
-	
-	/**
-	 * 新增保存化验结果
-	 */
-	@RequiresPermissions("system:bizAssay:add")
-	@Log(title = "新增化验结果", businessType = BusinessType.INSERT)
-	@PostMapping("/add")
-	@ResponseBody
-	public AjaxResult addSave(BizAssay bizAssay)
-	{		
-		return toAjax(bizAssayService.insertBizAssay(bizAssay));
-	}
 
 	/**
 	 * 查看化验结果
@@ -680,5 +660,60 @@ public class BizAssayController extends BaseController
 
 		return prefix + "/getdoc";
 	}
+
+	/**
+	 * 新增化验结果
+	 */
+	@GetMapping("/assayAdd")
+	public String assayAdd()
+	{
+		return prefix + "/addAssay";
+	}
+
+	/**
+	 * 新增保存化验结果
+	 */
+	@RequiresPermissions("system:bizAssay:add")
+	@Log(title = "新增化验", businessType = BusinessType.INSERT)
+	@PostMapping("/addAssay")
+	@ResponseBody
+	public AjaxResult addAssay(BizAssay bizAssay)
+	{
+		String begintime = bizAssay.getBeginTime();
+		String assaydate = begintime.substring(0,10);
+		bizAssay.setAssayDate(assaydate);
+		return toAjax(bizAssayService.insertBizAssay(bizAssay));
+	}
+
+
+	@RequiresPermissions("system:bizAssay:list")
+	@GetMapping("/resultAdd/{assayNo}")
+	public String resultAdd(@PathVariable("assayNo") String assayNo, ModelMap mmap)
+	{
+		BizAssay bizAssay = bizAssayService.selectBizAssayByAssayNo(assayNo);
+		mmap.put("assayNo", assayNo);
+		mmap.put("deviceNo", bizAssay.getDeviceNo());
+		return prefix + "/addResult";
+	}
+
+	/**
+	 * 修改新加化验结果
+	 */
+	@RequiresPermissions("system:bizAssay:edit")
+	@Log(title = "新加化验结果", businessType = BusinessType.UPDATE)
+	@PostMapping("/resultAdd")
+	@ResponseBody
+	public AjaxResult resultAdd(AssayResult result)
+	{
+		Date updateTime = result.getUpdateTime();
+		SimpleDateFormat format1 = new SimpleDateFormat("yyyy-MM-dd");
+		SimpleDateFormat format2 = new SimpleDateFormat("HH:mm:ss");
+		String date = format1.format(updateTime);
+		String time = format2.format(updateTime);
+		result.setResultDate(date);
+		result.setResultTime(time);
+		return toAjax(assayResultService.insertAssayResult(result));
+	}
+
 
 }
